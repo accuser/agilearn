@@ -21,7 +21,7 @@ Each guide follows the same four-part shape: **Learn** (step-by-step tutorials y
     <span class="agilearn-card__icon">:material-source-branch:</span>
     <strong class="agilearn-card__title">Conditional logic</strong>
     <span class="agilearn-card__desc">Making decisions in code: <code>if</code>/<code>elif</code>/<code>else</code>, boolean operators, truthiness, <code>match</code>/<code>case</code>.</span>
-    <span class="agilearn-meta"><span>Learn · 1</span><span>Recipes · 0</span><span>Reference · 0</span><span>Concepts · 0</span></span>
+    <span class="agilearn-meta"><span>Learn · 3</span><span>Recipes · 3</span><span>Reference · 3</span><span>Concepts · 2</span></span>
   </a>
 
   <a class="agilearn-card" href="guides/data-structures/" markdown>

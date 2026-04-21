@@ -144,6 +144,22 @@ nav:
           - Learn:
               - guides/conditional-logic/learn/index.md
               - If statements: guides/conditional-logic/learn/01-if-statements.ipynb
+              - Boolean operators and truthiness: guides/conditional-logic/learn/02-boolean-operators-and-truthiness.ipynb
+              - Pattern matching with match/case: guides/conditional-logic/learn/03-pattern-matching-with-match-case.ipynb
+          - Recipes:
+              - guides/conditional-logic/recipes/index.md
+              - Use guard clauses: guides/conditional-logic/recipes/use-guard-clauses.ipynb
+              - Choose between conditional patterns: guides/conditional-logic/recipes/choose-between-conditional-patterns.ipynb
+              - Avoid common conditional mistakes: guides/conditional-logic/recipes/avoid-common-conditional-mistakes.md
+          - Reference:
+              - guides/conditional-logic/reference/index.md
+              - Comparison and boolean operators: guides/conditional-logic/reference/comparison-and-boolean-operators.md
+              - Truthiness rules: guides/conditional-logic/reference/truthiness-rules.md
+              - match/case syntax: guides/conditional-logic/reference/match-case-syntax.md
+          - Concepts:
+              - guides/conditional-logic/concepts/index.md
+              - Why truthiness works the way it does: guides/conditional-logic/concepts/why-truthiness-works-the-way-it-does.md
+              - Structural pattern matching in context: guides/conditional-logic/concepts/structural-pattern-matching-in-context.md
       - Data structures:
           - guides/data-structures/index.md
           - Learn:

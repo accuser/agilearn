@@ -8,16 +8,16 @@ Conditional logic is how Python programs make decisions — choosing between pat
 
 ## Start here
 
-If conditionals are new to you, start with the single **[Learn](learn/)** tutorial — a hands-on introduction to `if`, `elif`, and `else`. Every code cell can be edited and run in place, directly on the page.
+If conditionals are new to you, work through the [**Learn**](learn/) section in order — three short notebooks, around fifteen minutes each. Every code cell can be edited and run in place, directly on the page; no install required.
 
-The **Recipes**, **Reference**, and **Concepts** sections for this guide are still in progress. The [Data structures](../data-structures/) and [Functions](../functions/) guides are good next stops once you've covered the basics here.
+If you already know the basics and are looking for a specific technique, jump to the [**Recipes**](recipes/) section, or scan the [**Reference**](reference/) for operators and syntax.
 
 ## What this guide covers
 
-**[Learn](learn/)** — `if`/`elif`/`else`, comparison and boolean operators, truthiness.
+**[Learn](learn/)** — `if`/`elif`/`else`, boolean operators and truthiness, and pattern matching with `match`/`case`.
 
-**Recipes** — *coming soon*: short, task-focused how-tos for specific conditional patterns.
+**[Recipes](recipes/)** — guard clauses, choosing between dispatch styles, and the common mistakes worth avoiding.
 
-**Reference** — *coming soon*: operator tables, truthiness rules, `match`/`case` syntax.
+**[Reference](reference/)** — comparison and boolean operators, truthiness rules, and `match`/`case` syntax.
 
-**Concepts** — *coming soon*: why truthiness works the way it does, structural pattern matching in context.
+**[Concepts](concepts/)** — why truthiness works the way it does, and where structural pattern matching fits.
