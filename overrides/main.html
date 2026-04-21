@@ -1,0 +1,324 @@
+{% extends "base.html" %}
+
+{# ---------------------------------------------------------------
+   Thebe assets (only on notebook pages)
+   --------------------------------------------------------------- #}
+{% block extrahead %}
+  {{ super() }}
+  {% if page.nb_url %}
+    <link rel="stylesheet" href="{{ 'assets/vendor/thebe/thebe.css' | url }}">
+    <script type="text/x-thebe-config">
+      {
+        "useBinder": false,
+        "useJupyterLite": true,
+        "mountActivateWidget": false,
+        "mountStatusWidget": false,
+        "selector": "pre[data-executable=\"true\"]",
+        "kernelOptions": {
+          "name": "python",
+          "kernelName": "python"
+        }
+      }
+    </script>
+  {% endif %}
+{% endblock extrahead %}
+
+{# ---------------------------------------------------------------
+   Content block: notebook toolbar + activation UI
+   --------------------------------------------------------------- #}
+{% block content %}
+{% if page.nb_url %}
+  <div class="agilearn-notebook-actions">
+    <a href="{{ page.nb_url }}"
+       title="Download this notebook"
+       class="md-content__button md-icon">
+      {% include ".icons/material/download.svg" %}
+    </a>
+  </div>
+
+  <div id="agilearn-run-banner" class="agilearn-run-banner" hidden>
+    <span class="agilearn-run-banner__msg">Loading Python (one-off download, ~10 MB)…</span>
+  </div>
+{% endif %}
+
+{{ super() }}
+
+{% if page.nb_url %}
+  <script>
+  (function () {
+    // -----------------------------------------------------------
+    // Agilearn: Thebe integration for mkdocs-jupyter notebook pages
+    //
+    // mkdocs-jupyter renders each code cell as a .jp-CodeCell block
+    // containing a <pre> with the raw source. We:
+    //   1. replace each .jp-CodeCell with a <pre data-executable="true">
+    //   2. load thebe-lite + thebe
+    //   3. call thebelab.bootstrap() to activate them
+    //
+    // Activation kicks off automatically once the cells have rendered —
+    // Learn and Recipes pages are expected to be interactive by default.
+    // Pyodide is ~10MB on first visit but the browser caches it, so
+    // subsequent visits start in seconds.
+    // -----------------------------------------------------------
+
+    // Use MkDocs's url() filter so these resolve relative to the current page,
+    // regardless of whether we're running at localhost:8000 or agilearn.co.uk.
+    const THEBE_LITE_SRC = "{{ 'assets/vendor/thebe-lite/thebe-lite.min.js' | url }}";
+    const THEBE_SRC      = "{{ 'assets/vendor/thebe/index.js' | url }}";
+    const SW_SRC         = "{{ 'service-worker.js' | url }}";
+
+    const banner = document.getElementById("agilearn-run-banner");
+    if (!banner) return;
+
+    function loadScript(src) {
+      return new Promise(function (resolve, reject) {
+        const s = document.createElement("script");
+        s.src = src;
+        s.onload = resolve;
+        s.onerror = function () { reject(new Error("Failed to load " + src)); };
+        document.head.appendChild(s);
+      });
+    }
+
+    function showBanner(text, tone) {
+      if (!banner) return;
+      banner.hidden = false;
+      banner.className = "agilearn-run-banner" + (tone ? " is-" + tone : "");
+      banner.querySelector(".agilearn-run-banner__msg").textContent = text;
+    }
+
+    // A stable version tag we'll also stash into localStorage so thebe-lite's
+    // "unregisterOldServiceWorkers" version check is a no-op (see below).
+    const AGILEARN_SW_VERSION = "agilearn-1";
+
+    function primeJupyterConfig() {
+      // Thebe-lite's SW-registration routine reads PageConfig.getOption("appVersion")
+      // and compares it against localStorage["<sw-url>-version"]. On mismatch (or on
+      // a fresh client with no localStorage entry), it unregisters *all* service
+      // workers for this origin and re-registers its own — blowing away our
+      // pre-registered SW and leaving the page uncontrolled for a moment. The
+      // uncontrolled window is enough to let the first /api/drive* fetches escape
+      // to the network, which kills sessionManager.ready and leaves cells
+      // permanently detached.
+      //
+      // The fix: inject a <script id="jupyter-config-data"> element with a fixed
+      // appVersion BEFORE thebe-lite loads. jupyterlab_services' PageConfig reads
+      // config from that element, so getOption("appVersion") now returns our tag
+      // instead of an empty string.
+      if (!document.getElementById("jupyter-config-data")) {
+        const cfg = document.createElement("script");
+        cfg.id = "jupyter-config-data";
+        cfg.type = "application/json";
+        cfg.textContent = JSON.stringify({ appVersion: AGILEARN_SW_VERSION });
+        document.head.appendChild(cfg);
+      }
+    }
+
+    async function ensureServiceWorker(src) {
+      // Thebe-lite registers its own service worker during kernel bootstrap,
+      // but its register() call resolves on *install* — not when the SW is
+      // actively controlling this client. Kernel session init issues
+      // /api/drive* fetches immediately afterwards, and those fetches need to
+      // be intercepted by our SW (which bridges them to a BroadcastChannel).
+      // If the SW hasn't claimed this client yet, those fetches escape to the
+      // network, mkdocs-serve returns 404, and sessionManager.ready never
+      // settles — leaving the cells un-attached. Register and wait here so
+      // the SW is guaranteed to control the page before Thebe touches it.
+      //
+      // We register at the same URL form thebe-lite uses
+      // (…/service-worker.js?enableCache=false) so that when thebe-lite runs
+      // navigator.serviceWorker.getRegistration(scriptURL) it finds the
+      // registration we already made and doesn't re-register. Combined with
+      // the localStorage version-key priming below, thebe-lite's
+      // "unregisterOldServiceWorkers" step becomes a no-op and our SW stays
+      // in control of the page throughout kernel init.
+      if (!("serviceWorker" in navigator)) return;
+      const absUrl = new URL(src, window.location.href);
+      absUrl.searchParams.set("enableCache", "false");
+      const scriptURL = absUrl.href;
+
+      // Pre-seed the localStorage key that thebe-lite's version check consults.
+      // thebe-lite keys on `${scriptURL}-version`; if it matches our appVersion
+      // tag, the "new version, unregistering" branch is skipped.
+      try {
+        localStorage.setItem(scriptURL + "-version", AGILEARN_SW_VERSION);
+      } catch (e) { /* localStorage disabled — thebe-lite will handle it */ }
+
+      // Evict any stale SW registrations at this origin whose scriptURL isn't
+      // ours. Earlier iterations of this code registered at
+      // `/service-worker.js` (without the query string), and older dev sessions
+      // may have left the upstream thebe-lite proxy-everything SW in place;
+      // both are at root scope and will happily intercept our asset fetches
+      // before we get a chance to activate our slim replacement.
+      try {
+        const existing = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(existing.map(function (r) {
+          const active = r.active || r.waiting || r.installing;
+          if (!active) return;
+          if (active.scriptURL !== scriptURL) return r.unregister();
+        }));
+      } catch (e) { /* best-effort — fall through to register() */ }
+
+      const registration = await navigator.serviceWorker.register(scriptURL);
+
+      // Wait for the SW belonging to *this* registration to reach "activated".
+      // A previous session may have left a byte-different SW installed at the
+      // same URL — e.g. the upstream proxy-everything version we've since
+      // slimmed down. In that case register() returns immediately with the
+      // new worker in `installing` or `waiting` state, while the old worker
+      // is still the page's controller. Just checking
+      // `navigator.serviceWorker.controller` here would happily hand Thebe
+      // over to the stale worker and break every asset fetch until the user
+      // reloads a couple of times.
+      const awaitActivated = (worker) => {
+        if (!worker) return Promise.resolve();
+        if (worker.state === "activated") return Promise.resolve();
+        return new Promise((resolve) => {
+          worker.addEventListener("statechange", () => {
+            if (worker.state === "activated") resolve();
+          });
+        });
+      };
+      const pending = registration.installing || registration.waiting;
+      if (pending) await awaitActivated(pending);
+
+      // Now make sure that worker is also *controlling* this client. After
+      // activation our SW's `clients.claim()` fires a controllerchange, but
+      // if it hasn't landed yet — or if the current controller is still the
+      // old SW — we wait for a controllerchange that points at the new
+      // registration's scriptURL.
+      const targetURL = (registration.active || registration.waiting || registration.installing || {}).scriptURL;
+      const isOurs = () => {
+        const c = navigator.serviceWorker.controller;
+        return !!c && (!targetURL || c.scriptURL === targetURL);
+      };
+      if (isOurs()) return;
+      await new Promise((resolve) => {
+        navigator.serviceWorker.addEventListener("controllerchange", function handler() {
+          if (isOurs()) {
+            navigator.serviceWorker.removeEventListener("controllerchange", handler);
+            resolve();
+          }
+        });
+      });
+    }
+
+    function convertCells() {
+      // For each rendered .jp-CodeCell, extract the source text from its <pre>,
+      // then replace the whole cell with a <pre data-executable="true">. Thebe
+      // will turn those into runnable editors on bootstrap.
+      const cells = document.querySelectorAll(".jp-CodeCell");
+      let converted = 0;
+      cells.forEach(function (cell) {
+        // The .highlight-ipynb pre is the rendered source (with syntax spans);
+        // its textContent is the raw code.
+        const pre = cell.querySelector(".highlight-ipynb pre, pre");
+        if (!pre) return;
+        const source = pre.textContent.replace(/\s+$/, "");
+        if (!source) return;
+
+        const holder = document.createElement("pre");
+        holder.setAttribute("data-executable", "true");
+        holder.setAttribute("data-language", "python");
+        holder.textContent = source;
+        holder.className = "agilearn-thebe-cell";
+
+        cell.parentNode.replaceChild(holder, cell);
+        converted++;
+      });
+      return converted;
+    }
+
+    async function activate() {
+      showBanner("Preparing interactive cells…");
+
+      const count = convertCells();
+      if (count === 0) {
+        // Notebook page with no runnable code cells — hide the banner rather
+        // than leaving a confusing "no cells" message on a prose-only page.
+        banner.hidden = true;
+        return;
+      }
+
+      try {
+        showBanner("Preparing browser runtime…");
+        primeJupyterConfig();
+        await ensureServiceWorker(SW_SRC);
+
+        showBanner("Loading Python (one-off download, ~10 MB)…");
+        await loadScript(THEBE_LITE_SRC);
+        await loadScript(THEBE_SRC);
+
+        if (!window.thebelab || typeof window.thebelab.bootstrap !== "function") {
+          throw new Error("Thebe library did not load correctly.");
+        }
+
+        showBanner("Starting in-browser Python kernel…");
+        // Pass config directly to bootstrap — the inline <script type="text/x-thebe-config">
+        // isn't reliably merged into defaults in thebe 0.9.x, so without this Thebe
+        // defaults useBinder:true and tries to launch a mybinder.org container.
+        // Thebe's startNewSession only reads `path` and `kernelName` from kernelOptions,
+        // so those two keys are all that matters here.
+        const result = await window.thebelab.bootstrap({
+          useBinder: false,
+          useJupyterLite: true,
+          // Thebe 0.9.x has a bug where bootstrap checks `e.requestKernel`
+          // (the raw argument) for early return, not `t.requestKernel` (the
+          // merged config with defaults applied). Without this flag explicitly
+          // set, bootstrap returns {server, notebook} immediately after
+          // findCells/renderAllCells — skipping `yield p.ready` and
+          // `yield p.startNewSession(d)` entirely. The result: no Pyodide
+          // download, no attached session, and every cell throws
+          // "Attempting to execute on a cell without an attached kernel"
+          // when the user clicks run.
+          requestKernel: true,
+          mountActivateWidget: false,
+          mountStatusWidget: false,
+          selector: 'pre[data-executable="true"]',
+          kernelOptions: {
+            path: "/",
+            kernelName: "python"
+          }
+        });
+
+        // Diagnostic — if bootstrap resolved but cells won't execute, this is
+        // usually the clue. Checks whether startNewSession returned a session
+        // with a live kernel, and whether each cell picked it up from
+        // notebook.attachSession.
+        console.log("[Agilearn] bootstrap result:", result);
+        console.log("[Agilearn] thebelab.session:", window.thebelab.session);
+        console.log("[Agilearn] session.kernel:", window.thebelab.session && window.thebelab.session.kernel);
+        console.log("[Agilearn] session.kernel.status:",
+          window.thebelab.session && window.thebelab.session.kernel && window.thebelab.session.kernel.status);
+        const notebook = window.thebelab.notebook;
+        if (notebook && notebook.cells) {
+          console.log("[Agilearn] notebook cells:", notebook.cells.length,
+            "attached:", notebook.cells.filter(function (c) { return c.session; }).length);
+        }
+
+        if (!window.thebelab.session || !window.thebelab.session.kernel) {
+          showBanner("Kernel started but no session was attached. See console for details.", "error");
+          return;
+        }
+        showBanner("Ready. Edit a cell and press ▶ to run it. State is shared between cells on this page.", "ready");
+        // Auto-dismiss the "ready" banner after a few seconds so it doesn't
+        // permanently take up vertical space above the cells.
+        setTimeout(function () { banner.hidden = true; }, 4000);
+      } catch (err) {
+        console.error("[Agilearn] Thebe activation failed:", err);
+        showBanner("Couldn't start the in-browser kernel: " + err.message, "error");
+      }
+    }
+
+    // Auto-activate on page load. mkdocs-jupyter has already rendered the cells
+    // into the DOM by the time this script runs at the bottom of the content
+    // block, so we can kick off straight away.
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", activate);
+    } else {
+      activate();
+    }
+  })();
+  </script>
+{% endif %}
+{% endblock content %}

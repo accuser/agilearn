@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agilearn-mkdocs-plugins"
+version = "0.1.0"
+description = "Local MkDocs plugins for the Agilearn Python Guides site"
+requires-python = ">=3.10"
+dependencies = ["mkdocs>=1.6.0"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["plugins*"]
+
+[project.entry-points."mkdocs.plugins"]
+notebook_link_rewriter = "plugins.notebook_link_rewriter:NotebookLinkRewriterPlugin"

@@ -1,0 +1,32 @@
+# =============================================================================
+# Cloudflare Pages — Agilearn
+# -----------------------------------------------------------------------------
+# Agilearn is a static MkDocs Material site. Cloudflare Pages clones the repo,
+# runs the build command below, and serves `pages_build_output_dir`.
+#
+# The build command and environment variables (PYTHON_VERSION) must also be
+# set in the Cloudflare dashboard under Workers & Pages → <project> → Settings
+# → Build configuration. This file keeps the project-level settings and the
+# output directory under version control.
+# =============================================================================
+
+name = "agilearn"
+compatibility_date = "2026-04-21"
+pages_build_output_dir = "site"
+
+# --- Build command reference -------------------------------------------------
+# Set this in the Cloudflare dashboard (Build configuration → Build command):
+#
+#   pip install -r requirements.txt && pip install -e . && mkdocs build --strict
+#
+# Set the output directory to:
+#
+#   site
+#
+# Set the following build environment variable so Cloudflare provisions the
+# right Python (MkDocs Material 9.6+ requires Python 3.10+):
+#
+#   PYTHON_VERSION = 3.12
+#
+# No root directory override needed if the repo root is the site root.
+# -----------------------------------------------------------------------------

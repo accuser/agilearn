@@ -1,0 +1,322 @@
+/* =========================================================
+   Agilearn — brand overlay for MkDocs Material
+   ========================================================= */
+
+:root,
+[data-md-color-scheme="default"] {
+  --agilearn-indigo: #3b3f8c;
+  --agilearn-indigo-dark: #2a2e6b;
+  --agilearn-gold: #d4a93b;
+  --agilearn-ink: #1a1c3a;
+  --agilearn-paper: #fbfaf7;
+  --md-primary-fg-color: var(--agilearn-indigo);
+  --md-primary-fg-color--light: #5a5fb5;
+  --md-primary-fg-color--dark: var(--agilearn-indigo-dark);
+  --md-accent-fg-color: var(--agilearn-gold);
+}
+
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #5a5fb5;
+  --md-accent-fg-color: var(--agilearn-gold);
+}
+
+/* -------- Brand mark (icon + wordmark) in header -------- */
+.md-header__title .md-header__topic .md-ellipsis {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.agilearn-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  line-height: 1;
+}
+
+.agilearn-brand__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  color: var(--agilearn-gold);
+}
+.agilearn-brand__icon svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+
+.agilearn-wordmark {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+.agilearn-wordmark em {
+  color: var(--agilearn-gold);
+  font-style: normal;
+}
+
+/* -------- Landing page: guide card grid -------- */
+.agilearn-hero {
+  padding: 2rem 0 1rem;
+  text-align: left;
+}
+.agilearn-hero h1 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.25rem;
+}
+.agilearn-hero p.lede {
+  font-size: 1.1rem;
+  color: var(--md-default-fg-color--light);
+  max-width: 42rem;
+}
+
+.agilearn-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.agilearn-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.1rem 1.2rem;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 10px;
+  background: var(--md-default-bg-color);
+  transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+  text-decoration: none !important;
+  color: inherit !important;
+}
+.agilearn-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--md-primary-fg-color);
+  box-shadow: 0 6px 20px rgba(59, 63, 140, 0.08);
+}
+.agilearn-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--md-primary-fg-color) 10%, transparent);
+  color: var(--md-primary-fg-color);
+  transition: background 120ms ease, color 120ms ease;
+}
+.agilearn-card__icon .twemoji,
+.agilearn-card__icon svg {
+  width: 1.3rem;
+  height: 1.3rem;
+  fill: currentColor;
+}
+.agilearn-card:hover .agilearn-card__icon {
+  background: var(--md-primary-fg-color);
+  color: #ffffff;
+}
+
+.agilearn-card__title {
+  display: block;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--md-primary-fg-color);
+  letter-spacing: -0.005em;
+}
+.agilearn-card__desc {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--md-default-fg-color--light);
+  line-height: 1.45;
+}
+.agilearn-card__desc code {
+  background: var(--md-default-fg-color--lightest);
+  padding: 0 0.2em;
+  border-radius: 3px;
+  font-size: 0.85em;
+}
+.agilearn-meta {
+  margin-top: auto;
+  font-size: 0.75rem;
+  color: var(--md-default-fg-color--light);
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  padding-top: 0.3rem;
+}
+.agilearn-meta span {
+  white-space: nowrap;
+}
+.agilearn-card.is-placeholder {
+  opacity: 0.65;
+}
+.agilearn-card.is-placeholder::after {
+  content: "coming soon";
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--md-default-fg-color--light);
+}
+
+/* -------- Notebook action toolbar (Download button only now that Thebe
+   auto-activates — kept for future additions like "share" or "reset"). -------- */
+.agilearn-notebook-actions {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: flex;
+  gap: 0.25rem;
+  z-index: 5;
+}
+
+/* -------- Thebe activation banner + runnable cells -------- */
+.agilearn-run-banner {
+  margin: 0.5rem 0 1rem;
+  padding: 0.6rem 0.9rem;
+  border-radius: 6px;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  background: var(--md-default-fg-color--lightest);
+  font-size: 0.85rem;
+  color: var(--md-default-fg-color);
+}
+.agilearn-run-banner.is-ready {
+  border-color: #2e7d32;
+  background: rgba(46, 125, 50, 0.08);
+  color: #1b5e20;
+}
+[data-md-color-scheme="slate"] .agilearn-run-banner.is-ready {
+  color: #a5d6a7;
+}
+.agilearn-run-banner.is-error {
+  border-color: #c62828;
+  background: rgba(198, 40, 40, 0.08);
+  color: #b71c1c;
+}
+[data-md-color-scheme="slate"] .agilearn-run-banner.is-error {
+  color: #ef9a9a;
+}
+.agilearn-thebe-cell {
+  /* Placeholder shown briefly between click and Thebe bootstrap. */
+  background: var(--md-code-bg-color);
+  color: var(--md-code-fg-color);
+  border: 1px dashed var(--md-default-fg-color--lightest);
+  border-radius: 4px;
+  padding: 0.8rem;
+  margin: 0.6rem 0;
+  font-family: var(--md-code-font-family);
+  font-size: 0.82rem;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+/* Thebe's own cell output styling — tighten to match Material's body text. */
+.thebe-cell {
+  margin: 0.6rem 0;
+}
+.thebe-input {
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.thebe-output {
+  margin-top: 0.3rem;
+  padding: 0.4rem 0.6rem;
+  font-family: var(--md-code-font-family);
+  font-size: 0.82rem;
+  background: var(--md-code-bg-color);
+  border-radius: 4px;
+  white-space: pre-wrap;
+}
+
+/* -------- Thebe per-cell controls (Run / Run all / Restart / Restart all) -------- */
+.thebe-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.4rem;
+  font-size: 0.78rem;
+}
+
+.thebe-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.7rem;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 999px;
+  background: var(--md-default-bg-color);
+  color: var(--md-default-fg-color);
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease, color 120ms ease,
+              box-shadow 120ms ease, transform 80ms ease;
+}
+.thebe-button:hover {
+  border-color: var(--md-primary-fg-color);
+  background: color-mix(in srgb, var(--md-primary-fg-color) 8%, transparent);
+  color: var(--md-primary-fg-color);
+}
+.thebe-button:active {
+  transform: translateY(1px);
+}
+.thebe-button:focus-visible {
+  outline: 2px solid var(--md-accent-fg-color);
+  outline-offset: 2px;
+}
+.thebe-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Primary action — filled indigo pill for "run" to match the activation button. */
+.thebe-run-button {
+  background: var(--md-primary-fg-color);
+  border-color: var(--md-primary-fg-color);
+  color: #fff;
+}
+.thebe-run-button:hover {
+  background: var(--md-primary-fg-color--dark);
+  border-color: var(--md-primary-fg-color--dark);
+  color: #fff;
+}
+
+/* Subtle destructive tint for restart actions. */
+.thebe-restart-button,
+.thebe-restartall-button {
+  color: var(--md-default-fg-color--light);
+}
+.thebe-restart-button:hover,
+.thebe-restartall-button:hover {
+  border-color: #c62828;
+  background: rgba(198, 40, 40, 0.08);
+  color: #b71c1c;
+}
+[data-md-color-scheme="slate"] .thebe-restart-button:hover,
+[data-md-color-scheme="slate"] .thebe-restartall-button:hover {
+  color: #ef9a9a;
+}
+
+/* Busy spinner — Thebe toggles display:inline-block when a cell is executing. */
+.thebe-busy {
+  display: none;
+  width: 0.9rem;
+  height: 0.9rem;
+  margin-left: 0.1rem;
+  border: 2px solid var(--md-default-fg-color--lightest);
+  border-top-color: var(--md-primary-fg-color);
+  border-radius: 50%;
+  animation: agilearn-thebe-spin 0.7s linear infinite;
+}
+@keyframes agilearn-thebe-spin {
+  to { transform: rotate(360deg); }
+}

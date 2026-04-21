@@ -1,0 +1,150 @@
+site_name: Agilearn
+site_description: Self-directed Python guides for second-year data science students and anyone learning the language seriously.
+site_author: Agilearn
+site_url: https://agilearn.co.uk/
+repo_url: https://github.com/accuser/agilearn
+repo_name: accuser/agilearn
+edit_uri: edit/main/docs/
+copyright: "&copy; Agilearn. Content licensed under MIT."
+
+theme:
+  name: material
+  custom_dir: overrides
+  language: en
+  font:
+    text: Inter
+    code: JetBrains Mono
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: amber
+      toggle:
+        icon: octicons/sun-16
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: amber
+      toggle:
+        icon: octicons/moon-16
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.indexes
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+    - content.action.edit
+    - toc.follow
+  icon:
+    repo: fontawesome/brands/github
+
+extra_css:
+  - assets/stylesheets/agilearn.css
+
+# The Lab page still exists as a redirect stub (we can't delete the file from
+# this workspace), but we don't list it in the nav. Tell MkDocs not to warn.
+validation:
+  nav:
+    omitted_files: ignore
+    not_found: warn
+    absolute_links: ignore
+  links:
+    not_found: warn
+    absolute_links: ignore
+    unrecognized_links: ignore
+
+plugins:
+  - search
+  - mkdocs-jupyter:
+      include_source: true
+      execute: false
+      ignore_h1_titles: true
+  - notebook_link_rewriter:
+      enabled: true
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - admonition
+  - pymdownx.details
+  - attr_list
+  - md_in_html
+  - def_list
+  - footnotes
+  - tables
+  - toc:
+      permalink: true
+      toc_depth: 3
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/accuser/agilearn
+
+nav:
+  - Home: index.md
+  - Guides:
+      - guides/index.md
+      - Functions:
+          - guides/functions/index.md
+          - Learn:
+              - guides/functions/learn/index.md
+              - Defining functions: guides/functions/learn/01-defining-functions.ipynb
+              - Lambda expressions: guides/functions/learn/02-lambda-expressions.ipynb
+              - Type hints: guides/functions/learn/03-type-hints.ipynb
+              - Docstrings: guides/functions/learn/04-docstrings.ipynb
+              - Scope and closures: guides/functions/learn/05-scope-and-closures.ipynb
+              - "*args and **kwargs": guides/functions/learn/06-args-and-kwargs.ipynb
+              - Decorators: guides/functions/learn/07-decorators.ipynb
+          - Recipes:
+              - guides/functions/recipes/index.md
+              - Use default and keyword arguments: guides/functions/recipes/use-default-and-keyword-arguments.ipynb
+              - Write recursive functions: guides/functions/recipes/write-recursive-functions.ipynb
+              - Create decorators: guides/functions/recipes/create-decorators.ipynb
+              - Work with higher-order functions: guides/functions/recipes/work-with-higher-order-functions.ipynb
+              - Validate function arguments: guides/functions/recipes/validate-function-arguments.ipynb
+          - Reference:
+              - guides/functions/reference/index.md
+              - Function syntax: guides/functions/reference/function-syntax.md
+              - Built-in functions: guides/functions/reference/built-in-functions.md
+              - Type hint syntax: guides/functions/reference/type-hints.md
+              - Docstring conventions: guides/functions/reference/docstring-conventions.md
+          - Concepts:
+              - guides/functions/concepts/index.md
+              - Why functions matter: guides/functions/concepts/why-functions-matter.md
+              - First-class functions in Python: guides/functions/concepts/first-class-functions.md
+              - "Scope, closures, and namespaces": guides/functions/concepts/scope-closures-and-namespaces.md
+              - The Zen of functions: guides/functions/concepts/the-zen-of-functions.md
+      - Conditional logic: guides/conditional-logic/index.md
+      - Data structures: guides/data-structures/index.md
+      - Error handling: guides/error-handling/index.md
+      - File handling: guides/file-handling/index.md
+      - Logging and debugging: guides/logging-and-debugging/index.md
+      - Regular expressions: guides/regex/index.md
+      - String processing: guides/string-processing/index.md
+      - Unit testing: guides/unit-testing/index.md
+  - About: about.md
