@@ -38,6 +38,34 @@ Each guide follows the same four-part shape: **Learn** (step-by-step tutorials y
     <span class="agilearn-meta"><span>Learn · 7</span><span>Recipes · 5</span><span>Reference · 4</span><span>Concepts · 4</span></span>
   </a>
 
+  <a class="agilearn-card" href="guides/classes-and-objects/" markdown>
+    <span class="agilearn-card__icon">:material-cube-outline:</span>
+    <strong class="agilearn-card__title">Classes and objects</strong>
+    <span class="agilearn-card__desc">Defining classes, dunder methods, data classes, inheritance versus composition, properties.</span>
+    <span class="agilearn-meta"><span>Learn · 5</span><span>Recipes · 4</span><span>Reference · 3</span><span>Concepts · 2</span></span>
+  </a>
+
+  <a class="agilearn-card" href="guides/dates-and-times/" markdown>
+    <span class="agilearn-card__icon">:material-calendar-clock:</span>
+    <strong class="agilearn-card__title">Dates and times</strong>
+    <span class="agilearn-card__desc">Working with <code>datetime</code>, parsing and formatting, time zones, and the traps that catch everyone out.</span>
+    <span class="agilearn-meta"><span>Learn · 3</span><span>Recipes · 4</span><span>Reference · 3</span><span>Concepts · 2</span></span>
+  </a>
+
+  <a class="agilearn-card" href="guides/type-hints/" markdown>
+    <span class="agilearn-card__icon">:material-tag-text-outline:</span>
+    <strong class="agilearn-card__title">Type hints</strong>
+    <span class="agilearn-card__desc">Annotations, generics, <code>Optional</code>, <code>TypedDict</code>, and how <code>mypy</code> uses them to catch bugs before runtime.</span>
+    <span class="agilearn-meta"><span>Learn · 4</span><span>Recipes · 4</span><span>Reference · 3</span><span>Concepts · 2</span></span>
+  </a>
+
+  <a class="agilearn-card" href="guides/iterators-and-generators/" markdown>
+    <span class="agilearn-card__icon">:material-refresh-auto:</span>
+    <strong class="agilearn-card__title">Iterators and generators</strong>
+    <span class="agilearn-card__desc">The iterator protocol, <code>yield</code>, generator expressions, and <code>itertools</code> — lazy pipelines that scale to streams and big data.</span>
+    <span class="agilearn-meta"><span>Learn · 4</span><span>Recipes · 4</span><span>Reference · 3</span><span>Concepts · 2</span></span>
+  </a>
+
   <a class="agilearn-card" href="guides/string-processing/" markdown>
     <span class="agilearn-card__icon">:material-format-quote-close:</span>
     <strong class="agilearn-card__title">String processing</strong>

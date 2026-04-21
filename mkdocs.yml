@@ -190,6 +190,98 @@ nav:
               - Hash tables and dictionaries: guides/data-structures/concepts/hash-tables-and-dictionaries.md
               - Choosing data structures: guides/data-structures/concepts/choosing-data-structures.md
               - Memory and performance: guides/data-structures/concepts/memory-and-performance.md
+      - Classes and objects:
+          - guides/classes-and-objects/index.md
+          - Learn:
+              - guides/classes-and-objects/learn/index.md
+              - Classes, instances, and __init__: guides/classes-and-objects/learn/01-classes-and-init.ipynb
+              - Dunder methods: guides/classes-and-objects/learn/02-dunder-methods.ipynb
+              - Data classes: guides/classes-and-objects/learn/03-data-classes.ipynb
+              - Inheritance and composition: guides/classes-and-objects/learn/04-inheritance-and-composition.ipynb
+              - Class attributes and properties: guides/classes-and-objects/learn/05-class-attributes-and-properties.ipynb
+          - Recipes:
+              - guides/classes-and-objects/recipes/index.md
+              - Choose between dataclass, NamedTuple, and class: guides/classes-and-objects/recipes/choose-between-dataclass-namedtuple-class.md
+              - Validate attributes on assignment: guides/classes-and-objects/recipes/validate-attributes-on-assignment.ipynb
+              - Make a class iterable: guides/classes-and-objects/recipes/make-a-class-iterable.ipynb
+              - Avoid common class mistakes: guides/classes-and-objects/recipes/avoid-common-class-mistakes.md
+          - Reference:
+              - guides/classes-and-objects/reference/index.md
+              - Dunder methods catalogue: guides/classes-and-objects/reference/dunder-methods-catalogue.md
+              - "@dataclass parameters": guides/classes-and-objects/reference/dataclass-parameters.md
+              - "property, classmethod, staticmethod": guides/classes-and-objects/reference/property-classmethod-staticmethod.md
+          - Concepts:
+              - guides/classes-and-objects/concepts/index.md
+              - When to reach for classes: guides/classes-and-objects/concepts/when-to-reach-for-classes.md
+              - Composition over inheritance: guides/classes-and-objects/concepts/composition-over-inheritance.md
+      - Dates and times:
+          - guides/dates-and-times/index.md
+          - Learn:
+              - guides/dates-and-times/learn/index.md
+              - Datetime basics: guides/dates-and-times/learn/01-datetime-basics.ipynb
+              - Parsing and formatting: guides/dates-and-times/learn/02-parsing-and-formatting.ipynb
+              - Time zones with zoneinfo: guides/dates-and-times/learn/03-time-zones-with-zoneinfo.ipynb
+          - Recipes:
+              - guides/dates-and-times/recipes/index.md
+              - Parse a messy date column: guides/dates-and-times/recipes/parse-a-messy-date-column.ipynb
+              - Compute durations and ages: guides/dates-and-times/recipes/compute-durations-and-ages.ipynb
+              - Convert between time zones: guides/dates-and-times/recipes/convert-between-time-zones.ipynb
+              - Avoid common datetime mistakes: guides/dates-and-times/recipes/avoid-common-datetime-mistakes.md
+          - Reference:
+              - guides/dates-and-times/reference/index.md
+              - strftime and strptime format codes: guides/dates-and-times/reference/strftime-format-codes.md
+              - timedelta arithmetic patterns: guides/dates-and-times/reference/timedelta-patterns.md
+              - zoneinfo reference: guides/dates-and-times/reference/zoneinfo-reference.md
+          - Concepts:
+              - guides/dates-and-times/concepts/index.md
+              - Why naive datetimes are a footgun: guides/dates-and-times/concepts/why-naive-datetimes-are-a-footgun.md
+              - UTC everywhere: guides/dates-and-times/concepts/utc-everywhere.md
+      - Type hints:
+          - guides/type-hints/index.md
+          - Learn:
+              - guides/type-hints/learn/index.md
+              - Why type hints: guides/type-hints/learn/01-why-type-hints.ipynb
+              - Basic annotations: guides/type-hints/learn/02-basic-annotations.ipynb
+              - Generics and collections: guides/type-hints/learn/03-generics-and-collections.ipynb
+              - Optional, Union, and friends: guides/type-hints/learn/04-typing-special-forms.ipynb
+          - Recipes:
+              - guides/type-hints/recipes/index.md
+              - Type a function signature: guides/type-hints/recipes/type-a-function-signature.ipynb
+              - Type a data structure: guides/type-hints/recipes/type-a-data-structure.ipynb
+              - Work with Optional values: guides/type-hints/recipes/work-with-optional-values.ipynb
+              - Avoid common typing mistakes: guides/type-hints/recipes/avoid-common-typing-mistakes.md
+          - Reference:
+              - guides/type-hints/reference/index.md
+              - typing module reference: guides/type-hints/reference/typing-module-reference.md
+              - Built-in generic types: guides/type-hints/reference/built-in-generic-types.md
+              - mypy cheatsheet: guides/type-hints/reference/mypy-cheatsheet.md
+          - Concepts:
+              - guides/type-hints/concepts/index.md
+              - When type hints help: guides/type-hints/concepts/when-type-hints-help.md
+              - Gradual typing: guides/type-hints/concepts/gradual-typing.md
+      - Iterators and generators:
+          - guides/iterators-and-generators/index.md
+          - Learn:
+              - guides/iterators-and-generators/learn/index.md
+              - The iteration protocol: guides/iterators-and-generators/learn/01-iteration-protocol.ipynb
+              - Generator functions: guides/iterators-and-generators/learn/02-generator-functions.ipynb
+              - Generator expressions and itertools: guides/iterators-and-generators/learn/03-generator-expressions-and-itertools.ipynb
+              - Custom iterators: guides/iterators-and-generators/learn/04-custom-iterators.ipynb
+          - Recipes:
+              - guides/iterators-and-generators/recipes/index.md
+              - Process a large file lazily: guides/iterators-and-generators/recipes/process-a-large-file-lazily.ipynb
+              - Chain and group iterables: guides/iterators-and-generators/recipes/chain-and-group-iterables.ipynb
+              - Combine generators into a pipeline: guides/iterators-and-generators/recipes/combine-generators.ipynb
+              - Avoid common iterator mistakes: guides/iterators-and-generators/recipes/avoid-common-iterator-mistakes.md
+          - Reference:
+              - guides/iterators-and-generators/reference/index.md
+              - itertools cheatsheet: guides/iterators-and-generators/reference/itertools-cheatsheet.md
+              - Iterator protocol reference: guides/iterators-and-generators/reference/iterator-protocol-reference.md
+              - Generator syntax reference: guides/iterators-and-generators/reference/generator-syntax-reference.md
+          - Concepts:
+              - guides/iterators-and-generators/concepts/index.md
+              - Laziness and memory: guides/iterators-and-generators/concepts/laziness-and-memory.md
+              - Iteration as an interface: guides/iterators-and-generators/concepts/iteration-as-an-interface.md
       - Error handling:
           - guides/error-handling/index.md
           - Learn:
