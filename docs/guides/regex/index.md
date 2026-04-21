@@ -4,17 +4,20 @@ title: Regular expressions
 
 # Regular expressions
 
-This guide covers pattern matching with Python's `re` module: syntax, quantifiers, character classes, groups, flags, and practical patterns for extracting data from text.
+Regular expressions are a tiny language for describing patterns in text. Once you can read them, a whole class of "find this", "extract that", "validate this" jobs become one-liners instead of nests of string slicing. They're notoriously cryptic at first sight, so this guide builds them up slowly and then puts them to work.
 
-!!! note "Coming soon"
-    This guide is awaiting migration into Agilearn. The archived version remains available at [accuser.dev/regex-with-python](https://accuser.dev/regex-with-python/).
+## Start here
 
-## What will be here
+If `re` is new to you, work through the [**Learn**](learn/) section in order — four short notebooks, around fifteen minutes each. Every code cell can be edited and run in place, directly on the page; no install required.
 
-**Learn** — your first pattern, character classes and quantifiers, groups and capturing, find-and-replace.
+If you already know the basics and are looking for a specific technique, jump to the [**Recipes**](recipes/) section, or scan the [**Reference**](reference/) for syntax and the `re` module's API.
 
-**Recipes** — extracting data from text, validating email addresses, using regex with file I/O, avoiding common mistakes.
+## What this guide covers
 
-**Reference** — `re` module, regex syntax, flags.
+**[Learn](learn/)** — your first pattern, character classes and quantifiers, groups and capturing, find-and-replace.
 
-**Concepts** — why regular expressions; understanding the regex engine.
+**[Recipes](recipes/)** — extracting data from messy text, validating email addresses, using regex with file I/O, and the mistakes most people make.
+
+**[Reference](reference/)** — `re` module API, regex syntax, and the flag list.
+
+**[Concepts](concepts/)** — how the regex engine actually works, and when reaching for regex is the right call.

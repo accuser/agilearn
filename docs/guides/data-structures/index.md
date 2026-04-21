@@ -4,17 +4,20 @@ title: Data structures
 
 # Data structures
 
-This guide covers Python's built-in data structures — lists, tuples, dictionaries, sets — and the tools for working with them: comprehensions, slicing, unpacking, and conversions between structures.
+Lists, tuples, dictionaries, and sets are the four built-in data structures that carry most of Python's weight. Comprehensions, slicing, and unpacking are the tools that make working with them idiomatic. This guide takes you through each structure in turn, the patterns for combining them, and the concepts that explain *why* Python gives you four rather than one.
 
-!!! note "Coming soon"
-    This guide has been written in depth and is awaiting migration into Agilearn. The archived version remains available at [accuser.dev/data-structures-with-python](https://accuser.dev/data-structures-with-python/).
+## Start here
 
-## What will be here
+If these structures are new to you, work through the [**Learn**](learn/) section in order — six short notebooks, around fifteen minutes each. Every code cell can be edited and run in place, directly on the page; no install required.
 
-**Learn** — lists, tuples, dictionaries, sets, comprehensions, slicing and unpacking.
+If you already know the basics and are looking for a specific technique, jump to the [**Recipes**](recipes/) section, or scan the [**Reference**](reference/) for method tables and operator summaries.
 
-**Recipes** — choosing the right structure, sorting and filtering, merging dictionaries, nested structures, converting between structures.
+## What this guide covers
 
-**Reference** — method tables for lists, tuples, dictionaries, and sets, plus sequence operations.
+**[Learn](learn/)** — lists, tuples, dictionaries, sets, comprehensions, slicing and unpacking.
 
-**Concepts** — mutable vs immutable, how hash tables power dictionaries, memory and performance trade-offs.
+**[Recipes](recipes/)** — sorting and filtering, merging dictionaries, nested structures, converting between structures, choosing the right structure.
+
+**[Reference](reference/)** — method tables for lists, dictionaries, sets, and tuples, plus sequence operations common to all.
+
+**[Concepts](concepts/)** — mutable vs immutable, how hash tables power dictionaries, trade-offs between structures, memory and performance.

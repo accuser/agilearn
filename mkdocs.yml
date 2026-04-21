@@ -139,12 +139,176 @@ nav:
               - First-class functions in Python: guides/functions/concepts/first-class-functions.md
               - "Scope, closures, and namespaces": guides/functions/concepts/scope-closures-and-namespaces.md
               - The Zen of functions: guides/functions/concepts/the-zen-of-functions.md
-      - Conditional logic: guides/conditional-logic/index.md
-      - Data structures: guides/data-structures/index.md
-      - Error handling: guides/error-handling/index.md
-      - File handling: guides/file-handling/index.md
-      - Logging and debugging: guides/logging-and-debugging/index.md
-      - Regular expressions: guides/regex/index.md
-      - String processing: guides/string-processing/index.md
-      - Unit testing: guides/unit-testing/index.md
+      - Conditional logic:
+          - guides/conditional-logic/index.md
+          - Learn:
+              - guides/conditional-logic/learn/index.md
+              - If statements: guides/conditional-logic/learn/01-if-statements.ipynb
+      - Data structures:
+          - guides/data-structures/index.md
+          - Learn:
+              - guides/data-structures/learn/index.md
+              - Working with lists: guides/data-structures/learn/01-lists.ipynb
+              - Working with tuples: guides/data-structures/learn/02-tuples.ipynb
+              - Working with dictionaries: guides/data-structures/learn/03-dictionaries.ipynb
+              - Working with sets: guides/data-structures/learn/04-sets.ipynb
+              - Comprehensions: guides/data-structures/learn/05-comprehensions.ipynb
+              - Slicing and unpacking: guides/data-structures/learn/06-slicing-and-unpacking.ipynb
+          - Recipes:
+              - guides/data-structures/recipes/index.md
+              - Sort and filter lists: guides/data-structures/recipes/sort-and-filter-lists.ipynb
+              - Merge and compare dictionaries: guides/data-structures/recipes/merge-and-compare-dictionaries.ipynb
+              - Work with nested structures: guides/data-structures/recipes/work-with-nested-structures.ipynb
+              - Convert between structures: guides/data-structures/recipes/convert-between-structures.ipynb
+              - Choose the right structure: guides/data-structures/recipes/choose-the-right-structure.md
+          - Reference:
+              - guides/data-structures/reference/index.md
+              - List methods: guides/data-structures/reference/list-methods.md
+              - Dictionary methods: guides/data-structures/reference/dictionary-methods.md
+              - Set operations: guides/data-structures/reference/set-operations.md
+              - Tuple operations: guides/data-structures/reference/tuple-operations.md
+              - Sequence operations: guides/data-structures/reference/sequence-operations.md
+          - Concepts:
+              - guides/data-structures/concepts/index.md
+              - Mutable versus immutable: guides/data-structures/concepts/mutable-versus-immutable.md
+              - Hash tables and dictionaries: guides/data-structures/concepts/hash-tables-and-dictionaries.md
+              - Choosing data structures: guides/data-structures/concepts/choosing-data-structures.md
+              - Memory and performance: guides/data-structures/concepts/memory-and-performance.md
+      - Error handling:
+          - guides/error-handling/index.md
+          - Learn:
+              - guides/error-handling/learn/index.md
+              - Your first exception: guides/error-handling/learn/01-your-first-exception.ipynb
+              - Exception types: guides/error-handling/learn/02-exception-types.ipynb
+              - Raising exceptions: guides/error-handling/learn/03-raising-exceptions.ipynb
+              - Cleanup with finally: guides/error-handling/learn/04-cleanup-with-finally.ipynb
+          - Recipes:
+              - guides/error-handling/recipes/index.md
+              - Handle multiple exceptions: guides/error-handling/recipes/handle-multiple-exceptions.ipynb
+              - Create custom exceptions: guides/error-handling/recipes/create-custom-exceptions.ipynb
+              - Use context managers: guides/error-handling/recipes/use-context-managers.ipynb
+              - Avoid common mistakes: guides/error-handling/recipes/avoid-common-mistakes.md
+          - Reference:
+              - guides/error-handling/reference/index.md
+              - try/except syntax: guides/error-handling/reference/try-except-syntax-reference.md
+              - Built-in exceptions: guides/error-handling/reference/built-in-exceptions-reference.md
+              - Exception hierarchy: guides/error-handling/reference/exception-hierarchy-reference.md
+          - Concepts:
+              - guides/error-handling/concepts/index.md
+              - Why error handling matters: guides/error-handling/concepts/why-error-handling-matters.md
+              - Understanding the exception model: guides/error-handling/concepts/understanding-the-exception-model.md
+      - File handling:
+          - guides/file-handling/index.md
+          - Learn:
+              - guides/file-handling/learn/index.md
+              - Reading files: guides/file-handling/learn/01-reading-files.ipynb
+              - Writing files: guides/file-handling/learn/02-writing-files.ipynb
+              - Working with paths: guides/file-handling/learn/03-working-with-paths.ipynb
+              - CSV and JSON files: guides/file-handling/learn/04-csv-and-json-files.ipynb
+          - Recipes:
+              - guides/file-handling/recipes/index.md
+              - Process large files: guides/file-handling/recipes/process-large-files.ipynb
+              - Manage temporary files: guides/file-handling/recipes/manage-temporary-files.ipynb
+              - Work with binary files: guides/file-handling/recipes/work-with-binary-files.ipynb
+              - Avoid common mistakes: guides/file-handling/recipes/avoid-common-file-handling-mistakes.md
+          - Reference:
+              - guides/file-handling/reference/index.md
+              - open() function: guides/file-handling/reference/open-function-reference.md
+              - File modes: guides/file-handling/reference/file-modes-reference.md
+              - pathlib quick reference: guides/file-handling/reference/pathlib-quick-reference.md
+          - Concepts:
+              - guides/file-handling/concepts/index.md
+              - Why context managers matter: guides/file-handling/concepts/why-context-managers-matter.md
+              - Understanding file encodings: guides/file-handling/concepts/understanding-file-encodings.md
+      - Logging and debugging:
+          - guides/logging-and-debugging/index.md
+          - Learn:
+              - guides/logging-and-debugging/learn/index.md
+              - Your first log message: guides/logging-and-debugging/learn/01-your-first-log-message.ipynb
+              - Log levels and formatting: guides/logging-and-debugging/learn/02-log-levels-and-formatting.ipynb
+              - Logging to files: guides/logging-and-debugging/learn/03-logging-to-files.ipynb
+              - Debugging with pdb: guides/logging-and-debugging/learn/04-debugging-with-pdb.ipynb
+          - Recipes:
+              - guides/logging-and-debugging/recipes/index.md
+              - Configure logging for a project: guides/logging-and-debugging/recipes/configure-logging-for-a-project.ipynb
+              - Create custom log handlers: guides/logging-and-debugging/recipes/create-custom-log-handlers.ipynb
+              - Use breakpoints effectively: guides/logging-and-debugging/recipes/use-breakpoints-effectively.ipynb
+              - Avoid common logging mistakes: guides/logging-and-debugging/recipes/avoid-common-logging-mistakes.ipynb
+          - Reference:
+              - guides/logging-and-debugging/reference/index.md
+              - logging module quick reference: guides/logging-and-debugging/reference/logging-module-quick-reference.md
+              - Log format reference: guides/logging-and-debugging/reference/log-format-reference.md
+              - pdb commands reference: guides/logging-and-debugging/reference/pdb-commands-reference.md
+          - Concepts:
+              - guides/logging-and-debugging/concepts/index.md
+              - Understanding log levels: guides/logging-and-debugging/concepts/understanding-log-levels.md
+              - Why logging beats print: guides/logging-and-debugging/concepts/why-logging-not-print.md
+      - Regular expressions:
+          - guides/regex/index.md
+          - Learn:
+              - guides/regex/learn/index.md
+              - Your first pattern: guides/regex/learn/01-your-first-pattern.ipynb
+              - Character classes and quantifiers: guides/regex/learn/02-character-classes-and-quantifiers.ipynb
+              - Groups and capturing: guides/regex/learn/03-groups-and-capturing.ipynb
+              - Find and replace: guides/regex/learn/04-find-and-replace.ipynb
+          - Recipes:
+              - guides/regex/recipes/index.md
+              - Extract data from text: guides/regex/recipes/extract-data-from-text.ipynb
+              - Validate email addresses: guides/regex/recipes/validate-email-addresses.ipynb
+              - Use regex with file I/O: guides/regex/recipes/use-regex-with-file-io.ipynb
+              - Avoid common regex mistakes: guides/regex/recipes/avoid-common-regex-mistakes.md
+          - Reference:
+              - guides/regex/reference/index.md
+              - re module quick reference: guides/regex/reference/re-module-quick-reference.md
+              - Regex syntax: guides/regex/reference/regex-syntax-reference.md
+              - Regex flags: guides/regex/reference/regex-flags-reference.md
+          - Concepts:
+              - guides/regex/concepts/index.md
+              - Understanding the regex engine: guides/regex/concepts/understanding-the-regex-engine.md
+              - Why regular expressions: guides/regex/concepts/why-regular-expressions.md
+      - String processing:
+          - guides/string-processing/index.md
+          - Learn:
+              - guides/string-processing/learn/index.md
+              - String basics: guides/string-processing/learn/01-string-basics.ipynb
+              - String methods: guides/string-processing/learn/02-string-methods.ipynb
+              - String formatting: guides/string-processing/learn/03-string-formatting.ipynb
+              - String searching: guides/string-processing/learn/04-string-searching.ipynb
+          - Recipes:
+              - guides/string-processing/recipes/index.md
+              - Clean and normalise text: guides/string-processing/recipes/clean-and-normalise-text.ipynb
+              - Parse structured strings: guides/string-processing/recipes/parse-structured-strings.ipynb
+              - Use string templates: guides/string-processing/recipes/use-string-templates.ipynb
+              - Avoid common string mistakes: guides/string-processing/recipes/avoid-common-string-mistakes.md
+          - Reference:
+              - guides/string-processing/reference/index.md
+              - String methods: guides/string-processing/reference/string-methods-reference.md
+              - String formatting: guides/string-processing/reference/string-formatting-reference.md
+              - String constants: guides/string-processing/reference/string-constants-reference.md
+          - Concepts:
+              - guides/string-processing/concepts/index.md
+              - Why strings are immutable: guides/string-processing/concepts/why-strings-are-immutable.md
+              - Understanding Unicode and encodings: guides/string-processing/concepts/understanding-unicode-and-encodings.md
+      - Unit testing:
+          - guides/unit-testing/index.md
+          - Learn:
+              - guides/unit-testing/learn/index.md
+              - Your first test: guides/unit-testing/learn/01-your-first-test.ipynb
+              - Testing thoroughly: guides/unit-testing/learn/02-testing-thoroughly.ipynb
+              - Testing best practices: guides/unit-testing/learn/03-testing-best-practices.ipynb
+              - Test fixtures: guides/unit-testing/learn/04-test-fixtures.ipynb
+          - Recipes:
+              - guides/unit-testing/recipes/index.md
+              - Run tests in Jupyter: guides/unit-testing/recipes/run-tests-in-jupyter.ipynb
+              - Test exceptions: guides/unit-testing/recipes/test-exceptions.ipynb
+              - Avoid common testing mistakes: guides/unit-testing/recipes/avoid-common-testing-mistakes.md
+          - Reference:
+              - guides/unit-testing/reference/index.md
+              - unittest quick reference: guides/unit-testing/reference/unittest-quick-reference.md
+              - Assertions: guides/unit-testing/reference/assertions.md
+              - Test naming conventions: guides/unit-testing/reference/test-naming-conventions.md
+          - Concepts:
+              - guides/unit-testing/concepts/index.md
+              - Why unit testing: guides/unit-testing/concepts/why-unit-testing.md
+              - Understanding test structure: guides/unit-testing/concepts/understanding-test-structure.md
   - About: about.md

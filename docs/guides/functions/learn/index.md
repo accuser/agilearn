@@ -4,7 +4,7 @@ title: Learn
 
 # Learn: Python Functions
 
-Seven short tutorials that build up your working knowledge of Python functions from the ground up. Each one is a Jupyter notebook — read it in the browser, or open it in the [Lab](../../../lab/) to run and edit the code yourself.
+Seven short tutorials that build up your working knowledge of Python functions from the ground up. Each one is a Jupyter notebook — read it in the browser, and edit and run any code cell directly on the page.
 
 The tutorials build on each other, so working through them in order is the fastest path. Each takes roughly fifteen to twenty minutes.
 
@@ -22,4 +22,4 @@ The tutorials build on each other, so working through them in order is the faste
 
 You'll get more from these if you're already comfortable with Python variables, strings, numbers, and `if`/`else`. If any of that feels shaky, the [Conditional logic](../../conditional-logic/) and [Data structures](../../data-structures/) guides are a good warm-up.
 
-You don't need Python installed locally — every tutorial runs in the [Lab](../../../lab/). If you'd rather run them on your own machine, each notebook has a download button in the top-right corner.
+You don't need Python installed locally — every tutorial runs in your browser. If you'd rather run them on your own machine, each notebook has a download button in the top-right corner.

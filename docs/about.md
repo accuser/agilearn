@@ -20,9 +20,9 @@ Each guide is structured into four sections.
 
 ## Running the code
 
-Every notebook page has an **Open in Lab** button that launches the notebook in a browser-side Python environment. No install, no signup. Details are on the [Lab](lab/) page.
+Every notebook page runs Python directly in your browser. Each code cell has its own **Run** button — edit the code, hit run, and see the output on the page. The Python environment loads on first use and runs entirely client-side: no install, no signup, no server. Your edits stay on your own machine.
 
-If you prefer to run locally, you can download each notebook with the download button next to the Lab button and open it in Jupyter or any editor with notebook support.
+If you prefer to run locally, every notebook has a **download** button in the top-right corner; open the downloaded `.ipynb` in Jupyter or any editor with notebook support.
 
 ## Licence and contributions
 

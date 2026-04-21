@@ -4,17 +4,20 @@ title: String processing
 
 # String processing
 
-This guide covers working with text in Python — string methods, formatting, searching, cleaning — and the Unicode behaviour you'll encounter sooner or later.
+Strings are the format almost everything arrives in — log lines, CSV cells, user input, API responses. Python gives you a sharp set of tools for slicing them up, cleaning them, and building new ones, and most data work involves more string handling than you'd expect. This guide covers the methods, the formatting mini-language, and the gotchas.
 
-!!! note "Coming soon"
-    This guide is awaiting migration into Agilearn. The archived version remains available at [accuser.dev/string-processing-with-python](https://accuser.dev/string-processing-with-python/).
+## Start here
 
-## What will be here
+If you're new to working with strings beyond the basics, work through the [**Learn**](learn/) section in order — four short notebooks, around fifteen minutes each. Every code cell can be edited and run in place, directly on the page; no install required.
 
-**Learn** — string basics, string methods, string formatting, string searching.
+If you already know the basics and are looking for a specific technique, jump to the [**Recipes**](recipes/) section, or scan the [**Reference**](reference/) for the methods and format directives.
 
-**Recipes** — cleaning and normalising text, parsing structured strings, string templates, avoiding common mistakes.
+## What this guide covers
 
-**Reference** — string methods, formatting syntax, string constants.
+**[Learn](learn/)** — string basics, the methods you'll use most, formatting with f-strings, and searching within strings.
 
-**Concepts** — why strings are immutable; understanding Unicode and encodings.
+**[Recipes](recipes/)** — cleaning and normalising messy text, parsing structured strings, using templates, and the mistakes worth avoiding.
+
+**[Reference](reference/)** — string methods, formatting mini-language, and the constants in `string`.
+
+**[Concepts](concepts/)** — why strings are immutable, and what Unicode and encodings are actually doing under the surface.

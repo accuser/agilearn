@@ -4,17 +4,20 @@ title: Logging and debugging
 
 # Logging and debugging
 
-This guide covers making Python programs observable — the `logging` module, log levels, handlers, formats — and debugging them with `pdb` and breakpoints.
+When a program does the wrong thing, you need two tools: a way to see what it was doing (logging) and a way to stop it and poke around (debugging). Python gives you a surprisingly capable version of each in the standard library — `logging` for structured, level-aware observability, and `pdb` for interactive stepping. This guide covers both, and the judgement calls for when to reach for which.
 
-!!! note "Coming soon"
-    This guide is awaiting migration into Agilearn. The archived version remains available at [accuser.dev/logging-and-debugging-with-python](https://accuser.dev/logging-and-debugging-with-python/).
+## Start here
 
-## What will be here
+If logging or `pdb` is new to you, work through the [**Learn**](learn/) section in order — four short notebooks, around fifteen minutes each. Every code cell can be edited and run in place, directly on the page; no install required.
 
-**Learn** — your first log message, log levels and formatting, logging to files, debugging with `pdb`.
+If you already know the basics and are looking for a specific technique, jump to the [**Recipes**](recipes/) section, or scan the [**Reference**](reference/) for `logging` methods and `pdb` commands.
 
-**Recipes** — configuring logging for a project, custom log handlers, effective breakpoints, avoiding common mistakes.
+## What this guide covers
 
-**Reference** — `logging` module, log format directives, `pdb` commands.
+**[Learn](learn/)** — your first log message, log levels and formatting, logging to files, debugging with `pdb`.
 
-**Concepts** — understanding log levels; why logging not `print`.
+**[Recipes](recipes/)** — project-wide logging configuration, custom handlers, effective breakpoints, common mistakes to avoid.
+
+**[Reference](reference/)** — `logging` module API, log-format directives, `pdb` command list.
+
+**[Concepts](concepts/)** — understanding log levels, and why logging beats `print` for anything beyond a scratch script.

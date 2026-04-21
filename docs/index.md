@@ -28,7 +28,7 @@ Each guide follows the same four-part shape: **Learn** (step-by-step tutorials y
     <span class="agilearn-card__icon">:material-format-list-bulleted-square:</span>
     <strong class="agilearn-card__title">Data structures</strong>
     <span class="agilearn-card__desc">Lists, tuples, dictionaries, sets, comprehensions, slicing, and when to reach for each.</span>
-    <span class="agilearn-meta"><span>Learn · 6</span><span>Recipes · 4</span><span>Reference · 5</span><span>Concepts · 4</span></span>
+    <span class="agilearn-meta"><span>Learn · 6</span><span>Recipes · 5</span><span>Reference · 5</span><span>Concepts · 4</span></span>
   </a>
 
   <a class="agilearn-card" href="guides/functions/" markdown>
@@ -86,6 +86,6 @@ Each guide follows the same four-part shape: **Learn** (step-by-step tutorials y
 
 ## Run Python in your browser
 
-Every tutorial in Agilearn is a Jupyter notebook, and every notebook can be opened in the **[Lab](lab/)** — a browser-side Python environment that needs no install, no signup, and no server. Your edits stay on your own machine.
+Every tutorial in Agilearn is a Jupyter notebook, and every code cell has its own **Run** button. Edit the code, hit run, and see the output on the page — no install, no signup, no server. The Python environment loads on first use and runs entirely client-side; your edits stay on your own machine.
 
 </div>

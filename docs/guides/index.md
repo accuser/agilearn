@@ -4,7 +4,7 @@ title: Guides
 
 # Python Guides
 
-Nine guides, each structured the same way: **Learn** for tutorials, **Recipes** for task-focused how-tos, **Reference** for lookups, and **Concepts** for short explanatory essays. Every tutorial can be run in the browser via the [Lab](../lab/).
+Nine guides, each structured the same way: **Learn** for tutorials, **Recipes** for task-focused how-tos, **Reference** for lookups, and **Concepts** for short explanatory essays. Every tutorial's code cells can be edited and run directly on the page.
 
 ## A recommended order
 

@@ -8,7 +8,7 @@ Functions are where Python programs stop being lists of instructions and start b
 
 ## Start here
 
-If functions are new to you, work through the [**Learn**](learn/) section in order — seven short notebooks, around fifteen minutes each. You can run them directly in the [Lab](../../lab/) without installing anything.
+If functions are new to you, work through the [**Learn**](learn/) section in order — seven short notebooks, around fifteen minutes each. Every code cell can be edited and run in place, directly on the page; no install required.
 
 If you already know the basics and have come looking for a specific technique, jump to the [**Recipes**](recipes/) section or scan the [**Reference**](reference/).
 
