@@ -1,195 +1,112 @@
 # Avoid common regex mistakes
 
-This guide covers the most frequent mistakes people make when writing regular expressions in Python and how to avoid them. Each section describes a common pitfall, explains why it is a problem, and provides the correct approach.
+**The question.** You've written a pattern, it doesn't match what you expected, and you're staring at it wondering whether the bug is in the regex or in your assumptions about it. This page is the short list of the bugs that catch nearly everyone — each with the smallest code snippet that shows the trap and the fix.
 
-## Prerequisites
+## The answer
 
-- Familiarity with basic regex concepts (character classes, quantifiers, groups, and anchors)
-- Python 3.12 or later
+| If this sounds familiar … | Reach for … |
+| --- | --- |
+| `\b` or `\d` in a pattern did nothing | A raw string: `r'\bword\b'`, not `'\bword\b'` |
+| `.+` or `.*` swallowed far more than you wanted | The lazy form: `.+?` or `.*?` |
+| A dot matched characters you wanted to keep literal | Escape it: `\.` (or use `re.escape(str)`) |
+| `re.match` returned `None` on input that clearly has the pattern | `re.search` (or anchor the pattern) |
+| A validation pattern let partial matches through | `re.fullmatch` or `^...$` |
+| A pattern that normally matches fast hangs on odd input | Flatten nested quantifiers |
+| `.` refused to match across a newline | Pass `re.DOTALL` or use `[\s\S]` |
+| A tight loop is spending all its time in `re` | `re.compile` once, reuse the compiled object |
 
-## Forgetting to use raw strings
+## Why each of these bites
 
-**The mistake:** Writing regex patterns as ordinary strings, causing backslashes to be interpreted as Python escape sequences before the `re` module sees them.
+### Not using raw strings
+
+Python strings interpret backslash escapes before the `re` module ever sees them. `'\b'` is already a backspace character by the time `re.compile` gets hold of it, so the `\b` word-boundary anchor never reaches the engine.
 
 ```python
 import re
 
-# Wrong: \b is interpreted as a backspace character
-match = re.search('\bword\b', 'a word here')
-print(match)  # None (unexpected)
-
-# Correct: use a raw string
-match = re.search(r'\bword\b', 'a word here')
-print(match)  # <re.Match object; span=(2, 6), match='word'>
+re.search('\bword\b', 'a word here')   # None — looking for literal \b
+re.search(r'\bword\b', 'a word here')  # matches 'word'
 ```
 
-**The fix:** Always use raw strings (`r'...'`) for regex patterns.
+Treat `r'...'` as mandatory for any pattern with a backslash in it.
 
-## Greedy matching when you want lazy
+### Greedy when you wanted lazy
 
-**The mistake:** Using a greedy quantifier (`*` or `+`) when you need a lazy one, causing the pattern to match more text than intended.
+`+` and `*` match **as much as they possibly can** and still allow the rest of the pattern to succeed. A `?` after the quantifier flips it to *as little as possible*.
 
 ```python
-import re
-
 text = '<b>bold</b> and <i>italic</i>'
-
-# Wrong: greedy .+ matches too much
-match = re.search(r'<.+>', text)
-print(match.group())  # '<b>bold</b> and <i>italic</i>'
-
-# Correct: lazy .+? stops at the first >
-match = re.search(r'<.+?>', text)
-print(match.group())  # '<b>'
+re.search(r'<.+>',  text).group()   # '<b>bold</b> and <i>italic</i>'
+re.search(r'<.+?>', text).group()   # '<b>'
 ```
 
-**The fix:** Append `?` to a quantifier to make it lazy (`+?`, `*?`, `??`). Use lazy quantifiers when you want the shortest possible match.
+### Unescaped metacharacters
 
-## Forgetting to escape metacharacters
-
-**The mistake:** Using metacharacters (`.`, `*`, `+`, `?`, `(`, `)`, `[`, `]`, `{`, `}`, `^`, `$`, `|`, `\`) as literal characters without escaping them.
+A bare `.` matches any character, a bare `+` is a quantifier, a bare `(` opens a group. When you want the literal character, escape it with `\` — or run the whole string through `re.escape`.
 
 ```python
-import re
+re.search(r'example.com',  'exampleXcom')   # matches (unwanted)
+re.search(r'example\.com', 'exampleXcom')   # None (correct)
 
-# Wrong: the dot matches any character
-match = re.search(r'example.com', 'exampleXcom')
-print(match)  # <re.Match object> (unexpected)
-
-# Correct: escape the dot to match a literal dot
-match = re.search(r'example\.com', 'exampleXcom')
-print(match)  # None (as expected)
+re.escape('price is $5.00 (USD)')
+# 'price\\ is\\ \\$5\\.00\\ \\(USD\\)'
 ```
 
-**The fix:** Escape metacharacters with a backslash when you want to match them literally. Alternatively, use `re.escape()` to escape an entire string.
+### `re.match` only looks at the start
+
+`re.match('\d+', 'error 404')` returns `None` because there's no digit at position zero. Use `re.search` for 'somewhere in the string' and reserve `re.match` for 'starts with …'.
+
+### Not anchoring validation patterns
+
+`re.search(r'\d{3}', 'abc123def')` matches the `123` in the middle. For validation, use `re.fullmatch` or wrap the pattern in `^...$`:
 
 ```python
-import re
-
-user_input = 'price is $5.00 (USD)'
-escaped = re.escape(user_input)
-print(escaped)  # 'price\\ is\\ \\$5\\.00\\ \\(USD\\)'
+re.fullmatch(r'\d{3}', 'abc123def')  # None
+re.fullmatch(r'\d{3}', '123')        # matches
 ```
 
-## Using `re.match()` when you mean `re.search()`
+### Catastrophic backtracking
 
-**The mistake:** Using `re.match()` expecting it to find a pattern anywhere in the string. The `re.match()` function only checks at the **beginning** of the string.
+Nested quantifiers like `(a+)+b` create exponentially many ways to match any given input. On a non-match the engine tries all of them before giving up — on 25 `a`s followed by a `c`, that's minutes rather than microseconds.
 
 ```python
-import re
-
-text = 'The error code is 404'
-
-# Wrong: re.match() only checks the beginning
-match = re.match(r'\d+', text)
-print(match)  # None
-
-# Correct: re.search() scans the entire string
-match = re.search(r'\d+', text)
-print(match.group())  # '404'
+re.compile(r'a+b').search('aaab')            # fast, matches
+re.compile(r'a+b').search('a' * 25 + 'c')    # fast, None
+# re.compile(r'(a+)+b').search('a' * 25 + 'c')  # do not run
 ```
 
-**The fix:** Use `re.search()` to find a pattern anywhere in a string. Reserve `re.match()` for when you specifically need to check the beginning.
+Flatten the repetition whenever you can.
 
-## Not anchoring validation patterns
+### `.` doesn't match newlines by default
 
-**The mistake:** Using `re.search()` to validate input without anchoring the pattern, allowing partial matches to pass validation.
-
-```python
-import re
-
-# Wrong: this matches the '123' inside the string
-if re.search(r'\d{3}', 'abc123def'):
-    print('Valid')  # Prints 'Valid' (unexpected)
-
-# Correct: use anchors or re.fullmatch()
-if re.fullmatch(r'\d{3}', 'abc123def'):
-    print('Valid')
-else:
-    print('Invalid')  # Prints 'Invalid' (as expected)
-```
-
-**The fix:** Use `re.fullmatch()` or anchor your pattern with `^` and `$` when validating that an entire string matches a pattern.
-
-## Catastrophic backtracking
-
-**The mistake:** Writing patterns with nested quantifiers that cause the regex engine to explore an exponential number of possibilities on non-matching input.
+Pass `re.DOTALL` (or use `[\s\S]` in the pattern) when you genuinely need a wildcard that crosses line boundaries.
 
 ```python
-import re
-
-# Dangerous pattern: nested quantifiers
-# This can take a very long time on non-matching input
-pattern = re.compile(r'(a+)+b')
-
-# Fine for matching input
-print(pattern.search('aaab'))  # Matches quickly
-
-# Extremely slow for non-matching input with many 'a' characters
-# pattern.search('a' * 25 + 'c')  # Do not run this!
-```
-
-**The fix:** Avoid nested quantifiers where possible. When you need them, use atomic grouping or possessive quantifiers (available in some regex engines), or restructure the pattern.
-
-```python
-import re
-
-# Safe version: remove the unnecessary nesting
-pattern = re.compile(r'a+b')
-print(pattern.search('aaab'))  # Matches quickly
-print(pattern.search('a' * 25 + 'c'))  # Returns None quickly
-```
-
-## Assuming `.` matches everything
-
-**The mistake:** Expecting the dot (`.`) to match newline characters. By default, `.` matches any character **except** newlines.
-
-```python
-import re
-
 text = 'line one\nline two'
-
-# Without DOTALL: dot does not match newlines
-match = re.search(r'one.line', text)
-print(match)  # None
-
-# With DOTALL: dot matches newlines too
-match = re.search(r'one.line', text, re.DOTALL)
-print(match.group())  # 'one\nline'
+re.search(r'one.line', text)               # None
+re.search(r'one.line', text, re.DOTALL)    # matches
 ```
 
-**The fix:** Use the `re.DOTALL` flag when you need `.` to match newline characters. Alternatively, use `[\s\S]` to match any character including newlines without changing the flag.
-
-## Not compiling frequently used patterns
-
-**The mistake:** Calling `re.search()` or `re.findall()` with a pattern string inside a loop, causing the pattern to be recompiled on every iteration.
+### Compiling inside a loop
 
 ```python
-import re
-
-texts = ['text one', 'text two', 'text three']
-
-# Inefficient: pattern is compiled on every iteration
-for text in texts:
-    re.search(r'\b\w+\b', text)
-
-# Better: compile once, use many times
 pattern = re.compile(r'\b\w+\b')
 for text in texts:
-    pattern.search(text)
+    pattern.search(text)   # no re-compile, no cache lookup
 ```
 
-**The fix:** Use `re.compile()` to compile the pattern once before the loop. The `re` module does cache recently used patterns, but explicit compilation makes the intent clear and avoids cache limitations.
+The `re` module caches recent patterns, but the cache is small and shared across your whole program. Compiling once makes the cost explicit and predictable.
 
-## Summary
+## Trade-offs and when to ignore this list
 
-| Mistake | Fix |
-|---|---|
-| Not using raw strings | Always use `r'...'` for patterns |
-| Greedy when lazy is needed | Add `?` after the quantifier |
-| Unescaped metacharacters | Use `\` or `re.escape()` |
-| `re.match()` instead of `re.search()` | Use `re.search()` to find anywhere |
-| Missing anchors for validation | Use `re.fullmatch()` or `^...$` |
-| Catastrophic backtracking | Avoid nested quantifiers |
-| Assuming `.` matches newlines | Use `re.DOTALL` when needed |
-| Not compiling patterns | Use `re.compile()` in loops |
+- **Greedy is sometimes the right default.** If you're matching against the *longest* sensible substring (everything up to the final separator, for instance), greedy quantifiers are what you want. Lazy is a choice, not a rule.
+- **`re.match` vs `re.search` is a semantic choice.** `re.match` is the correct function for "does this string start with …". The bug is using it when you meant "contains", not using it at all.
+- **`re.VERBOSE` tidies complex patterns.** If any one bullet above led you to write a longer, more defensive pattern, pass `re.VERBOSE` and break it across lines with inline comments — future you will be able to read it.
+- **Compilation only matters when it matters.** For one-shot calls, the module-level cache makes `re.search` and `pattern.search` almost identical. Reach for `re.compile` in loops, library code, and anywhere the intent is worth making explicit.
+
+## Related
+
+- **Learn** — [Character classes and quantifiers](../learn/02-character-classes-and-quantifiers.ipynb) for the semantics of `*`, `+`, `?`, and their lazy variants.
+- **Learn** — [Find and replace](../learn/04-find-and-replace.ipynb) for `re.sub` and the overlap between matching and substitution.
+- **Reference** — [Regex flags](../reference/regex-flags-reference.md) for `DOTALL`, `MULTILINE`, `VERBOSE`, and friends.
+- **Concepts** — [Understanding the regex engine](../concepts/understanding-the-regex-engine.md) for why backtracking is expensive.
