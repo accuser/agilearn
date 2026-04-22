@@ -1,6 +1,24 @@
 {% extends "base.html" %}
 
 {# ---------------------------------------------------------------
+   Page title (TONE-02)
+   - Homepage renders the full tagline instead of "Agilearn - Agilearn".
+   - Non-homepage pages use an em-dash separator ("Title — Agilearn")
+     for British typographic convention.
+   --------------------------------------------------------------- #}
+{% block htmltitle %}
+  {% if page.is_homepage %}
+    <title>Agilearn — Self-directed Python guides</title>
+  {% elif page.meta and page.meta.title %}
+    <title>{{ page.meta.title }} — {{ config.site_name }}</title>
+  {% elif page.title %}
+    <title>{{ page.title | striptags }} — {{ config.site_name }}</title>
+  {% else %}
+    <title>{{ config.site_name }}</title>
+  {% endif %}
+{% endblock %}
+
+{# ---------------------------------------------------------------
    Thebe assets (only on notebook pages) + skip-link hardening
    --------------------------------------------------------------- #}
 {% block extrahead %}

@@ -26,4 +26,6 @@ If you prefer to run locally, every notebook has a **download** button in the to
 
 ## Licence and contributions
 
-Content is MIT-licensed. The source lives on GitHub and contributions, corrections, and suggestions are welcome — there's an **Edit this page** link at the top of every page.
+Content is released under the MIT License — the project name keeps the US spelling because that's how the licence is formally titled, but everywhere else we use the British "licence". The licence covers all guides on this site and the accompanying code.
+
+The source lives on GitHub and contributions, corrections, and suggestions are welcome — there's an **Edit this page** link at the top of every page.
