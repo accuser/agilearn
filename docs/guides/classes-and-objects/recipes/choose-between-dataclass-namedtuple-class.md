@@ -1,24 +1,22 @@
----
-title: Choose between @dataclass, NamedTuple, and a plain class
----
+# Choose between @dataclass, NamedTuple, and a plain class
 
-# Choose between `@dataclass`, `NamedTuple`, and a plain class
+**The question.** You want to bundle a few values under a name and you have four reasonable options: `@dataclass`, `typing.NamedTuple`, `typing.TypedDict`, or a hand-written class. They look similar from ten feet away and behave quite differently up close.
 
-When you just want to bundle a few values under a name, you've got three reasonable options. This page is a decision guide — read the summary, then the notes on each trade-off if you want the reasoning.
+The short answer: default to `@dataclass`. Everything else is a case where the default doesn't fit.
 
-## The short answer
+## The answer
 
 | Situation | Reach for |
 | --- | --- |
-| A record type with more than three fields, or that might grow | `@dataclass` |
-| A record type you want to be immutable | `@dataclass(frozen=True)` |
-| A small immutable pair or triple, often unpacked | `typing.NamedTuple` |
-| Dict-shaped data (from JSON, or going into a library that wants a dict) | `typing.TypedDict` |
-| Anything with non-trivial behaviour — heavy custom dunders, complex validation, descriptors | Hand-written class |
+| More than three fields, or likely to grow | `@dataclass` |
+| Immutable record | `@dataclass(frozen=True)` |
+| Small, immutable, often unpacked (2–3 fields) | `typing.NamedTuple` |
+| Dict-shaped data from JSON or config | `typing.TypedDict` |
+| Non-trivial behaviour, complex construction, descriptors | Hand-written class |
 
 If you're not sure, use `@dataclass`. It has the widest sweet spot.
 
-## `@dataclass` — the default choice
+## Why `@dataclass` is the default
 
 ```python
 from dataclasses import dataclass
@@ -30,16 +28,9 @@ class User:
     is_admin: bool = False
 ```
 
-Gives you `__init__`, `__repr__`, and `__eq__` for free. Add parameters to tune behaviour: `frozen=True` for immutability, `slots=True` for smaller memory footprint, `order=True` for comparison operators, `kw_only=True` (3.10+) to require keyword arguments.
+That gives you `__init__`, `__repr__`, and `__eq__` for free. `frozen=True` makes it immutable; `slots=True` shrinks the memory footprint; `order=True` generates comparison operators; `kw_only=True` (3.10+) requires keyword arguments. Reach for it whenever the class is primarily data: the fields are what matter, and the methods mostly compute derived values. `@dataclass` scales to any number of fields without ceremony, which is why it's the safest starting point.
 
-Reach for `@dataclass` when:
-
-- The class is primarily data. You have fields, and the methods mostly compute derived values from those fields.
-- You have more than two or three fields, or you expect to add fields over time.
-- You want validation — add a `__post_init__`.
-- You want mutable state. A plain `@dataclass` gives you that. `@dataclass(frozen=True)` gives you an immutable value type.
-
-## `NamedTuple` — small, immutable, tuple-like
+## When `NamedTuple` earns its place
 
 ```python
 from typing import NamedTuple
@@ -49,21 +40,11 @@ class Coord(NamedTuple):
     lon: float
 ```
 
-`NamedTuple` is a genuine tuple with attribute access bolted on. It's immutable, hashable, memory-cheap, and participates in all the tuple-shaped APIs (unpacking, indexing, `==` with plain tuples).
+`NamedTuple` is a genuine tuple with attribute access bolted on. Immutable, hashable, memory-cheap, participates in tuple-shaped APIs (unpacking, indexing, `==` with plain tuples). Use it when the type is small (two or three fields), the values won't change, and unpacking (`lat, lon = coord`) reads naturally.
 
-Reach for `NamedTuple` when:
+Avoid it when you'd ever want to mutate state, inherit from another (non-NamedTuple) class, or when it matters that `Coord(51.5, -0.1) == (51.5, -0.1)` is `True` — sometimes handy, sometimes a footgun.
 
-- The type is small — two or three fields. At four or more, a `@dataclass(frozen=True)` reads better.
-- The values won't change over an instance's lifetime.
-- You'd plausibly unpack it: `lat, lon = coord`.
-
-Avoid `NamedTuple` when:
-
-- You want methods that mutate state. You can't.
-- You need inheritance from another class (`NamedTuple` can't inherit from non-NamedTuple bases).
-- You care that `Coord(51.5, -0.1) == (51.5, -0.1)` returns `True`. It does, because a `Coord` *is* a tuple — sometimes useful, sometimes a footgun when comparing heterogeneous data.
-
-## `TypedDict` — types for dict-shaped data
+## When `TypedDict` earns its place
 
 ```python
 from typing import TypedDict
@@ -74,51 +55,37 @@ class UserRecord(TypedDict):
     is_admin: bool
 ```
 
-`TypedDict` isn't a runtime class at all. It's a hint to type checkers like mypy and pyright. At runtime, a `UserRecord` is just a plain `dict`.
+`TypedDict` is a hint to type checkers. At runtime, a `UserRecord` is a plain `dict`. Use it when data comes from somewhere that hands you dicts (JSON, `csv.DictReader`, config parsers) and you don't want to convert into and out of a class. The [type hints guide](../../type-hints/) covers it in more detail.
 
-Reach for `TypedDict` when:
+## When a hand-written class earns its place
 
-- The data comes from somewhere that hands you dicts — JSON responses, config parsers, `csv.DictReader`.
-- You're passing data to a library that expects a dict.
-- You want type-checker support for the keys but don't want to convert to a class and back.
+Reach for a plain class when you need behaviour that doesn't fit dataclass field declarations: complex construction, heavy custom dunders, descriptors, runtime-generated attributes. If you're writing one of these, you probably know why — and the default for most everyday cases is still `@dataclass`.
 
-The [type hints guide](../../type-hints/) covers `TypedDict` in more detail.
+## Trade-offs
 
-## Plain class — when none of the above fits
-
-Hand-write the class when you need behaviour that doesn't fit dataclass field declarations: extensive custom dunders, descriptors, complex construction logic, runtime-generated attributes. If you're reaching here, you probably know why — the default choice is still `@dataclass`.
-
-## A worked comparison
-
-The same data, in each shape:
+**The same four fields, four ways:**
 
 ```python
-# @dataclass
-from dataclasses import dataclass
-
+# @dataclass — mutable, extensible, ~3 lines
 @dataclass
 class Book:
     title: str
     author: str
     pages: int = 0
 
-# NamedTuple
-from typing import NamedTuple
-
+# NamedTuple — immutable, tuple-compatible, similar size
 class Book(NamedTuple):
     title: str
     author: str
     pages: int = 0
 
-# TypedDict
-from typing import TypedDict
-
+# TypedDict — typed view of a dict, no runtime class
 class Book(TypedDict):
     title: str
     author: str
     pages: int
 
-# Plain class
+# Plain class — full control, full boilerplate
 class Book:
     def __init__(self, title, author, pages=0):
         self.title = title
@@ -126,4 +93,10 @@ class Book:
         self.pages = pages
 ```
 
-The `@dataclass` version is barely longer than the `NamedTuple`, mutable by default, and scales to any number of fields without ceremony — which is why it's the best default.
+The `@dataclass` version is barely longer than the `NamedTuple`, is mutable by default, and grows cleanly as fields are added. That's why it's the best default.
+
+## Related reading
+
+- [Avoid common class mistakes](avoid-common-class-mistakes.md) — especially the mutable-class-attribute bug that dataclasses sidestep.
+- [Dataclass parameters](../reference/dataclass-parameters.md) — every decorator option in one place.
+- [Type hints guide](../../type-hints/) — for `TypedDict` details.
