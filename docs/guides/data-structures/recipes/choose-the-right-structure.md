@@ -1,136 +1,50 @@
 # Choose the right data structure
 
-Selecting the right data structure affects the readability, correctness, and performance of your code. This guide walks you through a series of questions and common scenarios to help you make the right choice.
+**The question.** You've got data you need to store, and more than one container could plausibly hold it. List? Dict? Set? Tuple? `Counter`? `namedtuple`? You want a decision short enough to make in your head, and long enough to be right most of the time.
 
-## Decision questions
+The short version: ask what your **primary operation** is. Lookups by key → dict. Membership tests → set. Ordered items → list (if mutable) or tuple (if fixed). Then the edge cases fall out.
 
-Work through the following questions to narrow down which data structure best fits your use case.
+## The answer
 
-### Do you need ordered data?
+| Primary operation | Structure | Syntax |
+| --- | --- | --- |
+| Walk an ordered sequence | `list` | `[1, 2, 3]` |
+| Walk a fixed sequence | `tuple` | `(1, 2, 3)` |
+| Look up by key | `dict` | `{'a': 1}` |
+| Test membership | `set` | `{1, 2, 3}` |
+| Count occurrences | `collections.Counter` | `Counter(items)` |
+| Group items by category | `dict` of `list` | `{cat: [...]}` |
+| Named fields, immutable | `collections.namedtuple` or `dataclass(frozen=True)` | — |
+| Many database-style records | `list` of `dict` (or list of dataclasses) | — |
 
-If the order of items matters, use a **list** or a **tuple**.
+When in doubt, start with `list` or `dict`. They cover the majority of everyday cases, and refactoring to a more specialised structure later is rarely painful.
 
-- If you need to modify the collection, use a **list**.
-- If the data should remain fixed after creation, use a **tuple**.
+## Why each one earns its place
 
-### Do you need key-value lookups?
+**`list`** is the general-purpose ordered container. Appending, indexing, and iterating are all cheap. Reach for it whenever you just need "a bunch of things, in order" and you don't know in advance how many you'll need.
 
-If you need to associate values with unique keys for fast lookup, use a **dictionary**.
+**`tuple`** is a list that doesn't change. Use it for fixed heterogeneous records (`(width, height)`), for return values with a fixed shape, and anywhere you want a dict key — tuples are hashable; lists aren't.
 
-### Do you need unique items only?
+**`dict`** is the lookup table. Inserting, looking up, and deleting by key are all O(1) on average. Dicts also preserve insertion order (since Python 3.7), so you get a usable ordering for free.
 
-If you need a collection that automatically eliminates duplicates, use a **set**.
+**`set`** is the membership test. `x in a_set` is O(1); `x in a_list` is O(n). Sets also give you the algebra — union, intersection, difference — which is overkill for small collections but a lifesaver for diffing.
 
-### Do you need fast membership testing?
+**`collections.Counter`** is a `dict` subclass with counting baked in. `Counter(items)` reads items once and records counts; `most_common(3)` gives you the top three. Reach for it whenever "how many of each?" is the answer you want.
 
-If your primary operation is checking whether an item exists in the collection, use a **set** or a **dictionary**. Both offer average O(1) lookup time, compared to O(n) for lists and tuples.
+**`namedtuple` / frozen `dataclass`** are tuples with names. Use them when you want attribute access (`p.x` instead of `p[0]`) and immutability. For mutable records — or when you want type hints and default values — a regular `dataclass` is the better choice.
 
-## Common scenarios
+## Trade-offs
 
-### Storing a sequence of items
+**Lists are fine for small collections, slow for membership.** Scanning a 10-item list for `x in list` is instant. Scanning a 100 000-item list, a hundred thousand times, is not. Convert to a set (`lookup = set(list)`) when you're about to do repeated membership checks.
 
-Use a **list** when you need an ordered, modifiable collection.
+**Sets don't preserve order.** `set([1, 2, 3])` might iterate as `{3, 1, 2}` or any other order. If order matters, stay with a list and deduplicate via `dict.fromkeys(items)` (preserves insertion order).
 
-```python
-tasks = ["write report", "review code", "update tests"]
-tasks.append("deploy release")
-```
+**Tuples are immutable but shallow.** `(1, [2])` can still have its inner list mutated — the outer tuple is frozen, the inner list isn't. For genuine immutability, use `frozenset` for sets and a frozen `dataclass` plus `tuple`-only fields.
 
-### Returning multiple values from a function
+**Don't over-engineer.** A `dict` is often a fine stand-in for a class in a small script. Promote it to a `dataclass` when the shape starts appearing in multiple places or when you need validation — not before.
 
-Use a **tuple** to return a fixed group of related values.
+## Related reading
 
-```python
-def get_dimensions():
-    return (1920, 1080)
-
-width, height = get_dimensions()
-```
-
-### Counting occurrences
-
-Use a **dictionary** to count items, or use `collections.Counter` for a convenient shortcut.
-
-```python
-from collections import Counter
-
-words = ["apple", "banana", "apple", "cherry", "banana", "apple"]
-counts = Counter(words)
-```
-
-### Removing duplicates
-
-Use a **set** to strip duplicates. If you need to preserve insertion order, use `dict.fromkeys()`:
-
-```python
-# When order does not matter
-unique = set([1, 2, 2, 3, 3])
-
-# When order matters
-unique_ordered = list(dict.fromkeys([1, 2, 2, 3, 3]))
-```
-
-### Configuration and settings
-
-Use a **dictionary** to store named configuration values.
-
-```python
-config = {"debug": False, "max_retries": 3, "timeout_seconds": 30}
-```
-
-### Database-style records
-
-Use a **list of dictionaries** when each item has the same set of fields.
-
-```python
-employees = [
-    {"name": "Alice", "department": "Engineering", "salary": 55000},
-    {"name": "Bob", "department": "Marketing", "salary": 48000},
-]
-```
-
-### Grouping items by category
-
-Use a **dictionary of lists** to group related items under a shared key.
-
-```python
-grouped = {}
-for category, item in data:
-    if category not in grouped:
-        grouped[category] = []
-    grouped[category].append(item)
-```
-
-### Fixed coordinates or records
-
-Use a **named tuple** when you need a lightweight, immutable record with named fields.
-
-```python
-from collections import namedtuple
-
-Point = namedtuple("Point", ["x", "y"])
-origin = Point(0, 0)
-```
-
-## Summary table
-
-| Feature            | `list`          | `tuple`         | `dict`                | `set`           |
-|--------------------|-----------------|-----------------|----------------------|-----------------|
-| Ordered            | Yes             | Yes             | Yes (insertion order) | No              |
-| Mutable            | Yes             | No              | Yes                   | Yes             |
-| Duplicates allowed | Yes             | Yes             | Keys: No              | No              |
-| Syntax             | `[1, 2, 3]`    | `(1, 2, 3)`    | `{"a": 1}`           | `{1, 2, 3}`    |
-| Best for           | Sequences       | Fixed data      | Key-value mappings    | Unique items    |
-
-## Quick reference
-
-1. **Need to look up values by key?** Use a `dict`.
-2. **Need only unique items?** Use a `set`.
-3. **Need an ordered collection you can change?** Use a `list`.
-4. **Need an ordered collection that must not change?** Use a `tuple`.
-5. **Need named fields on an immutable record?** Use a `namedtuple`.
-6. **Need to count items?** Use `collections.Counter`.
-7. **Need to group items by category?** Use a `dict` of lists.
-8. **Need fast membership testing?** Use a `set` or `dict`.
-
-When in doubt, start with a `list` or a `dict`. These two structures cover the majority of everyday use cases, and you can refactor to a more specialised structure later if needed.
+- [Convert between data structures](convert-between-structures.ipynb) — once you've picked one shape and realise you need another.
+- [Merge and compare dictionaries](merge-and-compare-dictionaries.ipynb) — the most common dict manipulations.
+- [Work with nested structures](work-with-nested-structures.ipynb) — when one level of container isn't enough.
