@@ -1,0 +1,23 @@
+{% extends "main.html" %}
+
+{% block htmltitle %}
+  <title>Page not found — {{ config.site_name }}</title>
+{% endblock %}
+
+{% block content %}
+<h1>Page not found</h1>
+
+<p>Sorry — that page isn't here. It may have been renamed, moved, or never existed.</p>
+
+<h2>Where to next?</h2>
+<ul>
+  <li>Head back to the <a href="{{ '/' | url }}">home page</a> for an overview of the guides.</li>
+  <li>Browse all guides from the <a href="{{ '/guides/' | url }}">guides index</a>.</li>
+  <li>Read <a href="{{ '/about/' | url }}">about Agilearn</a> if you're new here.</li>
+</ul>
+
+<h2>Looking for something specific?</h2>
+<p>Use the search box at the top of the page — it searches every guide, recipe, and reference on the site. A couple of keywords is usually enough.</p>
+
+<p>If you followed a broken link from another site, you can <a href="https://github.com/accuser/agilearn/issues" rel="noopener">open an issue</a> so we can fix it.</p>
+{% endblock %}

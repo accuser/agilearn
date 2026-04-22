@@ -1,10 +1,35 @@
 {% extends "base.html" %}
 
 {# ---------------------------------------------------------------
-   Thebe assets (only on notebook pages)
+   Thebe assets (only on notebook pages) + skip-link hardening
    --------------------------------------------------------------- #}
 {% block extrahead %}
   {{ super() }}
+  {# Make the "Skip to content" link always present and always point at the
+     main article wrapper, regardless of whether the page has a TOC. Works
+     across Material's instant-navigation transitions. #}
+  <script>
+  (function () {
+    function fixSkipLink() {
+      var container = document.querySelector('[data-md-component="skip"]');
+      if (!container) return;
+      var link = container.querySelector('a.md-skip');
+      if (!link) {
+        link = document.createElement('a');
+        link.className = 'md-skip';
+        link.textContent = 'Skip to content';
+        container.appendChild(link);
+      }
+      link.setAttribute('href', '#agilearn-main');
+    }
+    if (document.readyState !== 'loading') fixSkipLink();
+    else document.addEventListener('DOMContentLoaded', fixSkipLink);
+    // Re-run on Material's instant-navigation page changes, if available.
+    if (typeof window.document$ !== 'undefined' && window.document$.subscribe) {
+      try { window.document$.subscribe(fixSkipLink); } catch (e) {}
+    }
+  })();
+  </script>
   {% if page.nb_url %}
     <link rel="stylesheet" href="{{ 'assets/vendor/thebe/thebe.css' | url }}">
     <script type="text/x-thebe-config">
@@ -22,6 +47,22 @@
     </script>
   {% endif %}
 {% endblock extrahead %}
+
+{# ---------------------------------------------------------------
+   Container override: add id + tabindex on the article wrapper so
+   the skip link always has a reliable, focusable landing point.
+   Mirrors base.html's default container block.
+   --------------------------------------------------------------- #}
+{% block container %}
+  <div class="md-content" data-md-component="content">
+    {% if "navigation.path" in features %}
+      {% include "partials/path.html" %}
+    {% endif %}
+    <article id="agilearn-main" tabindex="-1" class="md-content__inner md-typeset">
+      {{ self.content() }}
+    </article>
+  </div>
+{% endblock %}
 
 {# ---------------------------------------------------------------
    Content block: notebook toolbar + activation UI
