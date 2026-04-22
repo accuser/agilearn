@@ -10,9 +10,9 @@ Below is the summary, then each trap in detail.
 | --- | --- | --- |
 | `from typing import List` on 3.9+ | Deprecated capitalised form | `list[int]`, `dict[str, int]`, etc. |
 | `items: list` (no parameter) | Same as `list[Any]` — no checking | `list[int]` or `Iterable[int]` |
-| `tags: list = []` | Shared mutable default across calls | `tags: list \| None = None`, construct inside |
-| `name: Optional[str]` (no default) | Argument is still required | `name: str \| None = None` for "has a default" |
-| `next: Node` inside `class Node:` | `Node` not defined yet | `next: 'Node \| None' = None` or `from __future__ import annotations` |
+| `tags: list = []` | Shared mutable default across calls | `tags: list | None = None`, construct inside |
+| `name: Optional[str]` (no default) | Argument is still required | `name: str | None = None` for "has a default" |
+| `next: Node` inside `class Node:` | `Node` not defined yet | `next: 'Node | None' = None` or `from __future__ import annotations` |
 | `people: list[dict]` when you only iterate | Over-restrictive parameter | `Iterable[dict]` |
 | `def f(a: int): ...; f(True)` | `bool` is an `int` — passes the check | `Literal[0, 1]` or explicit validation |
 | `data: Any` | Turns off type-checking | `object`, a `TypeVar`, or a union |

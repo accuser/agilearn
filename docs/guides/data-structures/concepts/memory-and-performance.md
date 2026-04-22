@@ -68,7 +68,7 @@ Sets share the same hash table implementation as dictionaries (without storing v
 | Add (`s.add(x)`) | O(1) |
 | Remove (`s.remove(x)`) | O(1) |
 | Membership (`x in s`) | O(1) |
-| Union (`a \| b`) | O(len(a) + len(b)) |
+| Union (`a \ b`) | O(len(a) + len(b)) |
 | Intersection (`a & b`) | O(min(len(a), len(b))) |
 
 **Key insight:** Use sets instead of lists when you primarily need to test membership. A membership test that takes O(n) in a list takes O(1) in a set.

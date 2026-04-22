@@ -10,10 +10,10 @@ The core forms you'll reach for, with the Python version each first arrived in. 
 
 | Form | Since | Meaning |
 | --- | --- | --- |
-| `X \| Y` | 3.10 | Union of two types |
-| `Union[X, Y]` | 3.5 | Same as `X \| Y`, legacy spelling |
-| `X \| None` | 3.10 | Optional — `X` or `None` |
-| `Optional[X]` | 3.5 | Same as `X \| None` |
+| `X | Y` | 3.10 | Union of two types |
+| `Union[X, Y]` | 3.5 | Same as `X | Y`, legacy spelling |
+| `X | None` | 3.10 | Optional — `X` or `None` |
+| `Optional[X]` | 3.5 | Same as `X | None` |
 
 Prefer the `|` syntax on 3.10+. `Optional[X]` is still accepted and still readable — don't rewrite working code for the sake of it.
 
@@ -98,8 +98,8 @@ If you're targeting multiple Python versions:
 | Feature | 3.8 | 3.9 | 3.10 | 3.11 | 3.12 |
 | --- | --- | --- | --- | --- | --- |
 | `list[int]` etc. | `List[int]` | ✔ | ✔ | ✔ | ✔ |
-| `X \| Y` | `Union[X, Y]` | `Union[X, Y]` | ✔ | ✔ | ✔ |
-| `X \| None` | `Optional[X]` | `Optional[X]` | ✔ | ✔ | ✔ |
+| `X | Y` | `Union[X, Y]` | `Union[X, Y]` | ✔ | ✔ | ✔ |
+| `X | None` | `Optional[X]` | `Optional[X]` | ✔ | ✔ | ✔ |
 | `ParamSpec` | `typing_extensions` | `typing_extensions` | ✔ | ✔ | ✔ |
 | `NotRequired` | `typing_extensions` | `typing_extensions` | `typing_extensions` | ✔ | ✔ |
 | `Self` | `typing_extensions` | `typing_extensions` | `typing_extensions` | ✔ | ✔ |

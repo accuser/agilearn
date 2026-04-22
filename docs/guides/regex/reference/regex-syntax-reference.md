@@ -177,7 +177,7 @@ re.search(r'(?P<word>\w+)\s+(?P=word)', 'the the cat').group()
 
 | Pattern | Description |
 |---|---|
-| `a\|b` | Match either `a` or `b`. Alternation has the lowest precedence of all operators. |
+| `a|b` | Match either `a` or `b`. Alternation has the lowest precedence of all operators. |
 
 ```python
 import re
@@ -239,7 +239,7 @@ re.findall(r'(?<!£)\b\d+\.?\d*', 'Prices: £5.99 and 12 items')
 
 | Pattern | Description |
 |---|---|
-| `(?(id)yes\|no)` | Match `yes` pattern if group `id` matched, otherwise match `no` pattern. The `no` part is optional. |
+| `(?(id)yes|no)` | Match `yes` pattern if group `id` matched, otherwise match `no` pattern. The `no` part is optional. |
 
 ```python
 import re
