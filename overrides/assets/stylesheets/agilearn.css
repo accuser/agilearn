@@ -326,3 +326,80 @@
 @keyframes agilearn-thebe-spin {
   to { transform: rotate(360deg); }
 }
+
+/* =========================================================
+   Contrast & focus — WCAG 2.2 AA polish
+   Closes A11Y-02, A11Y-05, A11Y-06, A11Y-10 from the UX/a11y review.
+   ========================================================= */
+
+/* A11Y-02 · Top tabs in the slate (dark) palette render at ~3.67:1.
+   Material sets inactive tab links at 70% opacity over the primary
+   tint (#5a5fb5), which blends to roughly #cecfe9. Forcing full white
+   at full opacity lifts every tab to ~4.83:1 against #5a5fb5. Active
+   tabs remain visually distinct via Material's font-weight / border
+   treatment, so we don't need opacity for hierarchy. */
+[data-md-color-scheme="slate"] .md-tabs__link {
+  color: #ffffff;
+  opacity: 1;
+}
+
+/* A11Y-05 & A11Y-06 · Footer copyright and the "Material for MkDocs"
+   link are both on the same dark strip (#171717) in both palettes.
+   - Copyright text was #7f7f7f (4.47:1, just under 4.5:1). #a8a8a8
+     gives ~7.4:1, comfortably over AA.
+   - The upstream link was #b9b9b9 vs surrounding #7f7f7f (2.04:1), with
+     no underline. White + underline gives >= 3:1 against the new
+     surrounding text and satisfies 1.4.1 Use of Color. */
+.md-copyright {
+  color: #a8a8a8;
+}
+.md-copyright a,
+.md-copyright__highlight a {
+  color: #ffffff;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+.md-copyright a:hover,
+.md-copyright__highlight a:hover {
+  color: var(--md-accent-fg-color);
+}
+
+/* A11Y-10 · Focus rings were only styled on body links; tabs, search
+   input, palette toggle and header controls had no visible ring.
+   Establish a consistent amber ring for any keyboard-focused element,
+   then restate it on the elements Material nests behind label / a11y
+   hacks so the cascade still reaches them. */
+:focus-visible {
+  outline: 2px solid var(--md-accent-fg-color);
+  outline-offset: 2px;
+}
+
+.md-tabs__link:focus-visible,
+.md-nav__link:focus-visible,
+.md-header__button:focus-visible,
+.md-search__input:focus-visible,
+.md-footer__link:focus-visible,
+.md-content__button:focus-visible {
+  outline: 2px solid var(--md-accent-fg-color);
+  outline-offset: 2px;
+  /* Material uses box-shadow for some focus states elsewhere; clear it
+     so we don't get two stacked rings. */
+  box-shadow: none;
+}
+
+/* The palette toggle is rendered as a visually-hidden <input type="radio">
+   plus a sibling <label>. The input itself never paints, so put the ring
+   on the label when the (potentially off-screen) input has :focus-visible. */
+[data-md-component="palette"] input:focus-visible + label {
+  outline: 2px solid var(--md-accent-fg-color);
+  outline-offset: 2px;
+  border-radius: 50%;
+}
+
+/* Skip link — the default Material skip link is fine, but when it
+   receives focus (the very first Tab on a page) it deserves the same
+   amber ring. */
+.md-skip:focus-visible {
+  outline: 2px solid var(--md-accent-fg-color);
+  outline-offset: 2px;
+}
