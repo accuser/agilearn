@@ -1,248 +1,122 @@
 # Avoid common error handling mistakes
 
-Error handling code that is poorly written can introduce subtle bugs, hide real problems, and make your code harder to debug. This guide identifies the most common anti-patterns in exception handling and shows you how to avoid them.
+**The question.** You're reviewing (or writing) `try`/`except` code and something feels off — a bare `except` that catches Ctrl-C, a silent `pass` that ate a real bug, a try block that wraps half the function. You want the short list of traps and the fix for each.
 
-## The problem
+The short list is below, then each trap in detail.
 
-Many developers, especially those new to Python, fall into common traps when writing exception handling code. These mistakes can lead to silent failures, lost error information, and code that is difficult to maintain.
+## The answer
 
-## Mistake 1: Using bare `except`
+## The answer
 
-A bare `except` clause (without specifying an exception type) catches **everything**, including `KeyboardInterrupt` and `SystemExit`. This prevents users from stopping your program with Ctrl+C and can mask serious errors.
+| Looks like… | Why it bites | Fix |
+| --- | --- | --- |
+| `except:` | also catches `KeyboardInterrupt`, `SystemExit` | name the specific type(s), or use `except Exception` |
+| `except FileNotFoundError: pass` | silent swallow — debugging is nearly impossible | log, or at minimum add a comment explaining why it's safe |
+| `except Exception` everywhere | hides bugs behind an umbrella catch | handle specific types; `Exception` only as a logged safety net |
+| EAFP becomes flow control | `try: raise; except` instead of `if` | use `if`/`else` when the 'exception' is routine |
+| 30-line `try` block | the wrong line raised your expected exception | shrink the `try`; wrap only the statement that can fail |
+| `raise RuntimeError('bad')` inside an `except` | original cause lost | `raise RuntimeError('bad') from exc` |
+| `f = open(...); f.read(); f.close()` | file never closed if `read()` raises | `with open(...) as f:` |
 
-**Do not do this:**
+Each in detail below.
+
+## Why each one bites
+
+### 1. Bare `except`
+
+A bare `except` clause catches *everything* — including `KeyboardInterrupt` (Ctrl-C) and `SystemExit`. That means users can't interrupt your program and `sys.exit()` silently fails. Use `except Exception` if you really need a wide catch; better still, name the types you actually expect.
 
 ```python
-try:
-    result = process_data(data)
-except:
-    print("Something went wrong")
+# Wrong
+try: process_data(data)
+except: print('something went wrong')
+
+# Right
+try: process_data(data)
+except (ValueError, TypeError) as exc: print(f'invalid data: {exc}')
 ```
 
-**Do this instead:**
+### 2. Silent swallow
+
+`except X: pass` is almost always a bug in disguise. If the exception really is safe to ignore, say so in a comment; otherwise log it at minimum. 'An error happened somewhere' is the worst possible debugging clue.
 
 ```python
+# Usually wrong
+try: load_config()
+except FileNotFoundError: pass
+
+# Right — fallback is explicit
 try:
-    result = process_data(data)
-except ValueError:
-    print("Invalid data format")
-except TypeError:
-    print("Unexpected data type")
-```
-
-If you genuinely need to handle all standard exceptions, use `except Exception` rather than a bare `except`. This still allows `KeyboardInterrupt` and `SystemExit` to propagate normally.
-
-```python
-try:
-    result = process_data(data)
-except Exception as e:
-    print(f"An unexpected error occurred: {e}")
-```
-
-## Mistake 2: Swallowing exceptions silently
-
-Handling an exception without logging, re-raising, or otherwise responding to it hides errors and makes debugging nearly impossible.
-
-**Do not do this:**
-
-```python
-try:
-    config = load_config("settings.conf")
+    config = load_config()
 except FileNotFoundError:
-    pass  # Silently ignore the missing file
-```
-
-**Do this instead:**
-
-```python
-import logging
-
-logger = logging.getLogger(__name__)
-
-try:
-    config = load_config("settings.conf")
-except FileNotFoundError:
-    logger.warning("Configuration file not found, using defaults")
+    logger.warning('config missing, using defaults')
     config = DEFAULT_CONFIG
 ```
 
-If you must ignore an exception, add a comment explaining why it is safe to do so.
+### 3. Catching too broadly
+
+`except Exception` catches `KeyError`, `TypeError`, `AttributeError`, and every bug you didn't anticipate. If you know exactly which exceptions your code can raise, name them. Reserve `Exception` for a logged safety net at a framework boundary.
+
+### 4. Exceptions as flow control
 
 ```python
-try:
-    os.remove(temp_file)
-except FileNotFoundError:
-    # The file was already deleted by another process; this is expected
-    pass
-```
-
-## Mistake 3: Catching too broadly
-
-Handling `Exception` when you only expect specific exceptions hides bugs in your code.
-
-**Do not do this:**
-
-```python
-def get_user_age(data: dict) -> int:
-    """Extract the user age from a data dictionary."""
+# Wrong
+def is_positive(n):
     try:
-        return int(data["age"])
-    except Exception:
-        return 0
-```
-
-This hides `KeyError` (if `"age"` is missing), `TypeError` (if `data` is not a dictionary), and any other unexpected exceptions.
-
-**Do this instead:**
-
-```python
-def get_user_age(data: dict) -> int:
-    """Extract the user age from a data dictionary."""
-    try:
-        return int(data["age"])
-    except KeyError:
-        print("Age field is missing from the data")
-        return 0
-    except ValueError:
-        print(f"Age value is not a valid integer: {data['age']!r}")
-        return 0
-```
-
-## Mistake 4: Using exceptions for flow control
-
-Exceptions should represent exceptional conditions, not expected program flow. Using them as a substitute for `if`/`else` statements makes code harder to read and slower to execute.
-
-**Do not do this:**
-
-```python
-def is_positive(number: float) -> bool:
-    """Check whether a number is positive."""
-    try:
-        if number <= 0:
-            raise ValueError("Not positive")
+        if n <= 0: raise ValueError
         return True
     except ValueError:
         return False
+
+# Right
+def is_positive(n):
+    return n > 0
 ```
 
-**Do this instead:**
+Python's 'easier to ask forgiveness than permission' (EAFP) style is fine when the exception really is exceptional. It stops being fine when you're raising just so you can catch — that's an `if`, in disguise.
+
+### 5. Oversized `try` blocks
+
+Only wrap the line that might raise the exception you're catching. A 10-line `try` around 'read file, parse it, process it, save result' means a `FileNotFoundError` printed by your except clause might actually be from the parse step, not the read.
+
+### 6. Losing the original cause
+
+When you raise a new exception from inside an `except`, use `from exc`. That attaches the original as `__cause__` and both appear in the traceback — otherwise you're throwing away the most useful debugging clue.
 
 ```python
-def is_positive(number: float) -> bool:
-    """Check whether a number is positive."""
-    return number > 0
+# Wrong
+try: int(raw)
+except ValueError: raise RuntimeError('bad input')
+
+# Right
+try: int(raw)
+except ValueError as exc: raise RuntimeError('bad input') from exc
 ```
 
-However, there are cases where using exceptions is the Pythonic approach. The "easier to ask for forgiveness than permission" (EAFP) pattern is appropriate when the exceptional case is genuinely rare.
+### 7. Forgetting cleanup on exception
 
 ```python
-# EAFP style: appropriate when the key usually exists
-def get_cached_value(cache: dict, key: str) -> str | None:
-    """Get a value from the cache."""
-    try:
-        return cache[key]
-    except KeyError:
-        return None
-```
-
-## Mistake 5: Putting too much code in the `try` block
-
-A `try` block should contain only the code that might raise the exception you are handling. Including unrelated code makes it harder to identify the source of an exception.
-
-**Do not do this:**
-
-```python
-try:
-    filepath = build_filepath(name)
-    content = read_file(filepath)
-    data = parse_content(content)
-    result = process_data(data)
-    save_result(result)
-except FileNotFoundError:
-    print("File not found")
-```
-
-If `parse_content` or `process_data` accidentally raises `FileNotFoundError`, this code would incorrectly report "File not found" when the real problem is elsewhere.
-
-**Do this instead:**
-
-```python
-filepath = build_filepath(name)
-
-try:
-    content = read_file(filepath)
-except FileNotFoundError:
-    print(f"File not found: {filepath}")
-    content = ""
-
-if content:
-    data = parse_content(content)
-    result = process_data(data)
-    save_result(result)
-```
-
-## Mistake 6: Losing the original exception context
-
-When raising a new exception inside an `except` block, use exception chaining (`raise ... from ...`) to preserve the original exception information.
-
-**Do not do this:**
-
-```python
-try:
-    value = int(raw_input)
-except ValueError:
-    raise RuntimeError("Invalid input")
-```
-
-This discards the original `ValueError`, making it harder to debug.
-
-**Do this instead:**
-
-```python
-try:
-    value = int(raw_input)
-except ValueError as e:
-    raise RuntimeError("Invalid input") from e
-```
-
-The `from e` clause preserves the original exception as the `__cause__` attribute, so the full chain of errors is visible in the traceback.
-
-## Mistake 7: Not cleaning up resources
-
-Failing to release resources (files, connections, locks) when exceptions occur leads to resource leaks.
-
-**Do not do this:**
-
-```python
-f = open("data.txt", "r", encoding="utf-8")
+# Wrong — f.close() never runs if f.read() raises
+f = open('data.txt')
 data = f.read()
-f.close()  # This line never runs if f.read() raises an exception
-```
+f.close()
 
-**Do this instead:**
-
-```python
-with open("data.txt", "r", encoding="utf-8") as f:
+# Right — guaranteed cleanup
+with open('data.txt') as f:
     data = f.read()
-# The file is closed automatically, even if an exception occurs
 ```
 
-Always use context managers (the `with` statement) for resources that need cleanup. See the [Use context managers](use-context-managers.ipynb) guide for more details.
+Context managers exist precisely for this. Any resource with a lifecycle — files, locks, connections, cursors — should be acquired with `with`.
 
-## Quick reference: dos and do-nots
+## When the pattern is fine
 
-| Do | Do not |
-|----|--------|
-| Handle specific exception types | Use bare `except` |
-| Log or respond to handled exceptions | Swallow exceptions silently |
-| Keep `try` blocks small and focused | Wrap large blocks of code in `try` |
-| Use context managers for resources | Rely on manual cleanup after `try` |
-| Use exception chaining (`from e`) | Discard original exception context |
-| Use exceptions for exceptional conditions | Use exceptions for normal flow control |
-| Add descriptive error messages | Raise exceptions without messages |
+Each of these is a *pattern*, not an absolute rule. `except Exception` at a top-level handler that logs and re-raises is fine — it's the framework boundary. Silent `pass` is fine when the exception is genuinely idempotent-and-expected, like 'delete this file, don't care if it already went'. A wider `try` block is fine when the grouping really is a single operation whose failure modes you handle together.
 
-## Related guides
+The traps bite when the shortcut is applied out of habit to a case where the defaults don't match the intent.
 
-- [Create custom exceptions](create-custom-exceptions.ipynb) for building your own exception classes
-- [Handle multiple exceptions](handle-multiple-exceptions.ipynb) for working with different exception types
-- [Use context managers](use-context-managers.ipynb) for reliable resource cleanup
+## Related reading
+
+- [Create custom exceptions](create-custom-exceptions.ipynb) — raising your own types instead of reusing `ValueError`.
+- [Handle multiple exceptions](handle-multiple-exceptions.ipynb) — ordering, grouping, and chaining.
+- [Use context managers](use-context-managers.ipynb) — the cleanup-on-exception pattern in detail.
+- [try/except syntax reference](../reference/try-except-syntax-reference.md) — the full grammar, including `else` and `finally`.
