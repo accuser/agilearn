@@ -111,36 +111,6 @@ nav:
   - Home: index.md
   - Guides:
       - guides/index.md
-      - Functions:
-          - guides/functions/index.md
-          - Learn:
-              - guides/functions/learn/index.md
-              - Defining functions: guides/functions/learn/01-defining-functions.ipynb
-              - Lambda expressions: guides/functions/learn/02-lambda-expressions.ipynb
-              - Type hints: guides/functions/learn/03-type-hints.ipynb
-              - Docstrings: guides/functions/learn/04-docstrings.ipynb
-              - Scope and closures: guides/functions/learn/05-scope-and-closures.ipynb
-              - "*args and **kwargs": guides/functions/learn/06-args-and-kwargs.ipynb
-              - Decorators: guides/functions/learn/07-decorators.ipynb
-          - Recipes:
-              - guides/functions/recipes/index.md
-              - Use default and keyword arguments: guides/functions/recipes/use-default-and-keyword-arguments.ipynb
-              - Write recursive functions: guides/functions/recipes/write-recursive-functions.ipynb
-              - Create decorators: guides/functions/recipes/create-decorators.ipynb
-              - Work with higher-order functions: guides/functions/recipes/work-with-higher-order-functions.ipynb
-              - Validate function arguments: guides/functions/recipes/validate-function-arguments.ipynb
-          - Reference:
-              - guides/functions/reference/index.md
-              - Function syntax: guides/functions/reference/function-syntax.md
-              - Built-in functions: guides/functions/reference/built-in-functions.md
-              - Type hint syntax: guides/functions/reference/type-hints.md
-              - Docstring conventions: guides/functions/reference/docstring-conventions.md
-          - Concepts:
-              - guides/functions/concepts/index.md
-              - Why functions matter: guides/functions/concepts/why-functions-matter.md
-              - First-class functions in Python: guides/functions/concepts/first-class-functions.md
-              - "Scope, closures, and namespaces": guides/functions/concepts/scope-closures-and-namespaces.md
-              - The Zen of functions: guides/functions/concepts/the-zen-of-functions.md
       - Conditional logic:
           - guides/conditional-logic/index.md
           - Learn:
@@ -192,6 +162,36 @@ nav:
               - Hash tables and dictionaries: guides/data-structures/concepts/hash-tables-and-dictionaries.md
               - Choosing data structures: guides/data-structures/concepts/choosing-data-structures.md
               - Memory and performance: guides/data-structures/concepts/memory-and-performance.md
+      - Functions:
+          - guides/functions/index.md
+          - Learn:
+              - guides/functions/learn/index.md
+              - Defining functions: guides/functions/learn/01-defining-functions.ipynb
+              - Lambda expressions: guides/functions/learn/02-lambda-expressions.ipynb
+              - Type hints: guides/functions/learn/03-type-hints.ipynb
+              - Docstrings: guides/functions/learn/04-docstrings.ipynb
+              - Scope and closures: guides/functions/learn/05-scope-and-closures.ipynb
+              - "*args and **kwargs": guides/functions/learn/06-args-and-kwargs.ipynb
+              - Decorators: guides/functions/learn/07-decorators.ipynb
+          - Recipes:
+              - guides/functions/recipes/index.md
+              - Use default and keyword arguments: guides/functions/recipes/use-default-and-keyword-arguments.ipynb
+              - Write recursive functions: guides/functions/recipes/write-recursive-functions.ipynb
+              - Create decorators: guides/functions/recipes/create-decorators.ipynb
+              - Work with higher-order functions: guides/functions/recipes/work-with-higher-order-functions.ipynb
+              - Validate function arguments: guides/functions/recipes/validate-function-arguments.ipynb
+          - Reference:
+              - guides/functions/reference/index.md
+              - Function syntax: guides/functions/reference/function-syntax.md
+              - Built-in functions: guides/functions/reference/built-in-functions.md
+              - Type hint syntax: guides/functions/reference/type-hints.md
+              - Docstring conventions: guides/functions/reference/docstring-conventions.md
+          - Concepts:
+              - guides/functions/concepts/index.md
+              - Why functions matter: guides/functions/concepts/why-functions-matter.md
+              - First-class functions in Python: guides/functions/concepts/first-class-functions.md
+              - "Scope, closures, and namespaces": guides/functions/concepts/scope-closures-and-namespaces.md
+              - The Zen of functions: guides/functions/concepts/the-zen-of-functions.md
       - Classes and objects:
           - guides/classes-and-objects/index.md
           - Learn:
@@ -216,6 +216,29 @@ nav:
               - guides/classes-and-objects/concepts/index.md
               - When to reach for classes: guides/classes-and-objects/concepts/when-to-reach-for-classes.md
               - Composition over inheritance: guides/classes-and-objects/concepts/composition-over-inheritance.md
+      - String processing:
+          - guides/string-processing/index.md
+          - Learn:
+              - guides/string-processing/learn/index.md
+              - String basics: guides/string-processing/learn/01-string-basics.ipynb
+              - String methods: guides/string-processing/learn/02-string-methods.ipynb
+              - String formatting: guides/string-processing/learn/03-string-formatting.ipynb
+              - String searching: guides/string-processing/learn/04-string-searching.ipynb
+          - Recipes:
+              - guides/string-processing/recipes/index.md
+              - Clean and normalise text: guides/string-processing/recipes/clean-and-normalise-text.ipynb
+              - Parse structured strings: guides/string-processing/recipes/parse-structured-strings.ipynb
+              - Use string templates: guides/string-processing/recipes/use-string-templates.ipynb
+              - Avoid common string mistakes: guides/string-processing/recipes/avoid-common-string-mistakes.md
+          - Reference:
+              - guides/string-processing/reference/index.md
+              - String methods: guides/string-processing/reference/string-methods-reference.md
+              - String formatting: guides/string-processing/reference/string-formatting-reference.md
+              - String constants: guides/string-processing/reference/string-constants-reference.md
+          - Concepts:
+              - guides/string-processing/concepts/index.md
+              - Why strings are immutable: guides/string-processing/concepts/why-strings-are-immutable.md
+              - Understanding Unicode and encodings: guides/string-processing/concepts/understanding-unicode-and-encodings.md
       - Dates and times:
           - guides/dates-and-times/index.md
           - Learn:
@@ -284,29 +307,6 @@ nav:
               - guides/iterators-and-generators/concepts/index.md
               - Laziness and memory: guides/iterators-and-generators/concepts/laziness-and-memory.md
               - Iteration as an interface: guides/iterators-and-generators/concepts/iteration-as-an-interface.md
-      - Error handling:
-          - guides/error-handling/index.md
-          - Learn:
-              - guides/error-handling/learn/index.md
-              - Your first exception: guides/error-handling/learn/01-your-first-exception.ipynb
-              - Exception types: guides/error-handling/learn/02-exception-types.ipynb
-              - Raising exceptions: guides/error-handling/learn/03-raising-exceptions.ipynb
-              - Cleanup with finally: guides/error-handling/learn/04-cleanup-with-finally.ipynb
-          - Recipes:
-              - guides/error-handling/recipes/index.md
-              - Handle multiple exceptions: guides/error-handling/recipes/handle-multiple-exceptions.ipynb
-              - Create custom exceptions: guides/error-handling/recipes/create-custom-exceptions.ipynb
-              - Use context managers: guides/error-handling/recipes/use-context-managers.ipynb
-              - Avoid common mistakes: guides/error-handling/recipes/avoid-common-mistakes.md
-          - Reference:
-              - guides/error-handling/reference/index.md
-              - try/except syntax: guides/error-handling/reference/try-except-syntax-reference.md
-              - Built-in exceptions: guides/error-handling/reference/built-in-exceptions-reference.md
-              - Exception hierarchy: guides/error-handling/reference/exception-hierarchy-reference.md
-          - Concepts:
-              - guides/error-handling/concepts/index.md
-              - Why error handling matters: guides/error-handling/concepts/why-error-handling-matters.md
-              - Understanding the exception model: guides/error-handling/concepts/understanding-the-exception-model.md
       - File handling:
           - guides/file-handling/index.md
           - Learn:
@@ -330,6 +330,29 @@ nav:
               - guides/file-handling/concepts/index.md
               - Why context managers matter: guides/file-handling/concepts/why-context-managers-matter.md
               - Understanding file encodings: guides/file-handling/concepts/understanding-file-encodings.md
+      - Error handling:
+          - guides/error-handling/index.md
+          - Learn:
+              - guides/error-handling/learn/index.md
+              - Your first exception: guides/error-handling/learn/01-your-first-exception.ipynb
+              - Exception types: guides/error-handling/learn/02-exception-types.ipynb
+              - Raising exceptions: guides/error-handling/learn/03-raising-exceptions.ipynb
+              - Cleanup with finally: guides/error-handling/learn/04-cleanup-with-finally.ipynb
+          - Recipes:
+              - guides/error-handling/recipes/index.md
+              - Handle multiple exceptions: guides/error-handling/recipes/handle-multiple-exceptions.ipynb
+              - Create custom exceptions: guides/error-handling/recipes/create-custom-exceptions.ipynb
+              - Use context managers: guides/error-handling/recipes/use-context-managers.ipynb
+              - Avoid common mistakes: guides/error-handling/recipes/avoid-common-mistakes.md
+          - Reference:
+              - guides/error-handling/reference/index.md
+              - try/except syntax: guides/error-handling/reference/try-except-syntax-reference.md
+              - Built-in exceptions: guides/error-handling/reference/built-in-exceptions-reference.md
+              - Exception hierarchy: guides/error-handling/reference/exception-hierarchy-reference.md
+          - Concepts:
+              - guides/error-handling/concepts/index.md
+              - Why error handling matters: guides/error-handling/concepts/why-error-handling-matters.md
+              - Understanding the exception model: guides/error-handling/concepts/understanding-the-exception-model.md
       - Logging and debugging:
           - guides/logging-and-debugging/index.md
           - Learn:
@@ -376,29 +399,6 @@ nav:
               - guides/regex/concepts/index.md
               - Understanding the regex engine: guides/regex/concepts/understanding-the-regex-engine.md
               - Why regular expressions: guides/regex/concepts/why-regular-expressions.md
-      - String processing:
-          - guides/string-processing/index.md
-          - Learn:
-              - guides/string-processing/learn/index.md
-              - String basics: guides/string-processing/learn/01-string-basics.ipynb
-              - String methods: guides/string-processing/learn/02-string-methods.ipynb
-              - String formatting: guides/string-processing/learn/03-string-formatting.ipynb
-              - String searching: guides/string-processing/learn/04-string-searching.ipynb
-          - Recipes:
-              - guides/string-processing/recipes/index.md
-              - Clean and normalise text: guides/string-processing/recipes/clean-and-normalise-text.ipynb
-              - Parse structured strings: guides/string-processing/recipes/parse-structured-strings.ipynb
-              - Use string templates: guides/string-processing/recipes/use-string-templates.ipynb
-              - Avoid common string mistakes: guides/string-processing/recipes/avoid-common-string-mistakes.md
-          - Reference:
-              - guides/string-processing/reference/index.md
-              - String methods: guides/string-processing/reference/string-methods-reference.md
-              - String formatting: guides/string-processing/reference/string-formatting-reference.md
-              - String constants: guides/string-processing/reference/string-constants-reference.md
-          - Concepts:
-              - guides/string-processing/concepts/index.md
-              - Why strings are immutable: guides/string-processing/concepts/why-strings-are-immutable.md
-              - Understanding Unicode and encodings: guides/string-processing/concepts/understanding-unicode-and-encodings.md
       - Unit testing:
           - guides/unit-testing/index.md
           - Learn:
