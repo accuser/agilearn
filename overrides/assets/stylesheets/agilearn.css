@@ -896,3 +896,234 @@
   align-items: center;
   justify-content: center;
 }
+
+/* =========================================================
+   Notebook pages — mkdocs-jupyter integration
+   On notebook-rendered pages, markdown content lives inside
+   `.md-typeset > .jupyter-wrapper > .jp-Notebook > .jp-Cell > … >
+   .jp-RenderedHTMLCommon.jp-RenderedMarkdown.jp-MarkdownOutput`.
+   None of the `.md-typeset > p` measure/rhythm rules reach it (direct-
+   child combinator), and mkdocs-jupyter inlines a ~600 KB JupyterLab
+   stylesheet inside <article> that lands AFTER our <link>, so any rule
+   with equal specificity loses on source order. Restate the tokenised
+   treatment at a higher specificity, scoped to the rendered output.
+   ========================================================= */
+
+/* JupyterLab token overrides — point the tokens the inlined sheet reads
+   at our own design system so downstream `.jp-InputArea-editor`,
+   `.highlight-ipynb`, etc. inherit the right surfaces without us having
+   to override every leaf rule. Scoped to `.md-typeset .jupyter-wrapper`
+   so the specificity beats the inlined `.jupyter-wrapper` defaults. */
+.md-typeset .jupyter-wrapper {
+  --jp-cell-editor-background:        var(--agilearn-code-surface);
+  --jp-cell-editor-border-color:      var(--agilearn-divider);
+  --jp-cell-editor-active-background: var(--agilearn-code-surface);
+  --jp-cell-editor-active-border-color: var(--agilearn-indigo);
+  --jp-border-radius:                 6px;
+  --jp-code-padding:                  0.6rem;
+  --jp-cell-padding:                  0;
+  --jp-content-font-family:           var(--md-text-font-family, "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+  --jp-code-font-family:              var(--md-code-font-family, "IBM Plex Mono", ui-monospace, monospace);
+  --jp-content-font-color1:           var(--md-default-fg-color);
+  --jp-content-font-size1:            1rem;
+  --jp-code-font-size:                var(--agilearn-text-sm);
+
+  font-family: inherit;
+  color: var(--md-default-fg-color);
+}
+
+/* Measure — constrain rendered markdown prose to the same 42rem column
+   the rest of the article uses. Scoped to `.jp-RenderedHTMLCommon` so
+   code editors and raw output cells keep the full column. */
+.md-typeset .jp-RenderedHTMLCommon > p,
+.md-typeset .jp-RenderedHTMLCommon > ul,
+.md-typeset .jp-RenderedHTMLCommon > ol,
+.md-typeset .jp-RenderedHTMLCommon > dl,
+.md-typeset .jp-RenderedHTMLCommon > blockquote {
+  max-width: var(--agilearn-measure);
+}
+
+/* Paragraphs — beat the inlined `.jupyter-wrapper p { margin-bottom: 10px }`
+   rule via the extra `.jp-RenderedHTMLCommon` class in the selector. */
+.md-typeset .jp-RenderedHTMLCommon p {
+  margin: 0 0 0.9em;
+  color: var(--md-default-fg-color);
+}
+.md-typeset .jp-RenderedHTMLCommon p + p {
+  margin-top: 0;
+}
+
+/* Heading scale — re-declare per-level so any future upstream change to
+   JupyterLab's heading tokens can't drift our scale. Specificity (0,2,2)
+   beats both `.md-typeset h1` and anything shipped inside the inline
+   stylesheet. */
+.md-typeset .jp-RenderedHTMLCommon h1,
+.md-typeset .jp-RenderedHTMLCommon h2,
+.md-typeset .jp-RenderedHTMLCommon h3,
+.md-typeset .jp-RenderedHTMLCommon h4,
+.md-typeset .jp-RenderedHTMLCommon h5,
+.md-typeset .jp-RenderedHTMLCommon h6 {
+  font-family: inherit;
+  font-weight: 600;
+  line-height: var(--agilearn-lh-tight);
+  letter-spacing: 0;
+  color: var(--md-default-fg-color);
+}
+.md-typeset .jp-RenderedHTMLCommon h1 {
+  font-size: var(--agilearn-text-4xl);
+  font-weight: 700;
+  margin: 0 0 1rem;
+  letter-spacing: -0.01em;
+}
+.md-typeset .jp-RenderedHTMLCommon h2 {
+  font-size: var(--agilearn-text-3xl);
+  margin: 2rem 0 0.75rem;
+}
+.md-typeset .jp-RenderedHTMLCommon h3 {
+  font-size: var(--agilearn-text-2xl);
+  margin: 1.75rem 0 0.6rem;
+}
+.md-typeset .jp-RenderedHTMLCommon h4 {
+  font-size: var(--agilearn-text-xl);
+  margin: 1.5rem 0 0.5rem;
+}
+.md-typeset .jp-RenderedHTMLCommon h5 {
+  font-size: var(--agilearn-text-lg);
+  margin: 1.25rem 0 0.4rem;
+}
+.md-typeset .jp-RenderedHTMLCommon h6 {
+  font-size: var(--agilearn-text-base);
+  margin: 1.25rem 0 0.4rem;
+  color: var(--md-default-fg-color--light);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+}
+
+/* Anchor links — JupyterLab renders `<a class="anchor-link">¶</a>` on
+   every heading and hides them via `display: none`. Bring them back
+   so notebook readers can grab deep links, but keep them subtle: only
+   opaque on hover, ochre accent to match the rest of the site. */
+.md-typeset .jp-RenderedHTMLCommon h1 .anchor-link,
+.md-typeset .jp-RenderedHTMLCommon h2 .anchor-link,
+.md-typeset .jp-RenderedHTMLCommon h3 .anchor-link,
+.md-typeset .jp-RenderedHTMLCommon h4 .anchor-link,
+.md-typeset .jp-RenderedHTMLCommon h5 .anchor-link,
+.md-typeset .jp-RenderedHTMLCommon h6 .anchor-link {
+  display: inline;
+  color: var(--md-default-fg-color--lighter);
+  text-decoration: none;
+  margin-inline-start: 0.4em;
+  opacity: 0;
+  transition: opacity 120ms ease, color 120ms ease;
+}
+.md-typeset .jp-RenderedHTMLCommon h1:hover .anchor-link,
+.md-typeset .jp-RenderedHTMLCommon h2:hover .anchor-link,
+.md-typeset .jp-RenderedHTMLCommon h3:hover .anchor-link,
+.md-typeset .jp-RenderedHTMLCommon h4:hover .anchor-link,
+.md-typeset .jp-RenderedHTMLCommon h5:hover .anchor-link,
+.md-typeset .jp-RenderedHTMLCommon h6:hover .anchor-link {
+  opacity: 1;
+  color: var(--agilearn-ochre);
+}
+.md-typeset .jp-RenderedHTMLCommon .anchor-link:focus-visible {
+  opacity: 1;
+  outline: 2px solid var(--agilearn-focus-ring);
+  outline-offset: 2px;
+}
+
+/* Lists — mirror `.md-typeset ul / ol` treatment, same rhythm and
+   indent so nested steps in a tutorial cell read as hierarchy. */
+.md-typeset .jp-RenderedHTMLCommon ul,
+.md-typeset .jp-RenderedHTMLCommon ol {
+  margin: 0 0 0.9em;
+  padding-inline-start: 1.4em;
+}
+.md-typeset .jp-RenderedHTMLCommon li {
+  margin-block: 0.25em;
+}
+.md-typeset .jp-RenderedHTMLCommon li > ul,
+.md-typeset .jp-RenderedHTMLCommon li > ol {
+  margin: 0.25em 0;
+}
+
+/* Blockquotes, rules, tables inside rendered markdown. */
+.md-typeset .jp-RenderedHTMLCommon blockquote {
+  margin: 1rem 0;
+  padding: 0.6rem 1rem;
+  border-inline-start: 3px solid var(--agilearn-divider);
+  background: transparent;
+  color: var(--md-default-fg-color--light);
+  font-style: normal;
+}
+.md-typeset .jp-RenderedHTMLCommon hr {
+  margin: 2rem 0;
+  border: 0;
+  border-top: 1px solid var(--agilearn-divider);
+}
+.md-typeset .jp-RenderedHTMLCommon table {
+  margin: 1rem 0;
+  font-size: var(--agilearn-text-sm);
+  border-collapse: collapse;
+  border: 1px solid var(--agilearn-divider);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.md-typeset .jp-RenderedHTMLCommon table th,
+.md-typeset .jp-RenderedHTMLCommon table td {
+  padding: 0.55rem 0.85rem;
+  border: 0;
+}
+.md-typeset .jp-RenderedHTMLCommon table th {
+  background: var(--agilearn-surface-alt);
+  font-weight: 600;
+  text-align: start;
+}
+
+/* Inline code inside rendered markdown — IBM Plex Mono on the warm
+   code surface, matches the `.md-typeset code` treatment. */
+.md-typeset .jp-RenderedHTMLCommon code {
+  font-family: var(--md-code-font-family), "IBM Plex Mono", ui-monospace, monospace;
+  font-size: var(--agilearn-text-sm);
+  line-height: var(--agilearn-lh-code);
+  background: var(--agilearn-code-surface);
+  border-radius: 4px;
+  padding: 0.08em 0.32em;
+  color: var(--md-default-fg-color);
+}
+
+/* Cell chrome — small breathing room between stacked cells. Chain
+   `.jupyter-wrapper` so our specificity (0,3,0) beats the inlined
+   `.jupyter-wrapper .jp-Notebook .jp-Cell` source-order win.
+   Prompts and collapser strips are already `display: none` upstream. */
+.md-typeset .jupyter-wrapper .jp-Notebook {
+  padding: 0;
+}
+.md-typeset .jupyter-wrapper .jp-Cell {
+  padding: 0.35rem 0;
+}
+.md-typeset .jupyter-wrapper .jp-Cell + .jp-Cell {
+  margin-top: 0.25rem;
+}
+
+/* Code-cell chrome (`.jp-CodeCell`, `.jp-CodeMirrorEditor`,
+   `.jp-InputArea-editor`, `.highlight-ipynb`) is intentionally NOT
+   styled here. `convertCells()` in overrides/main.html runs on
+   DOMContentLoaded and replaces every `.jp-CodeCell` with a
+   `<pre class="agilearn-thebe-cell" data-executable="true">` placeholder
+   before paint, so those JupyterLab classes never appear in the live
+   DOM (verified via playwright headless). Thebe then upgrades the
+   placeholder to `.thebe-cell`. The styling for both visible states —
+   `.agilearn-thebe-cell` and `.thebe-cell` — lives further up in this
+   file and is what the user actually sees. */
+
+/* Slate palette — JupyterLab's default editor background switches to
+   a lighter grey that clashes with the rest of the dark surface. Force
+   it back to the agilearn code surface so the editor sits flush with
+   the surrounding cells. */
+[data-md-color-scheme="slate"] .md-typeset .jupyter-wrapper {
+  --jp-cell-editor-background:        var(--agilearn-code-surface);
+  --jp-cell-editor-active-background: var(--agilearn-code-surface);
+  --jp-cell-editor-border-color:      var(--agilearn-divider);
+  --jp-content-font-color1:           var(--md-default-fg-color);
+}
