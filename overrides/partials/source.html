@@ -1,0 +1,18 @@
+{# Agilearn override of Material's partials/source.html.
+   Only change vs upstream: set aria-label on the repository link so
+   Material's JS-injected star/fork counts (which render as a blank
+   "accuser/agilearn 00" accessible name before the GitHub API responds)
+   don't pollute the announcement. Closes A11Y-08 in the UX/a11y review. #}
+<a href="{{ config.repo_url }}"
+   title="{{ lang.t('source') }}"
+   class="md-source"
+   data-md-component="source"
+   aria-label="{{ config.site_name }} on GitHub">
+  <div class="md-source__icon md-icon">
+    {% set icon = config.theme.icon.repo or "fontawesome/brands/git-alt" %}
+    {% include ".icons/" ~ icon ~ ".svg" %}
+  </div>
+  <div class="md-source__repository">
+    {{ config.repo_name }}
+  </div>
+</a>

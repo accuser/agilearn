@@ -403,3 +403,17 @@
   outline: 2px solid var(--md-accent-fg-color);
   outline-offset: 2px;
 }
+
+/* A11Y-09 · The search "Clear" (reset) button is an 18×18 SVG, below
+   WCAG 2.2's 24×24 target size for unspaced controls. Pad the hit area
+   out to 24×24 without changing the SVG's visual size. Same treatment
+   on the search input's primary icon so the target footprint is
+   consistent. */
+.md-search__form button[type="reset"].md-search__icon,
+.md-search__form label.md-search__icon {
+  min-inline-size: 24px;
+  min-block-size: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}

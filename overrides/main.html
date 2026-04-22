@@ -22,11 +22,101 @@
       }
       link.setAttribute('href', '#agilearn-main');
     }
-    if (document.readyState !== 'loading') fixSkipLink();
-    else document.addEventListener('DOMContentLoaded', fixSkipLink);
+
+    function fixHeadingAnchors() {
+      // A11Y-04 — both Material (.headerlink) and mkdocs-jupyter
+      // (.anchor-link) emit a pilcrow (¶) character as the only text of
+      // their heading-permalink anchors. Screen readers announce the
+      // glyph literally ("paragraph mark"). Give each link a proper
+      // accessible name derived from its parent heading, and hide the
+      // glyph itself from the accessibility tree.
+      var links = document.querySelectorAll(
+        ".md-typeset .headerlink, .md-typeset .anchor-link"
+      );
+      links.forEach(function (link) {
+        if (link.dataset.agilearnPilcrow === "1") return;
+        var heading = link.closest("h1, h2, h3, h4, h5, h6");
+        var label = "Permalink to this section";
+        if (heading) {
+          // Clone so we can strip the anchor without mutating the DOM.
+          var clone = heading.cloneNode(true);
+          clone.querySelectorAll(".headerlink, .anchor-link").forEach(function (a) {
+            a.remove();
+          });
+          var text = clone.textContent.replace(/\s+/g, " ").trim();
+          if (text) label = "Permalink to " + text;
+        }
+        link.setAttribute("aria-label", label);
+        // Wrap the existing glyph so the link is still clickable and
+        // still paints the pilcrow for sighted users, but assistive tech
+        // ignores the character itself.
+        if (link.firstChild && link.firstChild.nodeType === Node.TEXT_NODE) {
+          var span = document.createElement("span");
+          span.setAttribute("aria-hidden", "true");
+          span.textContent = link.firstChild.nodeValue;
+          link.replaceChild(span, link.firstChild);
+        } else {
+          link.setAttribute("aria-hidden", "true"); // fallback if structure is unexpected
+          link.setAttribute("tabindex", "-1");
+        }
+        link.dataset.agilearnPilcrow = "1";
+      });
+    }
+
+    function labelSidebarNavLandmarks() {
+      // A11Y-07 — Material's recursive nav-item template emits multiple
+      // nested <nav> landmarks in the sidebar, each labelled only by its
+      // immediate section title ("Learn", "Recipes"...). A screen-reader
+      // user listing landmarks sees several navs called "Learn" and can
+      // no longer tell Functions:Learn apart from Classes:Learn. Walk
+      // the sidebar and build compound labels like "Functions: Learn".
+      var sidebarNavs = document.querySelectorAll(
+        '.md-sidebar--primary nav.md-nav[aria-labelledby]'
+      );
+      sidebarNavs.forEach(function (nav) {
+        if (nav.dataset.agilearnNavLabel === "1") return;
+        var ownId = nav.getAttribute("aria-labelledby");
+        var ownLabelEl = ownId ? document.getElementById(ownId) : null;
+        if (!ownLabelEl) return;
+        var ownText = ownLabelEl.textContent.replace(/\s+/g, " ").trim();
+        if (!ownText) return;
+
+        // Find nearest ancestor nav.md-nav (if any) to use as the prefix.
+        var ancestor = nav.parentElement;
+        var compound = ownText;
+        while (ancestor) {
+          if (ancestor.matches("nav.md-nav[aria-labelledby]")) {
+            var parentId = ancestor.getAttribute("aria-labelledby");
+            var parentLabelEl = parentId ? document.getElementById(parentId) : null;
+            if (parentLabelEl) {
+              var parentText = parentLabelEl.textContent
+                .replace(/\s+/g, " ")
+                .trim();
+              if (parentText && parentText !== ownText) {
+                compound = parentText + ": " + ownText;
+              }
+            }
+            break;
+          }
+          ancestor = ancestor.parentElement;
+        }
+        nav.setAttribute("aria-label", compound);
+        nav.removeAttribute("aria-labelledby");
+        nav.dataset.agilearnNavLabel = "1";
+      });
+    }
+
+    function runAll() {
+      fixSkipLink();
+      fixHeadingAnchors();
+      labelSidebarNavLandmarks();
+    }
+
+    if (document.readyState !== 'loading') runAll();
+    else document.addEventListener('DOMContentLoaded', runAll);
     // Re-run on Material's instant-navigation page changes, if available.
     if (typeof window.document$ !== 'undefined' && window.document$.subscribe) {
-      try { window.document$.subscribe(fixSkipLink); } catch (e) {}
+      try { window.document$.subscribe(runAll); } catch (e) {}
     }
   })();
   </script>
