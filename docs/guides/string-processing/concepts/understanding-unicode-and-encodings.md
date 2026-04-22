@@ -1,14 +1,14 @@
 # Understanding Unicode and encodings
 
-Every time you type a character on your keyboard, something remarkable happens behind the scenes. Your computer -- which fundamentally understands nothing but numbers -- must somehow represent the letter "A", the digit "7", the emoji "😊", and the Chinese character "中" as sequences of ones and zeros. How it does this, and why it matters to you as a Python programmer, is the subject of this article.
+Every time you type a character on your keyboard, something remarkable happens behind the scenes. Your computer &ndash; which fundamentally understands nothing but numbers &ndash; must somehow represent the letter "A", the digit "7", the emoji "😊", and the Chinese character "中" as sequences of ones and zeros. How it does this, and why it matters to you as a Python programmer, is the subject of this article.
 
 ## A brief history
 
 In the early days of computing, the **ASCII** standard assigned numbers to 128 characters: the English alphabet (uppercase and lowercase), digits, punctuation, and a handful of control characters. ASCII worked well for English text, but it left no room for the accented characters used in French, the umlauts in German, or the thousands of characters in Chinese, Japanese, and Korean.
 
-The solution -- or rather, the many competing solutions -- was a proliferation of **code pages**. Each code page extended ASCII with additional characters for a specific language or region. A file written using one code page would display as garbled nonsense when opened with another. This was the encoding chaos of the 1980s and 1990s.
+The solution &ndash; or rather, the many competing solutions &ndash; was a proliferation of **code pages**. Each code page extended ASCII with additional characters for a specific language or region. A file written using one code page would display as garbled nonsense when opened with another. This was the encoding chaos of the 1980s and 1990s.
 
-**Unicode** was created to end this chaos. It is a universal character set that assigns a unique number, called a **code point**, to every character in every writing system -- plus mathematical symbols, musical notation, and yes, emoji. As of 2024, Unicode defines over 149,000 characters.
+**Unicode** was created to end this chaos. It is a universal character set that assigns a unique number, called a **code point**, to every character in every writing system &ndash; plus mathematical symbols, musical notation, and yes, emoji. As of 2024, Unicode defines over 149,000 characters.
 
 ## What Unicode is (and is not)
 
@@ -94,12 +94,12 @@ Working with Unicode in Python is straightforward if you follow a few simple rul
 
 - **Always specify `encoding="utf-8"`** when opening files. Do not rely on the system default.
 - **Use `str` for text and `bytes` for binary data.** Do not mix them. If you find yourself calling `encode()` and `decode()` frequently, reconsider your data flow.
-- **Be explicit about encoding at system boundaries.** Whenever data enters or leaves your program -- through files, network connections, or command-line arguments -- specify the encoding.
+- **Be explicit about encoding at system boundaries.** Whenever data enters or leaves your program &ndash; through files, network connections, or command-line arguments &ndash; specify the encoding.
 - **Use `errors="replace"` or `errors="ignore"` as last resorts.** These options silently lose data. Prefer fixing the root cause instead.
 - **Test with international text.** If your code only works with ASCII characters, it will eventually fail in production. Include characters like "é", "ñ", "中", and "😊" in your test data.
 
 ## Summary
 
-The key insight is that **text and bytes are fundamentally different things**. Text is a sequence of characters with meaning. Bytes are a sequence of numbers. Encoding is the bridge between them -- the process of converting characters to bytes for storage or transmission, and decoding is the reverse.
+The key insight is that **text and bytes are fundamentally different things**. Text is a sequence of characters with meaning. Bytes are a sequence of numbers. Encoding is the bridge between them &ndash; the process of converting characters to bytes for storage or transmission, and decoding is the reverse.
 
 Python makes this distinction explicit with the `str` and `bytes` types. By always specifying your encoding (usually UTF-8) and keeping text and bytes separate, you can work confidently with international text and avoid the encoding errors that plague many programs.

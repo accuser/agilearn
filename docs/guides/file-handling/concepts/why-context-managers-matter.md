@@ -56,7 +56,7 @@ This is better for several reasons:
 The `with` statement uses the **context manager protocol**, which is defined by two special methods:
 
 1. When Python enters the `with` block, it calls `__enter__()` on the object returned by `open()`. The return value is assigned to the variable after `as`.
-2. When the `with` block ends -- whether normally or because of an exception -- Python calls `__exit__()`. For file objects, this method closes the file.
+2. When the `with` block ends &ndash; whether normally or because of an exception &ndash; Python calls `__exit__()`. For file objects, this method closes the file.
 
 Here is a simplified mental model of what the `with` statement does:
 
@@ -70,7 +70,7 @@ finally:
     manager.__exit__(None, None, None)
 ```
 
-You never need to write this yourself -- the `with` statement handles it all automatically.
+You never need to write this yourself &ndash; the `with` statement handles it all automatically.
 
 ## When exceptions strike
 
@@ -121,7 +121,7 @@ What can go wrong if you do not close files properly?
 
 ## Summary
 
-Context managers, used through the `with` statement, are one of the best features of Python for writing robust, correct file handling code. They solve a real problem -- resource management -- in an elegant and readable way. By using `with` for every file operation, you ensure that files are always closed properly, data is always flushed, and your code communicates its intent clearly.
+Context managers, used through the `with` statement, are one of the best features of Python for writing robust, correct file handling code. They solve a real problem &ndash; resource management &ndash; in an elegant and readable way. By using `with` for every file operation, you ensure that files are always closed properly, data is always flushed, and your code communicates its intent clearly.
 
 The rule is simple: if you are opening a file, use a `with` statement.
 

@@ -31,7 +31,7 @@ Small, focused functions are easier to understand individually and more flexible
 
 A function should be honest about what it needs and what it provides. Its parameters should clearly state what inputs it requires, and its return value should clearly communicate what it produces.
 
-Hidden dependencies -- like reading from global variables, relying on external state, or producing side effects that the caller does not expect -- make functions unpredictable. A function that quietly depends on a global configuration variable is harder to test and harder to reason about than one that accepts the configuration as a parameter.
+Hidden dependencies &ndash; like reading from global variables, relying on external state, or producing side effects that the caller does not expect &ndash; make functions unpredictable. A function that quietly depends on a global configuration variable is harder to test and harder to reason about than one that accepts the configuration as a parameter.
 
 ```python
 # Implicit: depends on global state

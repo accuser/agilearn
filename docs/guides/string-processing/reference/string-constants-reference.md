@@ -429,4 +429,4 @@ character_breakdown("Hello, World! 123")
 - [Python `string` module documentation](https://docs.python.org/3/library/string.html) -- official reference for the `string` module
 - [String methods reference](string-methods-reference.md) -- comprehensive reference for all `str` methods
 - [String formatting reference](string-formatting-reference.md) -- f-strings, `str.format()`, and the format specification mini-language
-- [PEP 292 -- Simpler String Substitutions](https://peps.python.org/pep-0292/) -- the PEP that introduced `string.Template`
+- [PEP 292&ndash;Simpler String Substitutions](https://peps.python.org/pep-0292/) -- the PEP that introduced `string.Template`

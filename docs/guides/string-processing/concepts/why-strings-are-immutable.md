@@ -1,12 +1,12 @@
 # Why strings are immutable
 
-You have probably encountered this at some point: you call a string method, expecting the string to change, and nothing happens. The original string sits there, untouched, as if it did not hear you. This is not a bug -- it is one of the most deliberate design decisions in Python.
+You have probably encountered this at some point: you call a string method, expecting the string to change, and nothing happens. The original string sits there, untouched, as if it did not hear you. This is not a bug &ndash; it is one of the most deliberate design decisions in Python.
 
 But why? Why can you not just change a character in a string the way you can change an element in a list? The answer touches on safety, performance, and some surprisingly deep ideas about how programs should work.
 
 ## What immutability means
 
-An **immutable** object is one that cannot be modified after it is created. When you call a method on a string, Python does not alter the original -- it creates and returns a brand new string.
+An **immutable** object is one that cannot be modified after it is created. When you call a method on a string, Python does not alter the original &ndash; it creates and returns a brand new string.
 
 ```python
 greeting = "hello"
@@ -45,7 +45,7 @@ The designers of Python made strings immutable for several compelling reasons, e
 
 ### Safety and predictability
 
-When you pass a string to a function, you can be confident it will not be changed behind your back. This eliminates an entire category of bugs -- the kind where a function modifies data you did not expect it to touch.
+When you pass a string to a function, you can be confident it will not be changed behind your back. This eliminates an entire category of bugs &ndash; the kind where a function modifies data you did not expect it to touch.
 
 ```python
 def process(name):
@@ -71,12 +71,12 @@ members = {"Alice", "Bob", "Charlie"}
 
 ### Memory efficiency
 
-Because strings cannot change, Python is free to **intern** them -- reuse the same object when identical strings appear in multiple places. This can significantly reduce memory usage in programs that work with many repeated strings.
+Because strings cannot change, Python is free to **intern** them &ndash; reuse the same object when identical strings appear in multiple places. This can significantly reduce memory usage in programs that work with many repeated strings.
 
 ```python
 a = "hello"
 b = "hello"
-print(a is b)  # True -- Python reuses the same object
+print(a is b)  # True &ndash; Python reuses the same object
 ```
 
 ### Thread safety
@@ -88,7 +88,7 @@ In programs that use multiple threads, immutable objects are inherently safe to 
 Immutability does come with a cost. When you build a string by concatenating in a loop, each iteration creates a new string object. The old ones are discarded, wasting time and memory:
 
 ```python
-# Inefficient -- creates a new string on every iteration
+# Inefficient &ndash; creates a new string on every iteration
 result = ""
 for word in ["hello", "beautiful", "world"]:
     result += word + " "
@@ -99,12 +99,12 @@ Each `+=` creates a temporary string, copies the old content, appends the new co
 The recommended approach is `str.join()`, which calculates the total length first and builds the result in a single pass:
 
 ```python
-# Efficient -- builds the string in one step
+# Efficient &ndash; builds the string in one step
 words = ["hello", "beautiful", "world"]
 result = " ".join(words)
 ```
 
-For more complex string building -- where you need conditional logic, formatting, and incremental assembly -- consider `io.StringIO`:
+For more complex string building &ndash; where you need conditional logic, formatting, and incremental assembly &ndash; consider `io.StringIO`:
 
 ```python
 import io
@@ -117,7 +117,7 @@ result = buffer.getvalue()
 
 ## How other languages compare
 
-Python is not alone in making strings immutable. Java and JavaScript both made the same choice, for similar reasons. In Java, the `String` class is immutable, and a separate `StringBuilder` class exists for efficient string construction -- much like the relationship between `str` and `io.StringIO` in Python.
+Python is not alone in making strings immutable. Java and JavaScript both made the same choice, for similar reasons. In Java, the `String` class is immutable, and a separate `StringBuilder` class exists for efficient string construction &ndash; much like the relationship between `str` and `io.StringIO` in Python.
 
 C takes the opposite approach: strings are mutable arrays of characters. This gives programmers maximum flexibility but also maximum responsibility. Buffer overflows and accidental string corruption are common sources of bugs in C programs.
 
@@ -135,4 +135,4 @@ Understanding immutability changes the way you write code:
 
 ## Summary
 
-Immutability is not a limitation -- it is a design choice that makes strings safer, faster, and more predictable. It prevents an entire class of bugs, enables strings to serve as dictionary keys, allows Python to optimise memory usage, and simplifies concurrent programming. The trade-off is that building strings in a loop requires a different approach, but `str.join()` and `io.StringIO` handle that elegantly. Once you internalise the idea that every string operation returns a new string, you will find that immutability makes your code cleaner and easier to reason about.
+Immutability is not a limitation &ndash; it is a design choice that makes strings safer, faster, and more predictable. It prevents an entire class of bugs, enables strings to serve as dictionary keys, allows Python to optimise memory usage, and simplifies concurrent programming. The trade-off is that building strings in a loop requires a different approach, but `str.join()` and `io.StringIO` handle that elegantly. Once you internalise the idea that every string operation returns a new string, you will find that immutability makes your code cleaner and easier to reason about.

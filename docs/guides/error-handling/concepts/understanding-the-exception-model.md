@@ -38,7 +38,7 @@ Each function is "stacked" on top of the one that called it. When `read_file()` 
 
 ## What happens when an exception is raised
 
-When an exception occurs -- whether raised explicitly with `raise` or triggered automatically by Python -- the following sequence unfolds:
+When an exception occurs &ndash; whether raised explicitly with `raise` or triggered automatically by Python &ndash; the following sequence unfolds:
 
 ### Step 1: The exception object is created
 

@@ -2,9 +2,9 @@
 
 ## What is an encoding?
 
-Computers store numbers, not letters. An encoding is the mapping between numbers and characters -- a codebook that tells the computer which number corresponds to which letter.
+Computers store numbers, not letters. An encoding is the mapping between numbers and characters &ndash; a codebook that tells the computer which number corresponds to which letter.
 
-When you save a text file, the characters you typed are converted into a sequence of bytes (numbers between 0 and 255) using an encoding. When you open the file later, those bytes are converted back into characters using the same encoding. If you read the file with a different encoding than the one used to write it, you get garbled text -- sometimes called "mojibake."
+When you save a text file, the characters you typed are converted into a sequence of bytes (numbers between 0 and 255) using an encoding. When you open the file later, those bytes are converted back into characters using the same encoding. If you read the file with a different encoding than the one used to write it, you get garbled text &ndash; sometimes called "mojibake."
 
 ## A brief history of character encodings
 
@@ -12,7 +12,7 @@ When you save a text file, the characters you typed are converted into a sequenc
 
 ASCII (American Standard Code for Information Interchange) was created in the 1960s. It defines 128 characters using 7 bits per character, covering English letters (uppercase and lowercase), digits, punctuation, and some control characters.
 
-The limitation is obvious: ASCII only covers English. Characters from other languages -- accented letters, Cyrillic, Chinese, Arabic, and so on -- are not represented.
+The limitation is obvious: ASCII only covers English. Characters from other languages &ndash; accented letters, Cyrillic, Chinese, Arabic, and so on &ndash; are not represented.
 
 ### Extended ASCII and code pages
 
@@ -24,7 +24,7 @@ The fundamental problem was that different systems used different extensions. A 
 
 Unicode was created to solve this problem once and for all. It assigns a unique number (called a "code point") to every character in every writing system. As of 2024, Unicode covers over 150,000 characters from virtually all human languages, plus mathematical symbols, emoji, and more.
 
-Unicode defines *which* characters exist and *what number* each one has. But it does not define how those numbers are stored as bytes -- that is the job of a Unicode encoding.
+Unicode defines *which* characters exist and *what number* each one has. But it does not define how those numbers are stored as bytes &ndash; that is the job of a Unicode encoding.
 
 ### UTF-8
 
@@ -72,7 +72,7 @@ Note that Python 3.15 will make UTF-8 the default encoding. However, specifying 
 
 | Encoding | Description | Common use |
 |----------|-------------|------------|
-| `utf-8` | Unicode, variable-length (1--4 bytes) | The recommended default for all new files |
+| `utf-8` | Unicode, variable-length (1&ndash;4 bytes) | The recommended default for all new files |
 | `ascii` | English characters only (128 characters) | Legacy systems, simple data |
 | `latin-1` (or `iso-8859-1`) | Western European characters (256 characters) | Older web pages, legacy systems |
 | `utf-16` | Unicode, 2 or 4 bytes per character | Some Windows APIs, some XML files |
@@ -98,7 +98,7 @@ When Python encounters bytes that cannot be decoded (or characters that cannot b
 with open("data.txt", "r", encoding="ascii", errors="strict") as f:
     content = f.read()  # UnicodeDecodeError if non-ASCII found
 
-# Replace -- substitutes problem characters
+# Replace &ndash; substitutes problem characters
 with open("data.txt", "r", encoding="ascii", errors="replace") as f:
     content = f.read()  # non-ASCII bytes become the replacement character
 ```
@@ -111,9 +111,9 @@ There is no reliable way to detect the encoding of a file automatically. A seque
 
 Some approaches to determining the encoding include the following:
 
-- **Check for a BOM** (byte order mark) at the start of the file -- see the next section
+- **Check for a BOM** (byte order mark) at the start of the file &ndash; see the next section
 - **Use third-party libraries** such as `chardet` or `charset-normalizer`, which analyse byte patterns to make an educated guess
-- **Know the encoding in advance** from documentation, file format standards, or conventions -- this is the most reliable approach
+- **Know the encoding in advance** from documentation, file format standards, or conventions &ndash; this is the most reliable approach
 
 ## The byte order mark (BOM)
 

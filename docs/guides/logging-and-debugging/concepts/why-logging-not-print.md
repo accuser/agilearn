@@ -34,13 +34,13 @@ You end up inventing your own conventions, and they are never consistent.
 
 Once a `print()` statement is in your code, it always produces output. The only way to silence it is to comment it out or delete it. If you want to see detailed output during development but not in production, you have to manually manage which print statements are active.
 
-The `logging` module solves this with levels. Set the level to `WARNING` in production, and all your `DEBUG` and `INFO` messages silently disappear -- without touching the source code.
+The `logging` module solves this with levels. Set the level to `WARNING` in production, and all your `DEBUG` and `INFO` messages silently disappear &ndash; without touching the source code.
 
 ### No destinations
 
 `print()` sends everything to standard output. If you want to save output to a file, send errors to a different destination, or forward messages to a monitoring system, you need to build all of that yourself.
 
-With logging, you can attach multiple **handlers** to a single logger. One handler writes to the console, another writes to a file, and a third sends critical errors to an alerting service -- all from the same log statements.
+With logging, you can attach multiple **handlers** to a single logger. One handler writes to the console, another writes to a file, and a third sends critical errors to an alerting service &ndash; all from the same log statements.
 
 ### No context
 
@@ -50,7 +50,7 @@ A bare `print("Something happened")` tells you nothing about when, where, or at 
 2026-02-09 14:30:05 - my_app.database - WARNING - Connection pool nearly full
 ```
 
-Timestamp, module name, severity level, and message -- all without any extra effort from the developer.
+Timestamp, module name, severity level, and message &ndash; all without any extra effort from the developer.
 
 ### No lazy evaluation
 
@@ -155,7 +155,7 @@ In a production environment, the difference between `print()` and `logging` beco
 - **Structured analysis.** With consistent formatting, log messages can be parsed, searched, and analysed programmatically.
 - **Zero-cost disabling.** `DEBUG` messages have virtually no performance impact in production when the level is set higher.
 
-None of this is possible with `print()` without building significant infrastructure around it -- infrastructure that the `logging` module already provides.
+None of this is possible with `print()` without building significant infrastructure around it &ndash; infrastructure that the `logging` module already provides.
 
 ## Making the switch
 
@@ -182,4 +182,4 @@ Transitioning from `print()` to `logging` is straightforward:
 
 4. **Keep `print()`** for actual program output that users should see.
 
-The change is small, but the benefits are significant -- and they grow as your project grows.
+The change is small, but the benefits are significant &ndash; and they grow as your project grows.
