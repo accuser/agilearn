@@ -88,33 +88,42 @@
       // user listing landmarks sees several navs called "Learn" and can
       // no longer tell Functions:Learn apart from Classes:Learn. Walk
       // the sidebar and build compound labels like "Functions: Learn".
+      //
+      // Implementation note: the element pointed at by aria-labelledby
+      // (the chevron <label>) is empty in Material's current markup —
+      // it contains only an SVG icon. The visible nav title sits inside
+      // the nav itself, in <label class="md-nav__title">. We read the
+      // title text from there, walking up to ancestor nav titles to
+      // build the compound label.
+      function navTitle(nav) {
+        var title = nav.querySelector(":scope > label.md-nav__title");
+        if (!title) return "";
+        // Strip nested icons/buttons before grabbing the text.
+        var clone = title.cloneNode(true);
+        clone.querySelectorAll(".md-nav__icon, .md-nav__button, button, svg")
+             .forEach(function (n) { n.remove(); });
+        return clone.textContent.replace(/\s+/g, " ").trim();
+      }
+
       var sidebarNavs = document.querySelectorAll(
         '.md-sidebar--primary nav.md-nav[aria-labelledby]'
       );
       sidebarNavs.forEach(function (nav) {
         if (nav.dataset.agilearnNavLabel === "1") return;
-        var ownId = nav.getAttribute("aria-labelledby");
-        var ownLabelEl = ownId ? document.getElementById(ownId) : null;
-        if (!ownLabelEl) return;
-        var ownText = ownLabelEl.textContent.replace(/\s+/g, " ").trim();
+        var ownText = navTitle(nav);
         if (!ownText) return;
 
-        // Find nearest ancestor nav.md-nav (if any) to use as the prefix.
+        // Walk up through ancestor navs and build a chain like
+        // "Functions: Learn".
         var ancestor = nav.parentElement;
         var compound = ownText;
         while (ancestor) {
-          if (ancestor.matches("nav.md-nav[aria-labelledby]")) {
-            var parentId = ancestor.getAttribute("aria-labelledby");
-            var parentLabelEl = parentId ? document.getElementById(parentId) : null;
-            if (parentLabelEl) {
-              var parentText = parentLabelEl.textContent
-                .replace(/\s+/g, " ")
-                .trim();
-              if (parentText && parentText !== ownText) {
-                compound = parentText + ": " + ownText;
-              }
+          if (ancestor.matches("nav.md-nav")) {
+            var parentText = navTitle(ancestor);
+            if (parentText && parentText !== ownText &&
+                compound.indexOf(parentText + ":") !== 0) {
+              compound = parentText + ": " + compound;
             }
-            break;
           }
           ancestor = ancestor.parentElement;
         }
