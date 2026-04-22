@@ -213,6 +213,12 @@
   white-space: pre;
   overflow-x: auto;
 }
+.agilearn-thebe-cell:focus-visible {
+  /* Keyboard users scrolling a long line of code in the pre-Thebe fallback
+     need a visible ring so they know where focus is. */
+  outline: 2px solid var(--md-accent-fg-color);
+  outline-offset: 2px;
+}
 
 /* Thebe's own cell output styling — tighten to match Material's body text. */
 .thebe-cell {

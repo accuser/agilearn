@@ -77,7 +77,12 @@
     </a>
   </div>
 
-  <div id="agilearn-run-banner" class="agilearn-run-banner" hidden>
+  <div id="agilearn-run-banner"
+       class="agilearn-run-banner"
+       role="status"
+       aria-live="polite"
+       aria-atomic="true"
+       hidden>
     <span class="agilearn-run-banner__msg">Loading Python (one-off download, ~10 MB)…</span>
   </div>
 {% endif %}
@@ -104,9 +109,13 @@
 
     // Use MkDocs's url() filter so these resolve relative to the current page,
     // regardless of whether we're running at localhost:8000 or agilearn.co.uk.
-    const THEBE_LITE_SRC = "{{ 'assets/vendor/thebe-lite/thebe-lite.min.js' | url }}";
-    const THEBE_SRC      = "{{ 'assets/vendor/thebe/index.js' | url }}";
-    const SW_SRC         = "{{ 'service-worker.js' | url }}";
+    // We then absolutise via new URL(rel, document.baseURI) so the paths are
+    // robust to any depth miscalculation and easier to debug (console/network
+    // tabs show the full URL, not `../../../../...`).
+    const resolve = function (rel) { return new URL(rel, document.baseURI).href; };
+    const THEBE_LITE_SRC = resolve("{{ 'assets/vendor/thebe-lite/thebe-lite.min.js' | url }}");
+    const THEBE_SRC      = resolve("{{ 'assets/vendor/thebe/index.js' | url }}");
+    const SW_SRC         = resolve("{{ 'service-worker.js' | url }}");
 
     const banner = document.getElementById("agilearn-run-banner");
     if (!banner) return;
@@ -119,6 +128,24 @@
         s.onerror = function () { reject(new Error("Failed to load " + src)); };
         document.head.appendChild(s);
       });
+    }
+
+    async function loadScriptWithRetry(src, attempts) {
+      // One-attempt retry with a short backoff for transient failures
+      // (intermittent "Network error" XHR exceptions observed during the review).
+      attempts = attempts || 2;
+      let lastErr = null;
+      for (let i = 0; i < attempts; i++) {
+        try {
+          return await loadScript(src);
+        } catch (err) {
+          lastErr = err;
+          if (i < attempts - 1) {
+            await new Promise(function (r) { setTimeout(r, 400 * (i + 1)); });
+          }
+        }
+      }
+      throw lastErr;
     }
 
     function showBanner(text, tone) {
@@ -261,6 +288,13 @@
         const holder = document.createElement("pre");
         holder.setAttribute("data-executable", "true");
         holder.setAttribute("data-language", "python");
+        // Fallback a11y while Thebe hasn't upgraded the cell yet: make each
+        // placeholder keyboard-reachable (so horizontal scrolling works with
+        // arrow keys) and announce what's in it. Thebe replaces these with
+        // its own CodeMirror editor on bootstrap, which takes focus over.
+        holder.setAttribute("tabindex", "0");
+        holder.setAttribute("role", "region");
+        holder.setAttribute("aria-label", "Code (loading interactive editor)");
         holder.textContent = source;
         holder.className = "agilearn-thebe-cell";
 
@@ -268,6 +302,37 @@
         converted++;
       });
       return converted;
+    }
+
+    function labelThebeCells() {
+      // After Thebe upgrades the placeholders to .thebe-cell editors, label
+      // each one "Code cell N of M" for screen-reader users who are moving
+      // between cells. Also relabel the per-cell Run button so it isn't just
+      // "Run" repeated N times in a row.
+      const cells = document.querySelectorAll(".thebe-cell");
+      const total = cells.length;
+      cells.forEach(function (cell, i) {
+        const n = i + 1;
+        cell.setAttribute("role", "region");
+        cell.setAttribute("aria-label", "Code cell " + n + " of " + total);
+
+        // Thebe 0.9.x renders the per-cell run button with lowercase text
+        // ("run"). Normalise to sentence case and give each one a distinct,
+        // screen-reader-friendly name.
+        const runBtn = cell.querySelector(".thebe-run-button, button.thebe-button");
+        if (runBtn && /^\s*run\s*$/i.test(runBtn.textContent)) {
+          runBtn.textContent = "Run";
+          runBtn.setAttribute("aria-label", "Run code cell " + n);
+        }
+      });
+
+      // Top-level "run all" button (if present) — same casing fix + label.
+      document.querySelectorAll(".thebe-run-all-button, button.thebe-run-all").forEach(function (btn) {
+        if (/^\s*run all\s*$/i.test(btn.textContent)) {
+          btn.textContent = "Run all";
+          btn.setAttribute("aria-label", "Run all code cells on this page");
+        }
+      });
     }
 
     async function activate() {
@@ -287,8 +352,8 @@
         await ensureServiceWorker(SW_SRC);
 
         showBanner("Loading Python (one-off download, ~10 MB)…");
-        await loadScript(THEBE_LITE_SRC);
-        await loadScript(THEBE_SRC);
+        await loadScriptWithRetry(THEBE_LITE_SRC);
+        await loadScriptWithRetry(THEBE_SRC);
 
         if (!window.thebelab || typeof window.thebelab.bootstrap !== "function") {
           throw new Error("Thebe library did not load correctly.");
@@ -338,16 +403,22 @@
         }
 
         if (!window.thebelab.session || !window.thebelab.session.kernel) {
-          showBanner("Kernel started but no session was attached. See console for details.", "error");
+          console.error("[Agilearn] Kernel session missing after bootstrap.");
+          showBanner("Interactive Python isn't available right now. Try refreshing the page, or copy the code into your own editor to run it.", "error");
           return;
         }
+        // Label cells + normalise Thebe button copy now that the editors
+        // have been mounted.
+        labelThebeCells();
         showBanner("Ready. Edit a cell and press ▶ to run it. State is shared between cells on this page.", "ready");
         // Auto-dismiss the "ready" banner after a few seconds so it doesn't
         // permanently take up vertical space above the cells.
         setTimeout(function () { banner.hidden = true; }, 4000);
       } catch (err) {
+        // Log the technical detail for debugging, but show the learner a
+        // learner-friendly message that tells them what they can actually do.
         console.error("[Agilearn] Thebe activation failed:", err);
-        showBanner("Couldn't start the in-browser kernel: " + err.message, "error");
+        showBanner("Interactive Python isn't available right now. Try refreshing the page, or copy the code into your own editor to run it.", "error");
       }
     }
 
