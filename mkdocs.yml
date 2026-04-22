@@ -5,7 +5,7 @@ site_url: https://agilearn.co.uk/
 repo_url: https://github.com/accuser/agilearn
 repo_name: accuser/agilearn
 edit_uri: edit/main/docs/
-copyright: "&copy; Agilearn. Content licensed under MIT."
+copyright: "&copy; Agilearn. All rights reserved. Code examples licensed under MIT License. Documentation licensed under CC BY 4.0."
 
 theme:
   name: material
