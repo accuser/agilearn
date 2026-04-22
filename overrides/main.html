@@ -1,10 +1,152 @@
 {% extends "base.html" %}
 
 {# ---------------------------------------------------------------
-   Thebe assets (only on notebook pages)
+   Page title (TONE-02)
+   - Homepage renders the full tagline instead of "Agilearn - Agilearn".
+   - Non-homepage pages use an em-dash separator ("Title — Agilearn")
+     for British typographic convention.
+   --------------------------------------------------------------- #}
+{% block htmltitle %}
+  {% if page.is_homepage %}
+    <title>Agilearn — Self-directed Python guides</title>
+  {% elif page.meta and page.meta.title %}
+    <title>{{ page.meta.title }} — {{ config.site_name }}</title>
+  {% elif page.title %}
+    <title>{{ page.title | striptags }} — {{ config.site_name }}</title>
+  {% else %}
+    <title>{{ config.site_name }}</title>
+  {% endif %}
+{% endblock %}
+
+{# ---------------------------------------------------------------
+   Thebe assets (only on notebook pages) + skip-link hardening
    --------------------------------------------------------------- #}
 {% block extrahead %}
   {{ super() }}
+  {# Make the "Skip to content" link always present and always point at the
+     main article wrapper, regardless of whether the page has a TOC. Works
+     across Material's instant-navigation transitions. #}
+  <script>
+  (function () {
+    function fixSkipLink() {
+      var container = document.querySelector('[data-md-component="skip"]');
+      if (!container) return;
+      var link = container.querySelector('a.md-skip');
+      if (!link) {
+        link = document.createElement('a');
+        link.className = 'md-skip';
+        link.textContent = 'Skip to content';
+        container.appendChild(link);
+      }
+      link.setAttribute('href', '#agilearn-main');
+    }
+
+    function fixHeadingAnchors() {
+      // A11Y-04 — both Material (.headerlink) and mkdocs-jupyter
+      // (.anchor-link) emit a pilcrow (¶) character as the only text of
+      // their heading-permalink anchors. Screen readers announce the
+      // glyph literally ("paragraph mark"). Give each link a proper
+      // accessible name derived from its parent heading, and hide the
+      // glyph itself from the accessibility tree.
+      var links = document.querySelectorAll(
+        ".md-typeset .headerlink, .md-typeset .anchor-link"
+      );
+      links.forEach(function (link) {
+        if (link.dataset.agilearnPilcrow === "1") return;
+        var heading = link.closest("h1, h2, h3, h4, h5, h6");
+        var label = "Permalink to this section";
+        if (heading) {
+          // Clone so we can strip the anchor without mutating the DOM.
+          var clone = heading.cloneNode(true);
+          clone.querySelectorAll(".headerlink, .anchor-link").forEach(function (a) {
+            a.remove();
+          });
+          var text = clone.textContent.replace(/\s+/g, " ").trim();
+          if (text) label = "Permalink to " + text;
+        }
+        link.setAttribute("aria-label", label);
+        // Wrap the existing glyph so the link is still clickable and
+        // still paints the pilcrow for sighted users, but assistive tech
+        // ignores the character itself.
+        if (link.firstChild && link.firstChild.nodeType === Node.TEXT_NODE) {
+          var span = document.createElement("span");
+          span.setAttribute("aria-hidden", "true");
+          span.textContent = link.firstChild.nodeValue;
+          link.replaceChild(span, link.firstChild);
+        } else {
+          link.setAttribute("aria-hidden", "true"); // fallback if structure is unexpected
+          link.setAttribute("tabindex", "-1");
+        }
+        link.dataset.agilearnPilcrow = "1";
+      });
+    }
+
+    function labelSidebarNavLandmarks() {
+      // A11Y-07 — Material's recursive nav-item template emits multiple
+      // nested <nav> landmarks in the sidebar, each labelled only by its
+      // immediate section title ("Learn", "Recipes"...). A screen-reader
+      // user listing landmarks sees several navs called "Learn" and can
+      // no longer tell Functions:Learn apart from Classes:Learn. Walk
+      // the sidebar and build compound labels like "Functions: Learn".
+      //
+      // Implementation note: the element pointed at by aria-labelledby
+      // (the chevron <label>) is empty in Material's current markup —
+      // it contains only an SVG icon. The visible nav title sits inside
+      // the nav itself, in <label class="md-nav__title">. We read the
+      // title text from there, walking up to ancestor nav titles to
+      // build the compound label.
+      function navTitle(nav) {
+        var title = nav.querySelector(":scope > label.md-nav__title");
+        if (!title) return "";
+        // Strip nested icons/buttons before grabbing the text.
+        var clone = title.cloneNode(true);
+        clone.querySelectorAll(".md-nav__icon, .md-nav__button, button, svg")
+             .forEach(function (n) { n.remove(); });
+        return clone.textContent.replace(/\s+/g, " ").trim();
+      }
+
+      var sidebarNavs = document.querySelectorAll(
+        '.md-sidebar--primary nav.md-nav[aria-labelledby]'
+      );
+      sidebarNavs.forEach(function (nav) {
+        if (nav.dataset.agilearnNavLabel === "1") return;
+        var ownText = navTitle(nav);
+        if (!ownText) return;
+
+        // Walk up through ancestor navs and build a chain like
+        // "Functions: Learn".
+        var ancestor = nav.parentElement;
+        var compound = ownText;
+        while (ancestor) {
+          if (ancestor.matches("nav.md-nav")) {
+            var parentText = navTitle(ancestor);
+            if (parentText && parentText !== ownText &&
+                compound.indexOf(parentText + ":") !== 0) {
+              compound = parentText + ": " + compound;
+            }
+          }
+          ancestor = ancestor.parentElement;
+        }
+        nav.setAttribute("aria-label", compound);
+        nav.removeAttribute("aria-labelledby");
+        nav.dataset.agilearnNavLabel = "1";
+      });
+    }
+
+    function runAll() {
+      fixSkipLink();
+      fixHeadingAnchors();
+      labelSidebarNavLandmarks();
+    }
+
+    if (document.readyState !== 'loading') runAll();
+    else document.addEventListener('DOMContentLoaded', runAll);
+    // Re-run on Material's instant-navigation page changes, if available.
+    if (typeof window.document$ !== 'undefined' && window.document$.subscribe) {
+      try { window.document$.subscribe(runAll); } catch (e) {}
+    }
+  })();
+  </script>
   {% if page.nb_url %}
     <link rel="stylesheet" href="{{ 'assets/vendor/thebe/thebe.css' | url }}">
     <script type="text/x-thebe-config">
@@ -24,6 +166,22 @@
 {% endblock extrahead %}
 
 {# ---------------------------------------------------------------
+   Container override: add id + tabindex on the article wrapper so
+   the skip link always has a reliable, focusable landing point.
+   Mirrors base.html's default container block.
+   --------------------------------------------------------------- #}
+{% block container %}
+  <div class="md-content" data-md-component="content">
+    {% if "navigation.path" in features %}
+      {% include "partials/path.html" %}
+    {% endif %}
+    <article id="agilearn-main" tabindex="-1" class="md-content__inner md-typeset">
+      {{ self.content() }}
+    </article>
+  </div>
+{% endblock %}
+
+{# ---------------------------------------------------------------
    Content block: notebook toolbar + activation UI
    --------------------------------------------------------------- #}
 {% block content %}
@@ -36,7 +194,12 @@
     </a>
   </div>
 
-  <div id="agilearn-run-banner" class="agilearn-run-banner" hidden>
+  <div id="agilearn-run-banner"
+       class="agilearn-run-banner"
+       role="status"
+       aria-live="polite"
+       aria-atomic="true"
+       hidden>
     <span class="agilearn-run-banner__msg">Loading Python (one-off download, ~10 MB)…</span>
   </div>
 {% endif %}
@@ -63,9 +226,13 @@
 
     // Use MkDocs's url() filter so these resolve relative to the current page,
     // regardless of whether we're running at localhost:8000 or agilearn.co.uk.
-    const THEBE_LITE_SRC = "{{ 'assets/vendor/thebe-lite/thebe-lite.min.js' | url }}";
-    const THEBE_SRC      = "{{ 'assets/vendor/thebe/index.js' | url }}";
-    const SW_SRC         = "{{ 'service-worker.js' | url }}";
+    // We then absolutise via new URL(rel, document.baseURI) so the paths are
+    // robust to any depth miscalculation and easier to debug (console/network
+    // tabs show the full URL, not `../../../../...`).
+    const resolve = function (rel) { return new URL(rel, document.baseURI).href; };
+    const THEBE_LITE_SRC = resolve("{{ 'assets/vendor/thebe-lite/thebe-lite.min.js' | url }}");
+    const THEBE_SRC      = resolve("{{ 'assets/vendor/thebe/index.js' | url }}");
+    const SW_SRC         = resolve("{{ 'service-worker.js' | url }}");
 
     const banner = document.getElementById("agilearn-run-banner");
     if (!banner) return;
@@ -78,6 +245,24 @@
         s.onerror = function () { reject(new Error("Failed to load " + src)); };
         document.head.appendChild(s);
       });
+    }
+
+    async function loadScriptWithRetry(src, attempts) {
+      // One-attempt retry with a short backoff for transient failures
+      // (intermittent "Network error" XHR exceptions observed during the review).
+      attempts = attempts || 2;
+      let lastErr = null;
+      for (let i = 0; i < attempts; i++) {
+        try {
+          return await loadScript(src);
+        } catch (err) {
+          lastErr = err;
+          if (i < attempts - 1) {
+            await new Promise(function (r) { setTimeout(r, 400 * (i + 1)); });
+          }
+        }
+      }
+      throw lastErr;
     }
 
     function showBanner(text, tone) {
@@ -220,6 +405,13 @@
         const holder = document.createElement("pre");
         holder.setAttribute("data-executable", "true");
         holder.setAttribute("data-language", "python");
+        // Fallback a11y while Thebe hasn't upgraded the cell yet: make each
+        // placeholder keyboard-reachable (so horizontal scrolling works with
+        // arrow keys) and announce what's in it. Thebe replaces these with
+        // its own CodeMirror editor on bootstrap, which takes focus over.
+        holder.setAttribute("tabindex", "0");
+        holder.setAttribute("role", "region");
+        holder.setAttribute("aria-label", "Code (loading interactive editor)");
         holder.textContent = source;
         holder.className = "agilearn-thebe-cell";
 
@@ -227,6 +419,37 @@
         converted++;
       });
       return converted;
+    }
+
+    function labelThebeCells() {
+      // After Thebe upgrades the placeholders to .thebe-cell editors, label
+      // each one "Code cell N of M" for screen-reader users who are moving
+      // between cells. Also relabel the per-cell Run button so it isn't just
+      // "Run" repeated N times in a row.
+      const cells = document.querySelectorAll(".thebe-cell");
+      const total = cells.length;
+      cells.forEach(function (cell, i) {
+        const n = i + 1;
+        cell.setAttribute("role", "region");
+        cell.setAttribute("aria-label", "Code cell " + n + " of " + total);
+
+        // Thebe 0.9.x renders the per-cell run button with lowercase text
+        // ("run"). Normalise to sentence case and give each one a distinct,
+        // screen-reader-friendly name.
+        const runBtn = cell.querySelector(".thebe-run-button, button.thebe-button");
+        if (runBtn && /^\s*run\s*$/i.test(runBtn.textContent)) {
+          runBtn.textContent = "Run";
+          runBtn.setAttribute("aria-label", "Run code cell " + n);
+        }
+      });
+
+      // Top-level "run all" button (if present) — same casing fix + label.
+      document.querySelectorAll(".thebe-run-all-button, button.thebe-run-all").forEach(function (btn) {
+        if (/^\s*run all\s*$/i.test(btn.textContent)) {
+          btn.textContent = "Run all";
+          btn.setAttribute("aria-label", "Run all code cells on this page");
+        }
+      });
     }
 
     async function activate() {
@@ -246,8 +469,8 @@
         await ensureServiceWorker(SW_SRC);
 
         showBanner("Loading Python (one-off download, ~10 MB)…");
-        await loadScript(THEBE_LITE_SRC);
-        await loadScript(THEBE_SRC);
+        await loadScriptWithRetry(THEBE_LITE_SRC);
+        await loadScriptWithRetry(THEBE_SRC);
 
         if (!window.thebelab || typeof window.thebelab.bootstrap !== "function") {
           throw new Error("Thebe library did not load correctly.");
@@ -297,16 +520,22 @@
         }
 
         if (!window.thebelab.session || !window.thebelab.session.kernel) {
-          showBanner("Kernel started but no session was attached. See console for details.", "error");
+          console.error("[Agilearn] Kernel session missing after bootstrap.");
+          showBanner("Interactive Python isn't available right now. Try refreshing the page, or copy the code into your own editor to run it.", "error");
           return;
         }
+        // Label cells + normalise Thebe button copy now that the editors
+        // have been mounted.
+        labelThebeCells();
         showBanner("Ready. Edit a cell and press ▶ to run it. State is shared between cells on this page.", "ready");
         // Auto-dismiss the "ready" banner after a few seconds so it doesn't
         // permanently take up vertical space above the cells.
         setTimeout(function () { banner.hidden = true; }, 4000);
       } catch (err) {
+        // Log the technical detail for debugging, but show the learner a
+        // learner-friendly message that tells them what they can actually do.
         console.error("[Agilearn] Thebe activation failed:", err);
-        showBanner("Couldn't start the in-browser kernel: " + err.message, "error");
+        showBanner("Interactive Python isn't available right now. Try refreshing the page, or copy the code into your own editor to run it.", "error");
       }
     }
 

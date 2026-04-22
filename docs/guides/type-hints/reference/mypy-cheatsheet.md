@@ -150,9 +150,9 @@ If no stubs exist and you can't add them, use the `ignore_missing_imports` overr
 `dmypy` runs mypy as a long-lived process, checking files in milliseconds instead of seconds. Huge for editor-driven workflows:
 
 ```bash
-dmypy run -- src/
+dmypy run &ndash; src/
 # subsequent calls are instant
-dmypy run -- src/
+dmypy run &ndash; src/
 ```
 
 Most editor integrations use `dmypy` under the hood already.

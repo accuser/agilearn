@@ -1,188 +1,54 @@
 # How to avoid common string mistakes
 
-Working with strings in Python is straightforward most of the time, but there are several common mistakes that can lead to subtle bugs, poor performance, or unexpected behaviour. This guide identifies the most frequent pitfalls and shows you how to avoid them.
+# What are the most common mistakes when working with strings?
 
-## Mistake 1: Forgetting that strings are immutable
+Strings feel like the easiest type in Python — until they're the thing burning a half-day of your debugging budget. Most string bugs come from a small, well-known set of traps: forgetting that strings are immutable, comparing with `is`, ignoring encoding, building strings in a loop with `+=`. This is a quick reference to the patterns that catch people.
 
-Strings in Python are immutable. Every string method that appears to modify a string actually returns a new string, leaving the original unchanged. Forgetting to capture the return value is one of the most common beginner mistakes.
+## The answer
 
-**The mistake:**
-
-```python
-name = "  Alice  "
-name.strip()
-print(name)  # Still "  Alice  " — the original string is unchanged
-```
-
-**Why it happens:** Methods such as `str.strip()`, `str.lower()`, and `str.replace()` do not modify the string in place. They return a new string with the changes applied.
-
-**The fix:**
-
-```python
-name = "  Alice  "
-name = name.strip()
-print(name)  # "Alice" — the return value is captured
-```
-
-Always assign the result of a string method back to a variable if you want to keep the modified version.
-
-## Mistake 2: Concatenating strings in a loop
-
-Building a string by repeatedly concatenating with `+` or `+=` inside a loop is a common performance trap. Because strings are immutable, each concatenation creates a new string object, which becomes increasingly expensive as the string grows.
-
-**The mistake:**
-
-```python
-words = ["Python", "is", "a", "powerful", "language"]
-sentence = ""
-for word in words:
-    sentence += word + " "
-print(sentence)
-```
-
-This works correctly for small lists, but for large datasets the repeated copying becomes very slow.
-
-**The fix:**
-
-```python
-words = ["Python", "is", "a", "powerful", "language"]
-sentence = " ".join(words)
-print(sentence)  # "Python is a powerful language"
-```
-
-The `str.join()` method is significantly faster because it calculates the total length needed and builds the result in a single pass. Use it whenever you need to combine multiple strings.
-
-## Mistake 3: Comparing strings with `is` instead of `==`
-
-The `is` operator checks whether two variables refer to the same object in memory, not whether they have the same value. Due to Python's string interning optimisation, `is` sometimes appears to work for string comparison, but this behaviour is not guaranteed.
-
-**The mistake:**
-
-```python
-a = "hello"
-b = "hello"
-print(a is b)  # May print True due to interning, but this is not reliable
-
-# This can fail unexpectedly
-user_input = input("Enter 'hello': ")
-print(user_input is "hello")  # Almost certainly False
-```
-
-**Why it happens:** Python interns (reuses) some string literals as an optimisation, so `is` may return `True` for identical literals. However, this does not apply to dynamically created strings.
-
-**The fix:**
-
-```python
-a = "hello"
-b = "hello"
-print(a == b)  # True — compares the values, not the object identity
-
-user_input = "hello"
-print(user_input == "hello")  # True — always reliable
-```
-
-Always use `==` to compare string values. Reserve `is` for identity checks, such as checking whether a value is `None`.
-
-## Mistake 4: Ignoring encoding when reading files
-
-When reading text files, Python uses a default encoding that varies by operating system. On most systems this is UTF-8, but on some Windows installations the default may be a legacy encoding such as `cp1252`. Failing to specify the encoding explicitly can lead to garbled text or errors.
-
-**The mistake:**
-
-```python
-# No encoding specified — uses the system default, which may vary
-with open("data.txt") as f:
-    content = f.read()
-```
-
-**Why it happens:** The default encoding depends on the operating system and locale settings. Code that works on one machine may fail on another.
-
-**The fix:**
-
-```python
-# Always specify the encoding explicitly
-with open("data.txt", encoding="utf-8") as f:
-    content = f.read()
-```
-
-If you are reading files that might contain encoding errors, you can also specify an error handler:
-
-```python
-# Replace undecodable bytes with the Unicode replacement character
-with open("data.txt", encoding="utf-8", errors="replace") as f:
-    content = f.read()
-```
-
-Always specify `encoding="utf-8"` (or the appropriate encoding) when opening text files.
-
-## Mistake 5: Using `str.split()` when `str.partition()` is more appropriate
-
-The `str.split()` method is versatile, but when you only need to split on the first occurrence of a separator, `str.partition()` is often a better choice. It always returns exactly three values and handles the case where the separator is missing more gracefully.
-
-**The mistake:**
-
-```python
-setting = "timeout=30"
-key, value = setting.split("=")  # Works here, but...
-
-no_value = "debug_mode"
-key, value = no_value.split("=")  # ValueError: not enough values to unpack
-```
-
-**The fix:**
-
-```python
-setting = "timeout=30"
-key, separator, value = setting.partition("=")
-print(f"{key}: {value}")  # "timeout: 30"
-
-no_value = "debug_mode"
-key, separator, value = no_value.partition("=")
-if separator:
-    print(f"{key}: {value}")
-else:
-    print(f"Flag: {key}")  # "Flag: debug_mode"
-```
-
-Use `str.partition()` when you expect exactly one separator and want predictable unpacking. Use `str.split()` when you need to split on all occurrences.
-
-## Mistake 6: Not handling empty strings
-
-Empty strings can cause unexpected behaviour in many string operations. Forgetting to check for them leads to subtle bugs, especially when processing user input or data from external sources.
-
-**The mistake:**
-
-```python
-def get_first_word(text: str) -> str:
-    return text.split()[0]  # IndexError if text is empty or whitespace-only
-
-print(get_first_word(""))          # IndexError
-print(get_first_word("   "))       # IndexError
-```
-
-**The fix:**
-
-```python
-def get_first_word(text: str) -> str:
-    words = text.split()
-    if not words:
-        return ""
-    return words[0]
-
-print(get_first_word(""))          # "" (empty string)
-print(get_first_word("   "))       # "" (empty string)
-print(get_first_word("Hello"))     # "Hello"
-```
-
-Always consider what happens when a string is empty, contains only whitespace, or is otherwise not in the expected format.
-
-## Quick reference
-
-| Mistake | Problem | Fix |
+| Trap | What happens | What to do instead |
 |---|---|---|
-| Forgetting immutability | String method result is discarded | Assign the return value: `s = s.strip()` |
-| Concatenating in a loop | Slow performance for large strings | Use `str.join()` instead |
-| Comparing with `is` | Unreliable identity comparison | Use `==` for value comparison |
-| Ignoring encoding | Garbled text or errors on different systems | Specify `encoding="utf-8"` explicitly |
-| Using `split()` for single splits | Unpacking errors when separator is missing | Use `str.partition()` for single splits |
-| Not handling empty strings | `IndexError` or unexpected results | Check for empty strings before processing |
+| Calling `text.strip()` and expecting `text` to change | Strings are immutable; the return value is discarded | `text = text.strip()` — assign the result |
+| Building a string with `s += word` in a loop | O(n²) — each concatenation copies the whole string | `"".join(parts)` — single pass, allocates once |
+| Comparing strings with `is` | Works *sometimes* due to interning, then breaks on dynamic input | Always use `==` for value comparison |
+| `open("file.txt")` with no encoding | Picks up the system default, breaks on Windows | `open("file.txt", encoding="utf-8")` |
+| `key, value = line.split("=")` when `=` might be missing | `ValueError: not enough values to unpack` | `key, sep, value = line.partition("=")` |
+| `text.split()[0]` on possibly-empty input | `IndexError` on empty or whitespace-only strings | Check `if not text.split(): ...` first |
+| Building user-facing templates with f-strings or `eval` | Lets template authors run arbitrary Python | `string.Template` — name substitution only, no expressions |
+
+## Why it works
+
+Each of these traps has the same shape: a thing that *looks* like it works, that *does* work in your test data, and that breaks the moment real input arrives.
+
+**Immutability.** Every string method returns a new string. `text.strip()` does not modify `text` — it returns a stripped copy and throws it away if you don't catch it. The same applies to `lower`, `upper`, `replace`, `casefold`, and every other "mutating-sounding" method. There is no in-place version. Treat strings like numbers: you wouldn't write `n + 1` and expect `n` to change.
+
+**Concatenation in a loop.** Because strings are immutable, `s += word` allocates a new string every iteration and copies the entire previous contents into it. Build a million-character string this way and you allocate a million strings and copy half a trillion characters. `"".join(parts)` walks the list once to compute the total length, allocates once, and copies once.
+
+**`is` versus `==`.** `is` asks "are these the same object in memory?". `==` asks "do these have the same value?". For strings the two answers usually coincide because of interning — Python caches short string literals and reuses the same object — but interning is a CPython optimisation, not a language guarantee. The moment a string is built dynamically (from `input()`, from `+`, from `read()`), interning doesn't apply, and `is` becomes a coin flip. Use `is` for `None` and not much else.
+
+**Encoding.** A text file is bytes; reading it as text requires a decoder. `open("file.txt")` uses `locale.getpreferredencoding(False)`, which is `"utf-8"` on modern Linux and macOS but historically `"cp1252"` on Windows. Code that round-trips fine on your laptop garbles characters in production. Always pass `encoding="utf-8"` (or whatever your data actually is) explicitly.
+
+**`split` versus `partition`.** `split("=")` returns a list whose length depends on the input — handy for "give me every chunk", lethal for "give me exactly two pieces". `partition("=")` always returns three values, with the separator slot empty if it wasn't found, so destructuring assignment never raises.
+
+**Empty strings.** `"".split()` returns `[]`, not `[""]`. `text[0]` on `""` raises `IndexError`. Decide what empty input means for your function and handle it at the top of the function, not at the call site.
+
+**Templates.** f-strings evaluate arbitrary Python expressions. That's perfect for hard-coded format strings in your source, and dangerous for templates loaded from anywhere a user can edit. `string.Template` does name substitution and nothing else, which is exactly the right power level for user-supplied templates.
+
+## Trade-offs
+
+A couple of these rules have edge cases worth knowing.
+
+`+=` for string-building is fine for short, fixed-size combinations — `prefix + name + suffix` reads well and there's no measurable cost. The performance trap only bites when the loop count grows.
+
+CPython has an optimisation that makes `s += word` in a tight loop *sometimes* run in linear time, by mutating the string in place when it's the only reference. Don't rely on it: it's CPython-specific, it doesn't apply to PyPy or other implementations, and it stops working the moment another reference exists.
+
+`encoding="utf-8"` is the right default for almost everything you'll write today, but if you're reading a file that genuinely is `cp1252` (an old Excel export, say), passing the wrong encoding gives you garbage *and* no error. Know your input, or use the `chardet` library to detect.
+
+`split` with `maxsplit=1` is a middle ground between `split` and `partition` — it raises if the separator is missing, which can be useful when you want a hard error rather than a fallback.
+
+## Related
+
+- [How to clean and normalise text](clean-and-normalise-text.ipynb) — the right place to handle whitespace, case, and Unicode together.
+- [How to parse structured strings](parse-structured-strings.ipynb) — `split` versus `partition` in context.
+- [How to use string templates](use-string-templates.ipynb) — when to drop f-strings for `string.Template`.
+- [String methods reference](../reference/string-methods-reference.md) — the full set of `str` methods with what each one returns.

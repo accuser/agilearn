@@ -39,7 +39,7 @@ Perhaps the most serious consequence of poor error handling is data loss. Consid
 
 ### Poor user experience
 
-An unhandled exception produces a traceback -- a wall of technical text that is meaningful to developers but confusing and alarming to users. A well-handled exception, by contrast, produces a clear, actionable message: "The configuration file was not found. Please check that settings.conf exists in the application directory."
+An unhandled exception produces a traceback &ndash; a wall of technical text that is meaningful to developers but confusing and alarming to users. A well-handled exception, by contrast, produces a clear, actionable message: "The configuration file was not found. Please check that settings.conf exists in the application directory."
 
 ### Difficult debugging
 
@@ -47,7 +47,7 @@ Paradoxically, handling exceptions poorly can make debugging *harder*. If you us
 
 ### Resource leaks
 
-When a program acquires resources -- files, network connections, database handles, locks -- it must release them when finished. If an exception interrupts the normal flow and the cleanup code never runs, those resources remain held. Over time, this leads to resource exhaustion: the program runs out of file handles, connections, or memory.
+When a program acquires resources &ndash; files, network connections, database handles, locks &ndash; it must release them when finished. If an exception interrupts the normal flow and the cleanup code never runs, those resources remain held. Over time, this leads to resource exhaustion: the program runs out of file handles, connections, or memory.
 
 ## The spectrum of error handling
 
@@ -138,7 +138,7 @@ raise FileNotFoundError(
 )
 ```
 
-The second approach tells the caller what type of failure occurred and provides specific details. The caller can then handle it appropriately -- perhaps by using a default configuration, asking the user for a different path, or logging the error and stopping.
+The second approach tells the caller what type of failure occurred and provides specific details. The caller can then handle it appropriately &ndash; perhaps by using a default configuration, asking the user for a different path, or logging the error and stopping.
 
 ### The principle of least surprise
 

@@ -214,7 +214,7 @@ set_direction("north")   # Valid
 |---------|---------|
 | `-> int` | Returns an integer |
 | `-> None` | Returns nothing (or returns `None` explicitly) |
-| `-> str \| None` | Returns a string or `None` |
+| `-> str | None` | Returns a string or `None` |
 | `-> tuple[int, str]` | Returns a tuple of an integer and a string |
 | `-> list[dict[str, int]]` | Returns a list of dictionaries |
 | `-> "ClassName"` | Forward reference to a class not yet defined |
@@ -271,7 +271,7 @@ def process(obj: HeavyClass) -> None:
 | `typing` module | 3.5 |
 | `Literal` | 3.8 |
 | Built-in generics (`list[int]`) | 3.9 |
-| `X \| Y` union syntax | 3.10 |
+| `X | Y` union syntax | 3.10 |
 | `Self` type | 3.11 |
 | `type` statement for type aliases | 3.12 |
 
@@ -283,7 +283,7 @@ def process(obj: HeavyClass) -> None:
 | A string return value | `-> str` |
 | A list of floats | `list[float]` |
 | A dictionary from strings to integers | `dict[str, int]` |
-| A value that could be a string or `None` | `str \| None` |
+| A value that could be a string or `None` | `str | None` |
 | A function that takes an `int` and returns a `str` | `Callable[[int], str]` |
 | Any type at all | `Any` |
 | One of specific literal values | `Literal["a", "b", "c"]` |

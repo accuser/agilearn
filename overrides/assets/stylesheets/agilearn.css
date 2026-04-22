@@ -4,20 +4,303 @@
 
 :root,
 [data-md-color-scheme="default"] {
-  --agilearn-indigo: #3b3f8c;
-  --agilearn-indigo-dark: #2a2e6b;
-  --agilearn-gold: #d4a93b;
-  --agilearn-ink: #1a1c3a;
-  --agilearn-paper: #fbfaf7;
-  --md-primary-fg-color: var(--agilearn-indigo);
-  --md-primary-fg-color--light: #5a5fb5;
-  --md-primary-fg-color--dark: var(--agilearn-indigo-dark);
-  --md-accent-fg-color: var(--agilearn-gold);
+  /* Brand hues — refined for the 2026 redesign. The indigo is slightly
+     deeper and more saturated than the original; the old "gold" has
+     been re-spun to a truer ochre so it no longer reads as mustard on
+     paper surfaces. */
+  --agilearn-indigo:        #2a2f80;
+  --agilearn-indigo-light:  #5a5fb5;
+  --agilearn-indigo-dark:   #1d2166;
+  --agilearn-ochre:         #c79116;
+  --agilearn-ochre-light:   #e3b149;
+  --agilearn-ochre-dark:    #9e6f0a;
+  --agilearn-ink:           #1a1c3a;
+  --agilearn-paper:         #fbfaf7;
+
+  /* Warm-grey neutral scale, derived from the paper surface. Use these
+     anywhere Material doesn't already hand us a sensible token so the
+     greys in cards, dividers, placeholders and secondary text all
+     share a single hue family. */
+  --agilearn-neutral-50:    #fbfaf7;
+  --agilearn-neutral-100:   #f4f1ea;
+  --agilearn-neutral-200:   #e8e3d6;
+  --agilearn-neutral-300:   #cfc8b8;
+  --agilearn-neutral-400:   #a29a88;
+  --agilearn-neutral-500:   #6e685a;
+  --agilearn-neutral-600:   #4b463c;
+  --agilearn-neutral-700:   #2e2b24;
+  --agilearn-neutral-800:   #1c1a16;
+  --agilearn-neutral-900:   #111110;
+
+  /* Semantic tints for admonitions / inline callouts. Tint fills are
+     chosen for AA body-text contrast against our ink; stripe colours
+     reuse each hue at full saturation for the left-bar accent. */
+  --agilearn-tint-note-bg:     #eef1fb;
+  --agilearn-tint-note-bar:    #3b4fa1;
+  --agilearn-tint-tip-bg:      #fdf5e3;
+  --agilearn-tint-tip-bar:     var(--agilearn-ochre);
+  --agilearn-tint-info-bg:     #e6f4f3;
+  --agilearn-tint-info-bar:    #2f7a74;
+  --agilearn-tint-warning-bg:  #fcf0d6;
+  --agilearn-tint-warning-bar: #b36b1a;
+  --agilearn-tint-danger-bg:   #fbe8e4;
+  --agilearn-tint-danger-bar:  #c04a3a;
+  --agilearn-tint-success-bg:  #ebf4e6;
+  --agilearn-tint-success-bar: #4a7a3a;
+  --agilearn-tint-example-bg:  #efe9f7;
+  --agilearn-tint-example-bar: #6a4fa1;
+
+  /* Surface tokens — paper for the article background, the next step
+     up on the neutral scale for subtle surfaces (cards, code blocks,
+     admonition fills when no tint applies) and a shared divider value
+     used across cards, code blocks and admonition borders. */
+  --agilearn-surface:         var(--agilearn-paper);
+  --agilearn-surface-alt:     var(--agilearn-neutral-100);
+  --agilearn-code-surface:    var(--agilearn-neutral-100);
+  --agilearn-divider:         var(--agilearn-neutral-200);
+
+  /* Semantic focus ring — named for clarity, keyed to ochre so it
+     sings against body copy. Both palettes inherit from this token
+     so the focus treatment always feels intentional. */
+  --agilearn-focus-ring:      var(--agilearn-ochre);
+
+  /* Material bindings — everything Material's own tokens read from. */
+  --md-primary-fg-color:        var(--agilearn-indigo);
+  --md-primary-fg-color--light: var(--agilearn-indigo-light);
+  --md-primary-fg-color--dark:  var(--agilearn-indigo-dark);
+  --md-accent-fg-color:         var(--agilearn-ochre);
 }
 
 [data-md-color-scheme="slate"] {
-  --md-primary-fg-color: #5a5fb5;
-  --md-accent-fg-color: var(--agilearn-gold);
+  /* In slate, the primary needs to lift so it reads against the dark
+     surface; the ochre lifts a touch too. Surfaces switch from paper
+     to a cool-warm dark that keeps a hint of the paper warmth instead
+     of going pure neutral. */
+  --agilearn-surface:         #17181f;
+  --agilearn-surface-alt:     #1f2028;
+  --agilearn-code-surface:    #1b1c24;
+  --agilearn-divider:         #2c2d36;
+
+  --agilearn-tint-note-bg:     #1f2544;
+  --agilearn-tint-tip-bg:      #332a17;
+  --agilearn-tint-info-bg:     #17302e;
+  --agilearn-tint-warning-bg:  #3b2e18;
+  --agilearn-tint-danger-bg:   #3a211d;
+  --agilearn-tint-success-bg:  #1f2e1a;
+  --agilearn-tint-example-bg:  #28223c;
+
+  --agilearn-focus-ring:   var(--agilearn-ochre-light);
+
+  --md-primary-fg-color:   var(--agilearn-indigo-light);
+  --md-accent-fg-color:    var(--agilearn-ochre-light);
+}
+
+/* =========================================================
+   Typography — modular scale, measure, rhythm
+   Docs/reference feel: 16px body, 1.55 line-height, 42rem measure.
+   Tokens first, then Material overrides.
+   ========================================================= */
+
+:root {
+  /* Modular scale — fifth-based, steps at 0.8125 / 0.875 / 1 / 1.125 /
+     1.25 / 1.5 / 1.875 / 2.25 rem. These are relative to the Material
+     typeset base so they scale cleanly with the page root. */
+  --agilearn-text-xs:   0.8125em;   /* 13px — meta, chip, stat */
+  --agilearn-text-sm:   0.875em;    /* 14px — captions, code inside prose */
+  --agilearn-text-base: 1em;        /* 16px — body */
+  --agilearn-text-lg:   1.125em;    /* 18px — lead, h5 */
+  --agilearn-text-xl:   1.25em;     /* 20px — h4 */
+  --agilearn-text-2xl:  1.5em;      /* 24px — h3 */
+  --agilearn-text-3xl:  1.875em;    /* 30px — h2 */
+  --agilearn-text-4xl:  2.25em;     /* 36px — h1 */
+
+  /* Line-heights — heading tight, body breathes, code sits on a
+     slightly looser baseline so backticks don't crash into the prose. */
+  --agilearn-lh-tight:  1.2;
+  --agilearn-lh-normal: 1.55;
+  --agilearn-lh-code:   1.5;
+
+  /* Measure — 42rem is a touch tighter than Material's default article
+     column and lands at ~75 characters at 16px IBM Plex Sans, the
+     sweet spot for sustained prose reading. Only prose elements
+     respect this; code blocks and tables keep the full column width. */
+  --agilearn-measure:   42rem;
+}
+
+/* --- Body typography ---------------------------------------------- */
+
+.md-typeset {
+  font-size: 1rem;                   /* 16px — override Material's 0.8rem/20px trick */
+  line-height: var(--agilearn-lh-normal);
+  color: var(--md-default-fg-color);
+}
+
+/* Constrain prose to the measure without boxing in code and tables.
+   We scope this to direct children of .md-typeset so nested lists and
+   paragraphs inside admonitions or cards aren't affected (they already
+   live inside a constrained container). */
+.md-typeset > p,
+.md-typeset > ul,
+.md-typeset > ol,
+.md-typeset > dl,
+.md-typeset > blockquote {
+  max-width: var(--agilearn-measure);
+}
+
+.md-typeset p {
+  margin: 0 0 0.9em;                 /* slightly tighter than Material's default 1.6em pairings */
+}
+.md-typeset p + p {
+  margin-top: 0;                     /* avoid double-margin when two paragraphs stack */
+}
+
+/* --- Heading scale ------------------------------------------------- */
+
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3,
+.md-typeset h4,
+.md-typeset h5,
+.md-typeset h6 {
+  font-family: inherit;
+  font-weight: 600;
+  line-height: var(--agilearn-lh-tight);
+  letter-spacing: 0;                 /* drop Material's subtle tracking on prose headings */
+  color: var(--md-default-fg-color);
+}
+
+.md-typeset h1 {
+  font-size: var(--agilearn-text-4xl);
+  font-weight: 700;
+  margin: 0 0 1rem;
+  letter-spacing: -0.01em;           /* a very light tighten on h1 only */
+}
+.md-typeset h2 {
+  font-size: var(--agilearn-text-3xl);
+  margin: 2rem 0 0.75rem;
+}
+.md-typeset h3 {
+  font-size: var(--agilearn-text-2xl);
+  margin: 1.75rem 0 0.6rem;
+}
+.md-typeset h4 {
+  font-size: var(--agilearn-text-xl);
+  margin: 1.5rem 0 0.5rem;
+}
+.md-typeset h5 {
+  font-size: var(--agilearn-text-lg);
+  margin: 1.25rem 0 0.4rem;
+}
+.md-typeset h6 {
+  font-size: var(--agilearn-text-base);
+  margin: 1.25rem 0 0.4rem;
+  color: var(--md-default-fg-color--light);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+}
+
+/* Tighten the gap when a heading follows another heading directly —
+   this happens at the top of sections with a subtitle. */
+.md-typeset h1 + h2,
+.md-typeset h2 + h3,
+.md-typeset h3 + h4 {
+  margin-top: 0.5rem;
+}
+
+/* --- Lists --------------------------------------------------------- */
+
+.md-typeset ul,
+.md-typeset ol {
+  margin: 0 0 0.9em;
+  padding-inline-start: 1.4em;
+}
+.md-typeset li {
+  margin-block: 0.25em;
+}
+/* Nested lists — tighter so indentation reads as hierarchy, not drama. */
+.md-typeset li > ul,
+.md-typeset li > ol {
+  margin: 0.25em 0;
+}
+/* Description lists — used in a few reference pages. */
+.md-typeset dl dt {
+  font-weight: 600;
+  margin-top: 0.9em;
+}
+.md-typeset dl dd {
+  margin: 0.25em 0 0.5em 1.25em;
+}
+
+/* --- Tables, blockquotes, rules ----------------------------------- */
+
+.md-typeset blockquote {
+  margin: 1rem 0;
+  padding: 0.6rem 1rem;
+  border-inline-start: 3px solid var(--agilearn-divider);
+  background: transparent;
+  color: var(--md-default-fg-color--light);
+  font-style: normal;
+}
+
+.md-typeset hr {
+  margin: 2rem 0;
+  border: 0;
+  border-top: 1px solid var(--agilearn-divider);
+}
+
+.md-typeset table:not([class]) {
+  margin: 1rem 0;
+  font-size: var(--agilearn-text-sm);
+  border: 1px solid var(--agilearn-divider);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.md-typeset table:not([class]) th,
+.md-typeset table:not([class]) td {
+  padding: 0.55rem 0.85rem;
+}
+.md-typeset table:not([class]) th {
+  background: var(--agilearn-surface-alt);
+  font-weight: 600;
+  text-align: start;
+}
+
+/* --- Details / summary (pymdownx.details) ------------------------- */
+
+.md-typeset details {
+  margin: 1rem 0;
+  border-radius: 6px;
+  border: 1px solid var(--agilearn-divider);
+}
+
+/* --- Code ---------------------------------------------------------- */
+
+.md-typeset code {
+  font-size: var(--agilearn-text-sm);
+  line-height: var(--agilearn-lh-code);
+  background: var(--agilearn-code-surface);
+  border-radius: 4px;
+  padding: 0.08em 0.32em;
+}
+
+.md-typeset pre,
+.md-typeset pre > code,
+.md-typeset .highlight pre {
+  font-size: var(--agilearn-text-sm);
+  line-height: var(--agilearn-lh-code);
+}
+
+.md-typeset pre {
+  background: var(--agilearn-code-surface);
+  border-radius: 6px;
+  border: 1px solid var(--agilearn-divider);
+}
+
+/* Inline <kbd> — align to the same visual weight as inline code. */
+.md-typeset kbd {
+  font-size: var(--agilearn-text-sm);
+  line-height: var(--agilearn-lh-code);
 }
 
 /* -------- Brand mark (icon + wordmark) in header -------- */
@@ -39,7 +322,7 @@
   justify-content: center;
   width: 1.35rem;
   height: 1.35rem;
-  color: var(--agilearn-gold);
+  color: var(--agilearn-ochre);
 }
 .agilearn-brand__icon svg {
   width: 100%;
@@ -48,57 +331,94 @@
 }
 
 .agilearn-wordmark {
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-weight: 700;
   font-size: 1.15rem;
   letter-spacing: -0.02em;
   color: #ffffff;
 }
 .agilearn-wordmark em {
-  color: var(--agilearn-gold);
+  color: var(--agilearn-ochre);
   font-style: normal;
 }
 
-/* -------- Landing page: guide card grid -------- */
+/* -------- Landing page: hero + guide card grid -------- */
 .agilearn-hero {
-  padding: 2rem 0 1rem;
+  padding: 2.25rem 0 1rem;
   text-align: left;
 }
 .agilearn-hero h1 {
   font-weight: 700;
-  letter-spacing: -0.02em;
-  margin-bottom: 0.25rem;
+  letter-spacing: -0.015em;
+  margin-bottom: 0.35rem;
+  font-size: var(--agilearn-text-4xl);
+  line-height: var(--agilearn-lh-tight);
 }
 .agilearn-hero p.lede {
-  font-size: 1.1rem;
+  font-size: var(--agilearn-text-lg);
+  line-height: var(--agilearn-lh-normal);
   color: var(--md-default-fg-color--light);
-  max-width: 42rem;
+  max-width: var(--agilearn-measure);
+  margin-top: 0.5rem;
 }
 
 .agilearn-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1rem;
-  margin: 1.5rem 0;
+  gap: 1.1rem;
+  margin: 1.75rem 0;
 }
 
+/* Cards drop the full outline in favour of an ambient shadow + a
+   4px coloured top-bar keyed off the indigo primary. The bar brightens
+   to the ochre accent on hover so the whole grid feels alive under a
+   pointer without reading as "a bunch of boxed sections". */
 .agilearn-card {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  padding: 1.1rem 1.2rem;
-  border: 1px solid var(--md-default-fg-color--lightest);
+  gap: 0.55rem;
+  padding: 1.15rem 1.2rem 1.2rem;
+  border: 0;
   border-radius: 10px;
-  background: var(--md-default-bg-color);
-  transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+  background: var(--agilearn-surface);
+  box-shadow:
+    0 1px 1px rgba(17, 17, 16, 0.04),
+    0 2px 8px rgba(17, 17, 16, 0.05);
+  transition: transform 140ms ease, box-shadow 140ms ease;
   text-decoration: none !important;
   color: inherit !important;
+  overflow: hidden;
+}
+.agilearn-card::before {
+  /* Coloured top-bar — absolute so it doesn't affect padding / flow. */
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  background: var(--agilearn-indigo);
+  transition: background 140ms ease;
 }
 .agilearn-card:hover {
   transform: translateY(-2px);
-  border-color: var(--md-primary-fg-color);
-  box-shadow: 0 6px 20px rgba(59, 63, 140, 0.08);
+  box-shadow:
+    0 1px 1px rgba(17, 17, 16, 0.04),
+    0 10px 24px rgba(42, 47, 128, 0.14);
 }
+.agilearn-card:hover::before {
+  background: var(--agilearn-ochre);
+}
+[data-md-color-scheme="slate"] .agilearn-card {
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.4),
+    0 2px 8px rgba(0, 0, 0, 0.35);
+}
+[data-md-color-scheme="slate"] .agilearn-card:hover {
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.4),
+    0 10px 24px rgba(0, 0, 0, 0.5);
+}
+
 .agilearn-card__icon {
   display: inline-flex;
   align-items: center;
@@ -108,7 +428,7 @@
   border-radius: 8px;
   background: color-mix(in srgb, var(--md-primary-fg-color) 10%, transparent);
   color: var(--md-primary-fg-color);
-  transition: background 120ms ease, color 120ms ease;
+  transition: background 140ms ease, color 140ms ease;
 }
 .agilearn-card__icon .twemoji,
 .agilearn-card__icon svg {
@@ -123,26 +443,27 @@
 
 .agilearn-card__title {
   display: block;
-  font-size: 1.05rem;
+  font-size: var(--agilearn-text-lg);
   font-weight: 600;
   color: var(--md-primary-fg-color);
   letter-spacing: -0.005em;
+  line-height: var(--agilearn-lh-tight);
 }
 .agilearn-card__desc {
   display: block;
-  font-size: 0.9rem;
+  font-size: var(--agilearn-text-sm);
   color: var(--md-default-fg-color--light);
-  line-height: 1.45;
+  line-height: 1.5;
 }
 .agilearn-card__desc code {
-  background: var(--md-default-fg-color--lightest);
-  padding: 0 0.2em;
+  background: var(--agilearn-code-surface);
+  padding: 0 0.25em;
   border-radius: 3px;
-  font-size: 0.85em;
+  font-size: 0.9em;
 }
 .agilearn-meta {
   margin-top: auto;
-  font-size: 0.75rem;
+  font-size: var(--agilearn-text-xs);
   color: var(--md-default-fg-color--light);
   display: flex;
   gap: 0.6rem;
@@ -153,11 +474,11 @@
   white-space: nowrap;
 }
 .agilearn-card.is-placeholder {
-  opacity: 0.65;
+  opacity: 0.62;
 }
 .agilearn-card.is-placeholder::after {
   content: "coming soon";
-  font-size: 0.7rem;
+  font-size: var(--agilearn-text-xs);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--md-default-fg-color--light);
@@ -175,27 +496,32 @@
 }
 
 /* -------- Thebe activation banner + runnable cells -------- */
+/* Banner is constrained to the measure so it sits inside the text
+   column rather than spanning the entire article grid — this keeps it
+   visually paired with the prose it announces. */
 .agilearn-run-banner {
-  margin: 0.5rem 0 1rem;
-  padding: 0.6rem 0.9rem;
+  margin: 0.75rem 0 1.1rem;
+  padding: 0.55rem 0.9rem;
+  max-width: var(--agilearn-measure);
   border-radius: 6px;
-  border: 1px solid var(--md-default-fg-color--lightest);
-  background: var(--md-default-fg-color--lightest);
-  font-size: 0.85rem;
+  border: 1px solid var(--agilearn-divider);
+  background: var(--agilearn-surface-alt);
+  font-size: var(--agilearn-text-sm);
+  line-height: var(--agilearn-lh-normal);
   color: var(--md-default-fg-color);
 }
 .agilearn-run-banner.is-ready {
-  border-color: #2e7d32;
-  background: rgba(46, 125, 50, 0.08);
-  color: #1b5e20;
+  border-color: var(--agilearn-tint-success-bar);
+  background: var(--agilearn-tint-success-bg);
+  color: var(--agilearn-tint-success-bar);
 }
 [data-md-color-scheme="slate"] .agilearn-run-banner.is-ready {
   color: #a5d6a7;
 }
 .agilearn-run-banner.is-error {
-  border-color: #c62828;
-  background: rgba(198, 40, 40, 0.08);
-  color: #b71c1c;
+  border-color: var(--agilearn-tint-danger-bar);
+  background: var(--agilearn-tint-danger-bg);
+  color: var(--agilearn-tint-danger-bar);
 }
 [data-md-color-scheme="slate"] .agilearn-run-banner.is-error {
   color: #ef9a9a;
@@ -212,6 +538,12 @@
   font-size: 0.82rem;
   white-space: pre;
   overflow-x: auto;
+}
+.agilearn-thebe-cell:focus-visible {
+  /* Keyboard users scrolling a long line of code in the pre-Thebe fallback
+     need a visible ring so they know where focus is. */
+  outline: 2px solid var(--agilearn-focus-ring);
+  outline-offset: 2px;
 }
 
 /* Thebe's own cell output styling — tighten to match Material's body text. */
@@ -270,7 +602,7 @@
   transform: translateY(1px);
 }
 .thebe-button:focus-visible {
-  outline: 2px solid var(--md-accent-fg-color);
+  outline: 2px solid var(--agilearn-focus-ring);
   outline-offset: 2px;
 }
 .thebe-button:disabled {
@@ -290,16 +622,23 @@
   color: #fff;
 }
 
-/* Subtle destructive tint for restart actions. */
+/* Restart / Restart-all are secondary actions — de-emphasise to a
+   text-level link-ish treatment so they don't compete with Run. They
+   keep the pill hit-area for pointer / keyboard use but lose the
+   outlined appearance when idle. */
 .thebe-restart-button,
 .thebe-restartall-button {
+  border-color: transparent;
+  background: transparent;
   color: var(--md-default-fg-color--light);
+  font-weight: 400;
+  padding-inline: 0.5rem;
 }
 .thebe-restart-button:hover,
 .thebe-restartall-button:hover {
-  border-color: #c62828;
-  background: rgba(198, 40, 40, 0.08);
-  color: #b71c1c;
+  border-color: var(--agilearn-tint-danger-bar);
+  background: var(--agilearn-tint-danger-bg);
+  color: var(--agilearn-tint-danger-bar);
 }
 [data-md-color-scheme="slate"] .thebe-restart-button:hover,
 [data-md-color-scheme="slate"] .thebe-restartall-button:hover {
@@ -319,4 +658,472 @@
 }
 @keyframes agilearn-thebe-spin {
   to { transform: rotate(360deg); }
+}
+
+/* =========================================================
+   Admonitions — semantic tints keyed to the new colour tokens
+   Material ships ~12 admonition variants; we restyle them all to a
+   consistent "tint fill + left-bar stripe + matched title" treatment.
+   Collapsible admonitions (pymdownx.details) inherit these styles
+   since they share the .admonition class.
+   ========================================================= */
+
+.md-typeset .admonition,
+.md-typeset details.admonition,
+.md-typeset details {
+  margin: 1.2rem 0;
+  padding: 0.75rem 1rem 0.75rem 1.1rem;
+  border: 1px solid var(--agilearn-divider);
+  border-inline-start: 4px solid var(--agilearn-neutral-300);
+  border-radius: 6px;
+  background: var(--agilearn-surface-alt);
+  font-size: var(--agilearn-text-base);
+  line-height: var(--agilearn-lh-normal);
+  box-shadow: none;                        /* override Material's default soft shadow */
+}
+
+.md-typeset .admonition-title,
+.md-typeset summary {
+  margin: 0 -1rem 0.4rem -1.1rem;
+  padding: 0.15rem 1rem 0.4rem 1.1rem;
+  border-bottom: 1px solid var(--agilearn-divider);
+  font-weight: 600;
+  font-size: var(--agilearn-text-base);
+  color: var(--md-default-fg-color);
+  background: transparent;
+  line-height: var(--agilearn-lh-tight);
+}
+.md-typeset .admonition > :last-child,
+.md-typeset details > :last-child {
+  margin-bottom: 0;
+}
+.md-typeset .admonition > p:first-of-type,
+.md-typeset details > p:first-of-type {
+  margin-top: 0.3rem;
+}
+
+/* Hide the icon-circle treatment Material paints via ::before — our
+   left-bar stripe carries the semantic cue instead. Keeping it would
+   double up and crowd the title. */
+.md-typeset .admonition-title::before,
+.md-typeset summary::before {
+  display: none;
+}
+
+/* Variant tokens — each family points at the tint-bg / tint-bar
+   tokens defined at the top of this sheet. Material's own class list
+   is the authoritative set; we map aliases (hint, important, check,
+   caution, error, missing, …) to the same family as the canonical
+   variant so authors can pick whichever word reads best. */
+
+.md-typeset .admonition.note,
+.md-typeset details.note,
+.md-typeset .admonition.seealso,
+.md-typeset details.seealso {
+  background: var(--agilearn-tint-note-bg);
+  border-inline-start-color: var(--agilearn-tint-note-bar);
+}
+
+.md-typeset .admonition.tip,
+.md-typeset details.tip,
+.md-typeset .admonition.hint,
+.md-typeset details.hint,
+.md-typeset .admonition.important,
+.md-typeset details.important {
+  background: var(--agilearn-tint-tip-bg);
+  border-inline-start-color: var(--agilearn-tint-tip-bar);
+}
+
+.md-typeset .admonition.info,
+.md-typeset details.info,
+.md-typeset .admonition.abstract,
+.md-typeset details.abstract,
+.md-typeset .admonition.summary,
+.md-typeset details.summary,
+.md-typeset .admonition.question,
+.md-typeset details.question,
+.md-typeset .admonition.help,
+.md-typeset details.help,
+.md-typeset .admonition.faq,
+.md-typeset details.faq,
+.md-typeset .admonition.todo,
+.md-typeset details.todo {
+  background: var(--agilearn-tint-info-bg);
+  border-inline-start-color: var(--agilearn-tint-info-bar);
+}
+
+.md-typeset .admonition.warning,
+.md-typeset details.warning,
+.md-typeset .admonition.caution,
+.md-typeset details.caution,
+.md-typeset .admonition.attention,
+.md-typeset details.attention {
+  background: var(--agilearn-tint-warning-bg);
+  border-inline-start-color: var(--agilearn-tint-warning-bar);
+}
+
+.md-typeset .admonition.danger,
+.md-typeset details.danger,
+.md-typeset .admonition.error,
+.md-typeset details.error,
+.md-typeset .admonition.failure,
+.md-typeset details.failure,
+.md-typeset .admonition.fail,
+.md-typeset details.fail,
+.md-typeset .admonition.missing,
+.md-typeset details.missing,
+.md-typeset .admonition.bug,
+.md-typeset details.bug {
+  background: var(--agilearn-tint-danger-bg);
+  border-inline-start-color: var(--agilearn-tint-danger-bar);
+}
+
+.md-typeset .admonition.success,
+.md-typeset details.success,
+.md-typeset .admonition.check,
+.md-typeset details.check,
+.md-typeset .admonition.done,
+.md-typeset details.done {
+  background: var(--agilearn-tint-success-bg);
+  border-inline-start-color: var(--agilearn-tint-success-bar);
+}
+
+.md-typeset .admonition.example,
+.md-typeset details.example {
+  background: var(--agilearn-tint-example-bg);
+  border-inline-start-color: var(--agilearn-tint-example-bar);
+}
+
+.md-typeset .admonition.quote,
+.md-typeset details.quote,
+.md-typeset .admonition.cite,
+.md-typeset details.cite {
+  background: transparent;
+  border-inline-start-color: var(--agilearn-neutral-300);
+}
+
+/* In slate, keep the same stripe colours but let the backgrounds pick
+   up the slate tokens automatically — they're defined on the scheme
+   so this whole mapping works in both palettes without extra rules. */
+
+/* =========================================================
+   Contrast & focus — WCAG 2.2 AA polish
+   Closes A11Y-02, A11Y-05, A11Y-06, A11Y-10 from the UX/a11y review.
+   ========================================================= */
+
+/* A11Y-02 · Top tabs in the slate (dark) palette render at ~3.67:1.
+   Material sets inactive tab links at 70% opacity over the primary
+   tint (#5a5fb5), which blends to roughly #cecfe9. Forcing full white
+   at full opacity lifts every tab to ~4.83:1 against #5a5fb5. Active
+   tabs remain visually distinct via Material's font-weight / border
+   treatment, so we don't need opacity for hierarchy. */
+[data-md-color-scheme="slate"] .md-tabs__link {
+  color: #ffffff;
+  opacity: 1;
+}
+
+/* A11Y-05 & A11Y-06 · Footer copyright and the "Material for MkDocs"
+   link are both on the same dark strip (#171717) in both palettes.
+   - Copyright text was #7f7f7f (4.47:1, just under 4.5:1). #a8a8a8
+     gives ~7.4:1, comfortably over AA.
+   - The upstream link was #b9b9b9 vs surrounding #7f7f7f (2.04:1), with
+     no underline. White + underline gives >= 3:1 against the new
+     surrounding text and satisfies 1.4.1 Use of Color. */
+.md-copyright {
+  color: #a8a8a8;
+}
+.md-copyright a,
+.md-copyright__highlight a {
+  color: #ffffff;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+.md-copyright a:hover,
+.md-copyright__highlight a:hover {
+  color: var(--md-accent-fg-color);
+}
+
+/* A11Y-10 · Focus rings were only styled on body links; tabs, search
+   input, palette toggle and header controls had no visible ring.
+   Establish a consistent amber ring for any keyboard-focused element,
+   then restate it on the elements Material nests behind label / a11y
+   hacks so the cascade still reaches them. */
+:focus-visible {
+  outline: 2px solid var(--agilearn-focus-ring);
+  outline-offset: 2px;
+}
+
+.md-tabs__link:focus-visible,
+.md-nav__link:focus-visible,
+.md-header__button:focus-visible,
+.md-search__input:focus-visible,
+.md-footer__link:focus-visible,
+.md-content__button:focus-visible {
+  outline: 2px solid var(--agilearn-focus-ring);
+  outline-offset: 2px;
+  /* Material uses box-shadow for some focus states elsewhere; clear it
+     so we don't get two stacked rings. */
+  box-shadow: none;
+}
+
+/* The palette toggle is rendered as a visually-hidden <input type="radio">
+   plus a sibling <label>. The input itself never paints, so put the ring
+   on the label when the (potentially off-screen) input has :focus-visible. */
+[data-md-component="palette"] input:focus-visible + label {
+  outline: 2px solid var(--agilearn-focus-ring);
+  outline-offset: 2px;
+  border-radius: 50%;
+}
+
+/* Skip link — the default Material skip link is fine, but when it
+   receives focus (the very first Tab on a page) it deserves the same
+   amber ring. */
+.md-skip:focus-visible {
+  outline: 2px solid var(--agilearn-focus-ring);
+  outline-offset: 2px;
+}
+
+/* A11Y-09 · The search "Clear" (reset) button is an 18×18 SVG, below
+   WCAG 2.2's 24×24 target size for unspaced controls. Pad the hit area
+   out to 24×24 without changing the SVG's visual size. Same treatment
+   on the search input's primary icon so the target footprint is
+   consistent. */
+.md-search__form button[type="reset"].md-search__icon,
+.md-search__form label.md-search__icon {
+  min-inline-size: 24px;
+  min-block-size: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =========================================================
+   Notebook pages — mkdocs-jupyter integration
+   On notebook-rendered pages, markdown content lives inside
+   `.md-typeset > .jupyter-wrapper > .jp-Notebook > .jp-Cell > … >
+   .jp-RenderedHTMLCommon.jp-RenderedMarkdown.jp-MarkdownOutput`.
+   None of the `.md-typeset > p` measure/rhythm rules reach it (direct-
+   child combinator), and mkdocs-jupyter inlines a ~600 KB JupyterLab
+   stylesheet inside <article> that lands AFTER our <link>, so any rule
+   with equal specificity loses on source order. Restate the tokenised
+   treatment at a higher specificity, scoped to the rendered output.
+   ========================================================= */
+
+/* JupyterLab token overrides — point the tokens the inlined sheet reads
+   at our own design system so downstream `.jp-InputArea-editor`,
+   `.highlight-ipynb`, etc. inherit the right surfaces without us having
+   to override every leaf rule. Scoped to `.md-typeset .jupyter-wrapper`
+   so the specificity beats the inlined `.jupyter-wrapper` defaults. */
+.md-typeset .jupyter-wrapper {
+  --jp-cell-editor-background:        var(--agilearn-code-surface);
+  --jp-cell-editor-border-color:      var(--agilearn-divider);
+  --jp-cell-editor-active-background: var(--agilearn-code-surface);
+  --jp-cell-editor-active-border-color: var(--agilearn-indigo);
+  --jp-border-radius:                 6px;
+  --jp-code-padding:                  0.6rem;
+  --jp-cell-padding:                  0;
+  --jp-content-font-family:           var(--md-text-font-family, "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+  --jp-code-font-family:              var(--md-code-font-family, "IBM Plex Mono", ui-monospace, monospace);
+  --jp-content-font-color1:           var(--md-default-fg-color);
+  --jp-content-font-size1:            1rem;
+  --jp-code-font-size:                var(--agilearn-text-sm);
+
+  font-family: inherit;
+  color: var(--md-default-fg-color);
+}
+
+/* Measure — constrain rendered markdown prose to the same 42rem column
+   the rest of the article uses. Scoped to `.jp-RenderedHTMLCommon` so
+   code editors and raw output cells keep the full column. */
+.md-typeset .jp-RenderedHTMLCommon > p,
+.md-typeset .jp-RenderedHTMLCommon > ul,
+.md-typeset .jp-RenderedHTMLCommon > ol,
+.md-typeset .jp-RenderedHTMLCommon > dl,
+.md-typeset .jp-RenderedHTMLCommon > blockquote {
+  max-width: var(--agilearn-measure);
+}
+
+/* Paragraphs — beat the inlined `.jupyter-wrapper p { margin-bottom: 10px }`
+   rule via the extra `.jp-RenderedHTMLCommon` class in the selector. */
+.md-typeset .jp-RenderedHTMLCommon p {
+  margin: 0 0 0.9em;
+  color: var(--md-default-fg-color);
+}
+.md-typeset .jp-RenderedHTMLCommon p + p {
+  margin-top: 0;
+}
+
+/* Heading scale — re-declare per-level so any future upstream change to
+   JupyterLab's heading tokens can't drift our scale. Specificity (0,2,2)
+   beats both `.md-typeset h1` and anything shipped inside the inline
+   stylesheet. */
+.md-typeset .jp-RenderedHTMLCommon h1,
+.md-typeset .jp-RenderedHTMLCommon h2,
+.md-typeset .jp-RenderedHTMLCommon h3,
+.md-typeset .jp-RenderedHTMLCommon h4,
+.md-typeset .jp-RenderedHTMLCommon h5,
+.md-typeset .jp-RenderedHTMLCommon h6 {
+  font-family: inherit;
+  font-weight: 600;
+  line-height: var(--agilearn-lh-tight);
+  letter-spacing: 0;
+  color: var(--md-default-fg-color);
+}
+.md-typeset .jp-RenderedHTMLCommon h1 {
+  font-size: var(--agilearn-text-4xl);
+  font-weight: 700;
+  margin: 0 0 1rem;
+  letter-spacing: -0.01em;
+}
+.md-typeset .jp-RenderedHTMLCommon h2 {
+  font-size: var(--agilearn-text-3xl);
+  margin: 2rem 0 0.75rem;
+}
+.md-typeset .jp-RenderedHTMLCommon h3 {
+  font-size: var(--agilearn-text-2xl);
+  margin: 1.75rem 0 0.6rem;
+}
+.md-typeset .jp-RenderedHTMLCommon h4 {
+  font-size: var(--agilearn-text-xl);
+  margin: 1.5rem 0 0.5rem;
+}
+.md-typeset .jp-RenderedHTMLCommon h5 {
+  font-size: var(--agilearn-text-lg);
+  margin: 1.25rem 0 0.4rem;
+}
+.md-typeset .jp-RenderedHTMLCommon h6 {
+  font-size: var(--agilearn-text-base);
+  margin: 1.25rem 0 0.4rem;
+  color: var(--md-default-fg-color--light);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+}
+
+/* Anchor links — JupyterLab renders `<a class="anchor-link">¶</a>` on
+   every heading and hides them via `display: none`. Bring them back
+   so notebook readers can grab deep links, but keep them subtle: only
+   opaque on hover, ochre accent to match the rest of the site. */
+.md-typeset .jp-RenderedHTMLCommon h1 .anchor-link,
+.md-typeset .jp-RenderedHTMLCommon h2 .anchor-link,
+.md-typeset .jp-RenderedHTMLCommon h3 .anchor-link,
+.md-typeset .jp-RenderedHTMLCommon h4 .anchor-link,
+.md-typeset .jp-RenderedHTMLCommon h5 .anchor-link,
+.md-typeset .jp-RenderedHTMLCommon h6 .anchor-link {
+  display: inline;
+  color: var(--md-default-fg-color--lighter);
+  text-decoration: none;
+  margin-inline-start: 0.4em;
+  opacity: 0;
+  transition: opacity 120ms ease, color 120ms ease;
+}
+.md-typeset .jp-RenderedHTMLCommon h1:hover .anchor-link,
+.md-typeset .jp-RenderedHTMLCommon h2:hover .anchor-link,
+.md-typeset .jp-RenderedHTMLCommon h3:hover .anchor-link,
+.md-typeset .jp-RenderedHTMLCommon h4:hover .anchor-link,
+.md-typeset .jp-RenderedHTMLCommon h5:hover .anchor-link,
+.md-typeset .jp-RenderedHTMLCommon h6:hover .anchor-link {
+  opacity: 1;
+  color: var(--agilearn-ochre);
+}
+.md-typeset .jp-RenderedHTMLCommon .anchor-link:focus-visible {
+  opacity: 1;
+  outline: 2px solid var(--agilearn-focus-ring);
+  outline-offset: 2px;
+}
+
+/* Lists — mirror `.md-typeset ul / ol` treatment, same rhythm and
+   indent so nested steps in a tutorial cell read as hierarchy. */
+.md-typeset .jp-RenderedHTMLCommon ul,
+.md-typeset .jp-RenderedHTMLCommon ol {
+  margin: 0 0 0.9em;
+  padding-inline-start: 1.4em;
+}
+.md-typeset .jp-RenderedHTMLCommon li {
+  margin-block: 0.25em;
+}
+.md-typeset .jp-RenderedHTMLCommon li > ul,
+.md-typeset .jp-RenderedHTMLCommon li > ol {
+  margin: 0.25em 0;
+}
+
+/* Blockquotes, rules, tables inside rendered markdown. */
+.md-typeset .jp-RenderedHTMLCommon blockquote {
+  margin: 1rem 0;
+  padding: 0.6rem 1rem;
+  border-inline-start: 3px solid var(--agilearn-divider);
+  background: transparent;
+  color: var(--md-default-fg-color--light);
+  font-style: normal;
+}
+.md-typeset .jp-RenderedHTMLCommon hr {
+  margin: 2rem 0;
+  border: 0;
+  border-top: 1px solid var(--agilearn-divider);
+}
+.md-typeset .jp-RenderedHTMLCommon table {
+  margin: 1rem 0;
+  font-size: var(--agilearn-text-sm);
+  border-collapse: collapse;
+  border: 1px solid var(--agilearn-divider);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.md-typeset .jp-RenderedHTMLCommon table th,
+.md-typeset .jp-RenderedHTMLCommon table td {
+  padding: 0.55rem 0.85rem;
+  border: 0;
+}
+.md-typeset .jp-RenderedHTMLCommon table th {
+  background: var(--agilearn-surface-alt);
+  font-weight: 600;
+  text-align: start;
+}
+
+/* Inline code inside rendered markdown — IBM Plex Mono on the warm
+   code surface, matches the `.md-typeset code` treatment. */
+.md-typeset .jp-RenderedHTMLCommon code {
+  font-family: var(--md-code-font-family), "IBM Plex Mono", ui-monospace, monospace;
+  font-size: var(--agilearn-text-sm);
+  line-height: var(--agilearn-lh-code);
+  background: var(--agilearn-code-surface);
+  border-radius: 4px;
+  padding: 0.08em 0.32em;
+  color: var(--md-default-fg-color);
+}
+
+/* Cell chrome — small breathing room between stacked cells. Chain
+   `.jupyter-wrapper` so our specificity (0,3,0) beats the inlined
+   `.jupyter-wrapper .jp-Notebook .jp-Cell` source-order win.
+   Prompts and collapser strips are already `display: none` upstream. */
+.md-typeset .jupyter-wrapper .jp-Notebook {
+  padding: 0;
+}
+.md-typeset .jupyter-wrapper .jp-Cell {
+  padding: 0.35rem 0;
+}
+.md-typeset .jupyter-wrapper .jp-Cell + .jp-Cell {
+  margin-top: 0.25rem;
+}
+
+/* Code-cell chrome (`.jp-CodeCell`, `.jp-CodeMirrorEditor`,
+   `.jp-InputArea-editor`, `.highlight-ipynb`) is intentionally NOT
+   styled here. `convertCells()` in overrides/main.html runs on
+   DOMContentLoaded and replaces every `.jp-CodeCell` with a
+   `<pre class="agilearn-thebe-cell" data-executable="true">` placeholder
+   before paint, so those JupyterLab classes never appear in the live
+   DOM (verified via playwright headless). Thebe then upgrades the
+   placeholder to `.thebe-cell`. The styling for both visible states —
+   `.agilearn-thebe-cell` and `.thebe-cell` — lives further up in this
+   file and is what the user actually sees. */
+
+/* Slate palette — JupyterLab's default editor background switches to
+   a lighter grey that clashes with the rest of the dark surface. Force
+   it back to the agilearn code surface so the editor sits flush with
+   the surrounding cells. */
+[data-md-color-scheme="slate"] .md-typeset .jupyter-wrapper {
+  --jp-cell-editor-background:        var(--agilearn-code-surface);
+  --jp-cell-editor-active-background: var(--agilearn-code-surface);
+  --jp-cell-editor-border-color:      var(--agilearn-divider);
+  --jp-content-font-color1:           var(--md-default-fg-color);
 }

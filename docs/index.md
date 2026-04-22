@@ -1,5 +1,4 @@
 ---
-title: Agilearn
 hide:
   - navigation
   - toc

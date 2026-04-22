@@ -70,7 +70,7 @@ def example():
     print(value)  # 42
 
 example()
-print(value)  # 100 -- the global is unchanged
+print(value)  # 100&ndash;the global is unchanged
 ```
 
 Shadowing is not an error, but it can be confusing. If a reader expects `value` inside the function to refer to the global, they will be surprised. Be deliberate about choosing names, and avoid shadowing unless you have a clear reason.

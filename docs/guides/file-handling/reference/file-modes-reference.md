@@ -192,8 +192,8 @@ The `newline` parameter in `open()` controls this behaviour:
 
 | Value | Reading behaviour | Writing behaviour |
 |-------|-------------------|-------------------|
-| `None` (default) | Universal newline mode -- all line endings become `\n` | `\n` is translated to the platform default |
-| `""` | No translation -- all line endings are returned as-is | No translation -- `\n` is written as-is |
+| `None` (default) | Universal newline mode &ndash; all line endings become `\n` | `\n` is translated to the platform default |
+| `""` | No translation &ndash; all line endings are returned as-is | No translation -- `\n` is written as-is |
 | `"\n"` | Only `\n` is recognised as a line ending | No translation |
 | `"\r\n"` | Only `\r\n` is recognised as a line ending | `\n` is written as `\r\n` |
 

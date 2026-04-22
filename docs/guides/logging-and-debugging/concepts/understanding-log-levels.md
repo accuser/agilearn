@@ -12,7 +12,7 @@ The five standard log levels form a hierarchy, from least severe to most severe:
 DEBUG (10)  →  INFO (20)  →  WARNING (30)  →  ERROR (40)  →  CRITICAL (50)
 ```
 
-Think of it like a volume dial. When you set the level to `WARNING`, you are turning down the volume -- you still hear the loud, important things (`WARNING`, `ERROR`, `CRITICAL`), but the quieter background chatter (`DEBUG`, `INFO`) is filtered out.
+Think of it like a volume dial. When you set the level to `WARNING`, you are turning down the volume &ndash; you still hear the loud, important things (`WARNING`, `ERROR`, `CRITICAL`), but the quieter background chatter (`DEBUG`, `INFO`) is filtered out.
 
 Setting the level to `DEBUG` turns the volume all the way up: you hear everything. Setting it to `CRITICAL` means only the most urgent messages get through.
 
@@ -53,7 +53,7 @@ logger.info("User %s authenticated successfully", username)
 logger.info("Scheduled task completed: %s records updated", count)
 ```
 
-`INFO` messages are the ones you would want to see in a production dashboard. They should be meaningful and not too frequent -- if your `INFO` output is more than a few lines per request or operation, some of those messages probably belong at `DEBUG` level.
+`INFO` messages are the ones you would want to see in a production dashboard. They should be meaningful and not too frequent &ndash; if your `INFO` output is more than a few lines per request or operation, some of those messages probably belong at `DEBUG` level.
 
 ## `WARNING` -- something unexpected
 
@@ -113,7 +113,7 @@ logger.critical("Out of disk space on %s", volume)
 logger.critical("Unrecoverable error in main loop, shutting down")
 ```
 
-In many applications, `CRITICAL` messages trigger immediate alerts to the operations team. Use this level sparingly -- if every error is critical, then nothing is truly critical.
+In many applications, `CRITICAL` messages trigger immediate alerts to the operations team. Use this level sparingly &ndash; if every error is critical, then nothing is truly critical.
 
 ## Choosing the right level
 
@@ -159,7 +159,7 @@ Different audiences need different levels, which is exactly what the logging sys
 
 ### What is the volume?
 
-Think about how many messages each level will produce under normal operation. In production, `DEBUG` messages might generate thousands of lines per second. That is fine -- they should be disabled by default. `INFO` messages should be at a manageable rate. `WARNING` and above should be rare events.
+Think about how many messages each level will produce under normal operation. In production, `DEBUG` messages might generate thousands of lines per second. That is fine &ndash; they should be disabled by default. `INFO` messages should be at a manageable rate. `WARNING` and above should be rare events.
 
 ## How levels interact with handlers
 
@@ -191,7 +191,7 @@ The result is a clean console that only shows things that need attention, alongs
 
 ## Summary
 
-Log levels are not just labels -- they are a filtering mechanism that lets you control the verbosity of your application without changing the code. Use them thoughtfully:
+Log levels are not just labels &ndash; they are a filtering mechanism that lets you control the verbosity of your application without changing the code. Use them thoughtfully:
 
 - **`DEBUG`** for detailed diagnostics during development
 - **`INFO`** for significant events in normal operation

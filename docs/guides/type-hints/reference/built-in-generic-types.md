@@ -31,7 +31,7 @@ From `collections.abc` (preferred) or `typing` (legacy). These describe what an 
 | `Collection[T]` | `len`, `in`, iteration | any sized iterable |
 | `Sequence[T]` | indexing, slicing | `list`, `tuple`, `range`, `str`, `bytes` |
 | `MutableSequence[T]` | `.append`, `.insert`, item assignment | `list`, `bytearray` |
-| `Set[T]` | `&`, `\|`, `-`, `<=`, etc. | `set`, `frozenset` |
+| `Set[T]` | `&`, `|`, `-`, `<=`, etc. | `set`, `frozenset` |
 | `MutableSet[T]` | `.add`, `.discard` | `set` only |
 
 ### Mapping hierarchy

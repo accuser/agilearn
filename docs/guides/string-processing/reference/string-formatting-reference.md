@@ -467,8 +467,8 @@ The `%` formatting approach has several limitations compared with f-strings and 
 
 - [Format String Syntax](https://docs.python.org/3/library/string.html#formatstrings) -- official Python documentation for `str.format()` syntax
 - [Format Specification Mini-Language](https://docs.python.org/3/library/string.html#format-specification-mini-language) -- official reference for the format spec
-- [PEP 498 -- Literal String Interpolation](https://peps.python.org/pep-0498/) -- the PEP that introduced f-strings
-- [PEP 701 -- Syntactic formalization of f-strings](https://peps.python.org/pep-0701/) -- relaxed restrictions on f-strings in Python 3.12
+- [PEP 498&ndash;Literal String Interpolation](https://peps.python.org/pep-0498/) -- the PEP that introduced f-strings
+- [PEP 701&ndash;Syntactic formalization of f-strings](https://peps.python.org/pep-0701/) -- relaxed restrictions on f-strings in Python 3.12
 - [String methods reference](string-methods-reference.md) -- comprehensive reference for all `str` methods
 - [String constants reference](string-constants-reference.md) -- constants from the `string` module
 - [printf-style String Formatting](https://docs.python.org/3/library/stdtypes.html#printf-style-string-formatting) -- official documentation for `%` formatting

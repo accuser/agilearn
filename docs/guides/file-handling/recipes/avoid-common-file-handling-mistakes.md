@@ -1,206 +1,119 @@
-# Avoid common file handling mistakes
+# Avoid common file-handling mistakes
 
-File handling is one of the most practical skills in Python, but several common mistakes can lead to bugs, data loss, or code that behaves differently across platforms. This guide covers the most frequent pitfalls and how to avoid them.
+**The question.** You're reviewing file-handling code and something smells — an `open()` without `with`, a missing `encoding`, a `'w'` where you meant `'a'`, a `readlines()` on a log that could be multi-gigabyte. You want the short list of traps and the fix for each.
 
-## Mistake 1: forgetting to close files
+The short list is below, then each trap in detail.
 
-**Problem:** opening a file without ensuring it is closed.
+## The answer
+
+## The answer
+
+| Looks like… | Why it bites | Fix |
+| --- | --- | --- |
+| `f = open(...); f.read()` | file never closed if `read()` raises | `with open(...) as f:` |
+| `open('data.txt', 'r')` — no encoding | default varies by platform; UnicodeDecodeError on Windows | always pass `encoding='utf-8'` |
+| `open('log.txt', 'w')` when you meant append | truncates the file before writing | use `'a'` for append |
+| `'data/' + 'reports/' + 'summary.txt'` | hard-coded separator breaks on Windows | `Path('data') / 'reports' / 'summary.txt'` |
+| `open('config.txt')` with no fallback | `FileNotFoundError` crashes the caller | check `Path.exists()` or catch `FileNotFoundError` |
+| `f.readlines()` on a log file | loads everything into memory | `for line in f:` iterates lazily |
+| `csv.writer(f)` without `newline=''` | extra blank rows on Windows | always open with `newline=''` for CSVs |
+| `open('config.txt')` from a script | resolves against CWD, not script dir | `Path(__file__).parent / 'config.txt'` |
+| `open('img.png', 'r')` for binary | encoding and newline translation corrupt the file | binary mode: `'rb'` / `'wb'` |
+
+Each in detail below.
+
+## Why each one bites
+
+### 1. Forgetting to close
 
 ```python
-# Problem: file may stay open if an error occurs
-f = open("data.txt", "r", encoding="utf-8")
+# Wrong — if f.read() raises, close never runs
+f = open('data.txt', encoding='utf-8')
 content = f.read()
-# f.close() is never called if an error occurs above
-```
+f.close()
 
-**Solution:** use a `with` statement.
-
-```python
-# Solution: file is automatically closed
-with open("data.txt", "r", encoding="utf-8") as f:
+# Right — guaranteed close on exit, even via exception
+with open('data.txt', encoding='utf-8') as f:
     content = f.read()
 ```
 
-Open files consume system resources, data may not be flushed to disc, and other programs may not be able to access the file. The `with` statement guarantees the file is closed, even if an error occurs.
+Open file handles are a finite resource on every OS. Leaked handles break long-running processes and (on Windows) prevent other programs from opening the file. `with` blocks guarantee cleanup.
 
-## Mistake 2: not specifying encoding
+### 2. Not specifying encoding
 
-**Problem:** relying on the platform default encoding.
-
-```python
-# Problem: uses platform-dependent default encoding
-with open("data.txt", "r") as f:
-    content = f.read()
-```
-
-**Solution:** always specify encoding explicitly.
+Without `encoding=...`, Python uses `locale.getencoding()` — usually UTF-8 on Linux/macOS but *cp1252* on Windows in an English locale. The same script then behaves differently across machines, and a file that reads fine locally blows up on a colleague's laptop. From Python 3.15 this will warn by default; you may as well start now.
 
 ```python
-# Solution: consistent behaviour across platforms
-with open("data.txt", "r", encoding="utf-8") as f:
-    content = f.read()
+# Wrong
+open('data.txt').read()
+
+# Right
+open('data.txt', encoding='utf-8').read()
 ```
 
-Without explicit encoding, Python uses the system default, which varies between operating systems. This can lead to `UnicodeDecodeError` or garbled text when your code runs on a different platform.
+### 3. Write mode vs. append
 
-## Mistake 3: using `"w"` mode when you mean `"a"`
+`'w'` truncates the file to zero before you write a single byte. If you meant to add to the end, you wanted `'a'`. Easy mistake on log files — one stray `'w'` and the whole history is gone.
 
-**Problem:** accidentally overwriting an entire file.
+### 4. String concatenation for paths
 
 ```python
-# Problem: overwrites the entire file!
-with open("log.txt", "w", encoding="utf-8") as f:
-    f.write("New log entry\n")
+# Wrong — breaks on Windows, awkward if 'data' already ends with /
+path = 'data' + '/' + 'reports' + '/' + 'summary.txt'
+
+# Right
+from pathlib import Path
+path = Path('data') / 'reports' / 'summary.txt'
 ```
 
-**Solution:** use append mode.
+`Path` handles separators and trailing-slash normalisation for you. The `/` operator reads naturally once you've used it a few times.
 
-```python
-# Solution: adds to the end of the file
-with open("log.txt", "a", encoding="utf-8") as f:
-    f.write("New log entry\n")
-```
+### 5. No fallback for a missing file
 
-Write mode `"w"` truncates the file to zero length before writing. If you want to add to an existing file, use `"a"` mode instead.
-
-## Mistake 4: using string concatenation for paths
-
-**Problem:** hard-coding path separators.
-
-```python
-# Problem: platform-dependent separator
-path = "data" + "/" + "reports" + "/" + "summary.txt"
-```
-
-**Solution:** use `pathlib.Path`.
+Either check first or catch the exception — but pick one deliberately.
 
 ```python
 from pathlib import Path
 
-# Solution: platform-independent paths
-path = Path("data") / "reports" / "summary.txt"
-```
-
-Hard-coded path separators break on different operating systems. The `pathlib` module handles separators automatically.
-
-## Mistake 5: not handling `FileNotFoundError`
-
-**Problem:** assuming the file always exists.
-
-```python
-# Problem: crashes if file does not exist
-with open("config.txt", "r", encoding="utf-8") as f:
-    config = f.read()
-```
-
-**Solution:** check first or handle the exception.
-
-```python
-from pathlib import Path
-
-# Option 1: check before reading
-config_path = Path("config.txt")
-if config_path.exists():
-    config = config_path.read_text(encoding="utf-8")
+# Option A — check first (fine when race conditions don't matter)
+if Path('config.txt').exists():
+    config = Path('config.txt').read_text(encoding='utf-8')
 else:
-    config = "default settings"
+    config = DEFAULTS
 
-# Option 2: handle the exception
+# Option B — EAFP (cleaner when you were going to read anyway)
 try:
-    with open("config.txt", "r", encoding="utf-8") as f:
-        config = f.read()
+    config = Path('config.txt').read_text(encoding='utf-8')
 except FileNotFoundError:
-    config = "default settings"
+    config = DEFAULTS
 ```
 
-Always consider what happens if the file does not exist. Either check with `Path.exists()` or handle the `FileNotFoundError` exception.
+### 6. `readlines()` on a large file
 
-## Mistake 6: reading entire large files into memory
+`f.readlines()` and `f.read()` both load the entire file. For a log of any size this is either slow (few MB) or fatal (multi-GB). `for line in f` iterates lazily — one line at a time, O(longest line) in memory.
 
-**Problem:** loading a very large file all at once.
+### 7. CSVs without `newline=''`
 
-```python
-# Problem: loads entire file into memory
-with open("huge-file.txt", "r", encoding="utf-8") as f:
-    lines = f.readlines()  # could be gigabytes!
-```
+CSV writers assume they control line termination. When the file object is also translating newlines, you get extra blank rows between data rows on Windows. `newline=''` disables Python's newline translation so the CSV module can produce output that's consistent across platforms.
 
-**Solution:** iterate line by line.
+### 8. Relative paths vs. script directory
 
-```python
-# Solution: constant memory usage
-with open("huge-file.txt", "r", encoding="utf-8") as f:
-    for line in f:
-        process(line)
-```
+`open('config.txt')` resolves against the *current working directory* — wherever the user ran the script from — which is almost never the directory containing your script. Build paths from `Path(__file__).parent` when the file lives next to the code.
 
-The `readlines()` and `read()` methods load the entire file into memory. For large files, iterate line by line to keep memory usage constant.
+### 9. Text mode for binary data
 
-## Mistake 7: forgetting `newline=""` for CSV files
+`open('image.png', 'r')` will either corrupt the image (via newline translation on Windows) or raise `UnicodeDecodeError` immediately. Any non-text file — image, audio, archive, custom binary format — wants `'rb'` or `'wb'`.
 
-**Problem:** extra blank lines in CSV output.
+## When the pattern is fine
 
-```python
-import csv
+Some of these are genuine trade-offs, not absolutes. `f.read()` is fine for a file you know is small. `'w'` is correct when you *really do* want to overwrite. A bare `except` over an `open()` is fine if you immediately log and fall back.
 
-# Problem: may produce extra blank lines on Windows
-with open("data.csv", "w", encoding="utf-8") as f:
-    writer = csv.writer(f)
-    writer.writerow(["name", "age"])
-```
+The traps bite when the shortcut is applied reflexively to a case where the defaults don't match the intent — Windows when you tested only on Linux, a log file where you meant to append, a PNG that happened to start with UTF-8-safe bytes on your machine.
 
-**Solution:** always use `newline=""`.
+## Related reading
 
-```python
-import csv
-
-# Solution: correct newline handling
-with open("data.csv", "w", encoding="utf-8", newline="") as f:
-    writer = csv.writer(f)
-    writer.writerow(["name", "age"])
-```
-
-Without `newline=""`, Python may double up newlines when writing CSV files, resulting in blank rows between data rows.
-
-## Mistake 8: assuming the current working directory
-
-**Problem:** using relative paths that depend on where the script is run from.
-
-```python
-# Problem: depends on where the script is run from
-with open("config.txt", "r", encoding="utf-8") as f:
-    config = f.read()
-```
-
-**Solution:** use a path relative to the script location.
-
-```python
-from pathlib import Path
-
-# Solution: path relative to the script file
-script_dir = Path(__file__).parent
-config_path = script_dir / "config.txt"
-with config_path.open("r", encoding="utf-8") as f:
-    config = f.read()
-```
-
-Relative paths are resolved from the current working directory, which may not be the directory containing your script. Use `Path(__file__).parent` to get the directory of the current script.
-
-## Quick reference table
-
-| Mistake | Solution |
-|---------|----------|
-| Forgetting to close files | Use `with` statements |
-| Not specifying encoding | Always use `encoding="utf-8"` |
-| Using `"w"` instead of `"a"` | Check the mode before writing |
-| String concatenation for paths | Use `pathlib.Path` with the `/` operator |
-| Not handling missing files | Use `Path.exists()` or `try`/`except` |
-| Loading large files into memory | Iterate line by line |
-| Missing `newline=""` for CSV | Always use `newline=""` with CSV files |
-| Assuming working directory | Use `Path(__file__).parent` |
-
-## See also
-
-- [Why context managers matter](../concepts/why-context-managers-matter.md)
-- [Understanding file encodings](../concepts/understanding-file-encodings.md)
-- [File modes reference](../reference/file-modes-reference.md)
+- [Process large files](process-large-files.ipynb) — the lazy-iteration pattern in detail.
+- [Work with binary files](work-with-binary-files.ipynb) — `'rb'`/`'wb'` and `struct`.
+- [Manage temporary files](manage-temporary-files.ipynb) — atomic-write and cleanup patterns.
+- [pathlib quick reference](../reference/pathlib-quick-reference.md) — the `Path` API in one place.
+- [File modes reference](../reference/file-modes-reference.md) — every mode combination and what it does.

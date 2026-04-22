@@ -72,9 +72,9 @@ Items in either set (or both).
 
 | Form | Syntax |
 |------|--------|
-| Operator | `a \| b` |
+| Operator | `a | b` |
 | Method | `a.union(b)` |
-| In-place | `a \|= b` or `a.update(b)` |
+| In-place | `a |= b` or `a.update(b)` |
 
 ```python
 a = {1, 2, 3}
@@ -203,7 +203,7 @@ Frozen sets can be used as dictionary keys or as elements of other sets.
 
 | Operation              | Operator | Method                         |
 |------------------------|----------|--------------------------------|
-| Union                  | `\|`     | `union()`                      |
+| Union                  | `|`     | `union()`                      |
 | Intersection           | `&`      | `intersection()`               |
 | Difference             | `-`      | `difference()`                 |
 | Symmetric difference   | `^`      | `symmetric_difference()`       |
