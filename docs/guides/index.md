@@ -4,7 +4,7 @@ title: Guides
 
 # Python Guides
 
-Thirteen guides, each structured the same way: **Learn** for tutorials, **Recipes** for task-focused how-tos, **Reference** for lookups, and **Concepts** for short explanatory essays. Every tutorial's code cells can be edited and run directly on the page.
+Fourteen guides, each structured the same way: **Learn** for tutorials, **Recipes** for task-focused how-tos, **Reference** for lookups, and **Concepts** for short explanatory essays. Every tutorial's code cells can be edited and run directly on the page.
 
 ## A recommended order
 
@@ -23,5 +23,6 @@ If you're working through Python for the first time, a sensible sequence is:
 11. [Logging and debugging](logging-and-debugging/) — making programs observable.
 12. [Regular expressions](regex/) — pattern matching for text.
 13. [Unit testing](unit-testing/) — proving your code works.
+14. [Packages and packaging](packages-and-packaging/) — modules, imports, virtual environments, and shipping your code.
 
 If you're here for a specific topic, pick any guide and dive in — they're self-contained.

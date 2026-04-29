@@ -421,4 +421,32 @@ nav:
               - guides/unit-testing/concepts/index.md
               - Why unit testing: guides/unit-testing/concepts/why-unit-testing.md
               - Understanding test structure: guides/unit-testing/concepts/understanding-test-structure.md
+      - Packages and packaging:
+          - guides/packages-and-packaging/index.md
+          - Learn:
+              - guides/packages-and-packaging/learn/index.md
+              - Modules and imports: guides/packages-and-packaging/learn/01-modules-and-imports.ipynb
+              - Packages and namespaces: guides/packages-and-packaging/learn/02-packages-and-namespaces.ipynb
+              - Installing third-party packages: guides/packages-and-packaging/learn/03-installing-third-party-packages.ipynb
+              - Virtual environments: guides/packages-and-packaging/learn/04-virtual-environments.ipynb
+              - Authoring a package: guides/packages-and-packaging/learn/05-authoring-a-package.ipynb
+              - Building and publishing: guides/packages-and-packaging/learn/06-building-and-publishing.ipynb
+          - Recipes:
+              - guides/packages-and-packaging/recipes/index.md
+              - Pin and lock dependencies: guides/packages-and-packaging/recipes/pin-and-lock-dependencies.md
+              - Turn a script folder into a package: guides/packages-and-packaging/recipes/turn-a-script-folder-into-a-package.md
+              - Add a console-script entry point: guides/packages-and-packaging/recipes/add-a-console-script-entry-point.md
+              - Resolve import errors: guides/packages-and-packaging/recipes/resolve-import-errors.md
+              - Avoid common packaging mistakes: guides/packages-and-packaging/recipes/avoid-common-packaging-mistakes.md
+          - Reference:
+              - guides/packages-and-packaging/reference/index.md
+              - Import statement forms: guides/packages-and-packaging/reference/import-statement-forms.md
+              - pip command quick reference: guides/packages-and-packaging/reference/pip-command-quick-reference.md
+              - pyproject.toml field reference: guides/packages-and-packaging/reference/pyproject-toml-field-reference.md
+              - Project layout: guides/packages-and-packaging/reference/project-layout.md
+          - Concepts:
+              - guides/packages-and-packaging/concepts/index.md
+              - How Python's import system works: guides/packages-and-packaging/concepts/how-pythons-import-system-works.md
+              - Why wheels exist: guides/packages-and-packaging/concepts/why-wheels-exist.md
+              - The PyPI ecosystem and trust: guides/packages-and-packaging/concepts/the-pypi-ecosystem-and-trust.md
   - About: about.md

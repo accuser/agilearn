@@ -107,6 +107,13 @@ Each guide follows the same four-part shape: **Learn** (step-by-step tutorials y
     <span class="agilearn-meta"><span>Learn · 4</span><span>Recipes · 3</span><span>Reference · 3</span><span>Concepts · 2</span></span>
   </a>
 
+  <a class="agilearn-card" href="guides/packages-and-packaging/" markdown>
+    <span class="agilearn-card__icon">:material-package-variant-closed:</span>
+    <strong class="agilearn-card__title">Packages and packaging</strong>
+    <span class="agilearn-card__desc">Modules, imports, virtual environments, <code>pyproject.toml</code>, and shipping your own code to PyPI.</span>
+    <span class="agilearn-meta"><span>Learn · 6</span><span>Recipes · 5</span><span>Reference · 4</span><span>Concepts · 3</span></span>
+  </a>
+
 </div>
 
 <div class="agilearn-hero" markdown>
