@@ -8,7 +8,7 @@ hide:
 
 # Python Guides
 
-Self-directed guides for learning Python, written for second-year data science students and free for anyone.
+Self-directed guides for learning Python, free for anyone.
 
 Each guide follows the same four-part shape: **Learn** (step-by-step tutorials you can run in the browser), **Recipes** (short task-focused how-tos), **Reference** (quick lookups), and **Concepts** (short pieces explaining why things work the way they do).
 

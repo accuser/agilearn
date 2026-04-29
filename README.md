@@ -1,6 +1,6 @@
 # Agilearn — Python Guides
 
-This repository is the source for **agilearn.co.uk**, a unified home for thirteen self-directed Python guides written for second-year data science students and anyone learning the language seriously. The site is built with MkDocs Material; tutorial notebooks are made runnable in place using Thebe + Pyodide (the same stack that powers JupyterLite), with no backend.
+This repository is the source for **agilearn.co.uk**, a unified home for thirteen self-directed Python guides for anyone learning the language seriously. The site is built with MkDocs Material; tutorial notebooks are made runnable in place using Thebe + Pyodide (the same stack that powers JupyterLite), with no backend.
 
 ## Status
 

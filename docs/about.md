@@ -1,6 +1,6 @@
 # About Agilearn
 
-Agilearn is a set of self-directed Python guides, originally developed to support a second-year data science module and published here as a free, open resource.
+Agilearn is a set of self-directed Python guides, published as a free, open resource.
 
 ## Who it's for
 
