@@ -72,6 +72,13 @@ Each guide follows the same four-part shape: **Learn** (step-by-step tutorials y
     <span class="agilearn-meta"><span>Learn · 4</span><span>Recipes · 4</span><span>Reference · 3</span><span>Concepts · 2</span></span>
   </a>
 
+  <a class="agilearn-card" href="guides/numbers-and-maths/" markdown>
+    <span class="agilearn-card__icon">:material-calculator:</span>
+    <strong class="agilearn-card__title">Numbers and maths</strong>
+    <span class="agilearn-card__desc">Integers and floats, the <code>0.1 + 0.2</code> problem, exact <code>Decimal</code> and <code>Fraction</code>, and <code>math</code>/<code>statistics</code>/<code>random</code>.</span>
+    <span class="agilearn-meta"><span>Learn · 4</span><span>Recipes · 4</span><span>Reference · 3</span><span>Concepts · 2</span></span>
+  </a>
+
   <a class="agilearn-card" href="guides/file-handling/" markdown>
     <span class="agilearn-card__icon">:material-file-document:</span>
     <strong class="agilearn-card__title">File handling</strong>

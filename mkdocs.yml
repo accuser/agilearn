@@ -238,6 +238,29 @@ nav:
               - guides/string-processing/concepts/index.md
               - Why strings are immutable: guides/string-processing/concepts/why-strings-are-immutable.md
               - Understanding Unicode and encodings: guides/string-processing/concepts/understanding-unicode-and-encodings.md
+      - Numbers and maths:
+          - guides/numbers-and-maths/index.md
+          - Learn:
+              - guides/numbers-and-maths/learn/index.md
+              - Numeric types: guides/numbers-and-maths/learn/01-numeric-types.ipynb
+              - Floating point: guides/numbers-and-maths/learn/02-floating-point.ipynb
+              - Decimal and Fraction: guides/numbers-and-maths/learn/03-decimal-and-fraction.ipynb
+              - Maths, statistics, and random: guides/numbers-and-maths/learn/04-math-random-statistics.ipynb
+          - Recipes:
+              - guides/numbers-and-maths/recipes/index.md
+              - Round numbers correctly: guides/numbers-and-maths/recipes/round-numbers-correctly.ipynb
+              - Handle money with Decimal: guides/numbers-and-maths/recipes/handle-money-with-decimal.ipynb
+              - Format numbers for display: guides/numbers-and-maths/recipes/format-numbers-for-display.ipynb
+              - Avoid common number mistakes: guides/numbers-and-maths/recipes/avoid-common-number-mistakes.md
+          - Reference:
+              - guides/numbers-and-maths/reference/index.md
+              - math module reference: guides/numbers-and-maths/reference/math-module-reference.md
+              - Number formatting reference: guides/numbers-and-maths/reference/number-formatting-reference.md
+              - Numeric types and operators reference: guides/numbers-and-maths/reference/numeric-types-and-operators-reference.md
+          - Concepts:
+              - guides/numbers-and-maths/concepts/index.md
+              - How floating point works: guides/numbers-and-maths/concepts/how-floats-work.md
+              - Choosing a numeric type: guides/numbers-and-maths/concepts/choosing-a-numeric-type.md
       - Dates and times:
           - guides/dates-and-times/index.md
           - Learn:
