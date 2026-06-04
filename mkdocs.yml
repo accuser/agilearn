@@ -161,6 +161,29 @@ nav:
               - Hash tables and dictionaries: guides/data-structures/concepts/hash-tables-and-dictionaries.md
               - Choosing data structures: guides/data-structures/concepts/choosing-data-structures.md
               - Memory and performance: guides/data-structures/concepts/memory-and-performance.md
+      - Collections:
+          - guides/collections/index.md
+          - Learn:
+              - guides/collections/learn/index.md
+              - Counter: guides/collections/learn/01-counter.ipynb
+              - defaultdict: guides/collections/learn/02-defaultdict.ipynb
+              - deque: guides/collections/learn/03-deque.ipynb
+              - namedtuple and friends: guides/collections/learn/04-namedtuple-and-friends.ipynb
+          - Recipes:
+              - guides/collections/recipes/index.md
+              - Count and tally items: guides/collections/recipes/count-and-tally-items.ipynb
+              - Group items with defaultdict: guides/collections/recipes/group-items-with-defaultdict.ipynb
+              - Build a queue or sliding window: guides/collections/recipes/build-a-queue-or-sliding-window.ipynb
+              - Avoid common collections mistakes: guides/collections/recipes/avoid-common-collections-mistakes.md
+          - Reference:
+              - guides/collections/reference/index.md
+              - Counter and defaultdict reference: guides/collections/reference/counter-and-defaultdict-reference.md
+              - deque reference: guides/collections/reference/deque-reference.md
+              - namedtuple, OrderedDict, and ChainMap reference: guides/collections/reference/namedtuple-ordereddict-chainmap-reference.md
+          - Concepts:
+              - guides/collections/concepts/index.md
+              - Why specialised containers: guides/collections/concepts/why-specialised-containers.md
+              - Choosing a container: guides/collections/concepts/choosing-a-container.md
       - Functions:
           - guides/functions/index.md
           - Learn:

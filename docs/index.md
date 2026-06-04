@@ -30,6 +30,13 @@ Each guide follows the same four-part shape: **Learn** (step-by-step tutorials y
     <span class="agilearn-meta"><span>Learn · 6</span><span>Recipes · 5</span><span>Reference · 5</span><span>Concepts · 4</span></span>
   </a>
 
+  <a class="agilearn-card" href="guides/collections/" markdown>
+    <span class="agilearn-card__icon">:material-toy-brick-outline:</span>
+    <strong class="agilearn-card__title">Collections</strong>
+    <span class="agilearn-card__desc">Specialised containers: <code>Counter</code>, <code>defaultdict</code>, <code>deque</code>, <code>namedtuple</code>, and <code>ChainMap</code>.</span>
+    <span class="agilearn-meta"><span>Learn · 4</span><span>Recipes · 4</span><span>Reference · 3</span><span>Concepts · 2</span></span>
+  </a>
+
   <a class="agilearn-card" href="guides/functions/" markdown>
     <span class="agilearn-card__icon">:material-function-variant:</span>
     <strong class="agilearn-card__title">Functions</strong>
