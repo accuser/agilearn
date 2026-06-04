@@ -421,6 +421,29 @@ nav:
               - guides/unit-testing/concepts/index.md
               - Why unit testing: guides/unit-testing/concepts/why-unit-testing.md
               - Understanding test structure: guides/unit-testing/concepts/understanding-test-structure.md
+      - Concurrency:
+          - guides/concurrency/index.md
+          - Learn:
+              - guides/concurrency/learn/index.md
+              - Concurrency models: guides/concurrency/learn/01-concurrency-models.ipynb
+              - Threads and futures: guides/concurrency/learn/02-threads-and-futures.ipynb
+              - Processes and parallelism: guides/concurrency/learn/03-processes-and-parallelism.ipynb
+              - Async and await: guides/concurrency/learn/04-async-await.ipynb
+          - Recipes:
+              - guides/concurrency/recipes/index.md
+              - Run blocking calls in a thread pool: guides/concurrency/recipes/run-blocking-calls-in-a-thread-pool.ipynb
+              - Parallelise CPU work across processes: guides/concurrency/recipes/parallelise-cpu-work-across-processes.ipynb
+              - Run async tasks concurrently: guides/concurrency/recipes/run-async-tasks-concurrently.ipynb
+              - Avoid common concurrency mistakes: guides/concurrency/recipes/avoid-common-concurrency-mistakes.md
+          - Reference:
+              - guides/concurrency/reference/index.md
+              - asyncio cheatsheet: guides/concurrency/reference/asyncio-cheatsheet.md
+              - concurrent.futures reference: guides/concurrency/reference/concurrent-futures-reference.md
+              - threading and multiprocessing reference: guides/concurrency/reference/threading-and-multiprocessing-reference.md
+          - Concepts:
+              - guides/concurrency/concepts/index.md
+              - The GIL and what it means: guides/concurrency/concepts/the-gil-and-what-it-means.md
+              - Choosing a concurrency model: guides/concurrency/concepts/choosing-a-concurrency-model.md
       - Packages and packaging:
           - guides/packages-and-packaging/index.md
           - Learn:

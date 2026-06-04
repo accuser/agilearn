@@ -114,6 +114,13 @@ Each guide follows the same four-part shape: **Learn** (step-by-step tutorials y
     <span class="agilearn-meta"><span>Learn · 6</span><span>Recipes · 5</span><span>Reference · 4</span><span>Concepts · 3</span></span>
   </a>
 
+  <a class="agilearn-card" href="guides/concurrency/" markdown>
+    <span class="agilearn-card__icon">:material-call-split:</span>
+    <strong class="agilearn-card__title">Concurrency</strong>
+    <span class="agilearn-card__desc">Overlapping work with threads, true parallelism with processes, and high-volume I/O with <code>async</code>/<code>await</code>.</span>
+    <span class="agilearn-meta"><span>Learn · 4</span><span>Recipes · 4</span><span>Reference · 3</span><span>Concepts · 2</span></span>
+  </a>
+
 </div>
 
 <div class="agilearn-hero" markdown>

@@ -1,16 +1,16 @@
 # Agilearn — Python Guides
 
-This repository is the source for **agilearn.co.uk**, a unified home for fourteen self-directed Python guides for anyone learning the language seriously. The site is built with MkDocs Material; tutorial notebooks are made runnable in place using Thebe + Pyodide (the same stack that powers JupyterLite), with no backend.
+This repository is the source for **agilearn.co.uk**, a unified home for fifteen self-directed Python guides for anyone learning the language seriously. The site is built with MkDocs Material; tutorial notebooks are made runnable in place using Thebe + Pyodide (the same stack that powers JupyterLite), with no backend.
 
 ## Status
 
-All nine original standalone guides have been migrated, and four further guides (Classes and objects, Dates and times, Type hints, Iterators and generators) have been written from scratch. Every guide follows the same four-part shape — **Learn**, **Recipes**, **Reference**, **Concepts** — and recipes across the site have been rewritten to a consistent task-focused template.
+All nine original standalone guides have been migrated, and further guides (Classes and objects, Dates and times, Type hints, Iterators and generators, and Concurrency) have been written from scratch. Every guide follows the same four-part shape — **Learn**, **Recipes**, **Reference**, **Concepts** — and recipes across the site have been rewritten to a consistent task-focused template.
 
 Active threads of work are tracked in the planning notes at `../agilearn-plan.md` and the UX/accessibility review documents in the parent directory.
 
 ## Guides
 
-The fourteen guides, in the recommended learning order shown in the nav:
+The fifteen guides, in the recommended learning order shown in the nav:
 
 1. Conditional logic
 2. Data structures
@@ -25,7 +25,8 @@ The fourteen guides, in the recommended learning order shown in the nav:
 11. Logging and debugging
 12. Regular expressions
 13. Unit testing
-14. Packages and packaging
+14. Concurrency
+15. Packages and packaging
 
 Each guide lives under `docs/guides/<slug>/` with `learn/`, `recipes/`, `reference/`, and `concepts/` subdirectories.
 
@@ -33,7 +34,7 @@ Each guide lives under `docs/guides/<slug>/` with `learn/`, `recipes/`, `referen
 
 ```
 agilearn/
-├── mkdocs.yml                        Unified config and full nav for all 13 guides
+├── mkdocs.yml                        Unified config and full nav for all 15 guides
 ├── requirements.txt                  mkdocs-material, mkdocs-jupyter
 ├── pyproject.toml                    Installs the local notebook_link_rewriter plugin
 ├── wrangler.toml                     Cloudflare Pages project config
@@ -97,7 +98,7 @@ Two deploy paths are configured; pick whichever matches where the site is curren
 
 Open `http://localhost:8000/` after `mkdocs serve` and you should see:
 
-- The **Agilearn landing page** with the fourteen-guide card grid.
+- The **Agilearn landing page** with the fifteen-guide card grid.
 - Any guide rendered in the four-section shape (Learn / Recipes / Reference / Concepts), with notebook tutorials that run in the browser.
 - Notebook pages with two action buttons in the top-right: **Download** and **Open in Lab**.
 - Dark/light mode toggle, the indigo + ochre palette, IBM Plex Sans / IBM Plex Mono typography, the Agilearn wordmark, and unified search.
