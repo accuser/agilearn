@@ -16,6 +16,6 @@ This guide takes the three tools in turn — threads, processes, and `async`/`aw
 - **[Concepts](concepts/)** — essays on the GIL (what it really does, and the free-threaded future) and on choosing a concurrency model from first principles.
 
 !!! note "Running these examples"
-    Threads and processes don't run inside the in-browser sandbox — those examples are written as you'd run them in a real `.py` file, so try them locally. The `async` examples do run in the browser, but in a notebook cell you `await main()` directly instead of calling `asyncio.run(main())`; both forms are shown where it matters.
+    Cells that need real threads or processes can't run in the in-browser runtime, so they have **no Run button** and are marked *"runs locally only"* — they're written as complete `.py` scripts, so copy them into your own editor to try them. The `async` examples *do* run here; in a notebook cell you `await main()` directly instead of calling `asyncio.run(main())`, and both forms are shown where it matters.
 
 New to the topic? Start with [Learn → Concurrency models](learn/01-concurrency-models.ipynb). Here for a specific task? [Recipes](recipes/) is task-focused and [Reference](reference/) is for lookups.

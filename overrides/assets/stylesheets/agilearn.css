@@ -546,6 +546,42 @@
   outline-offset: 2px;
 }
 
+/* -------- Non-runnable cells (notebook tag: ["no-run"]) -------- */
+/* Examples that depend on real OS threads or processes can't execute in the
+   in-browser Pyodide runtime. convertCells() leaves these static and prepends
+   the badge below, so a missing Run button reads as intentional. */
+.agilearn-norun__badge {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+  max-width: var(--agilearn-measure);
+  margin: 0.6rem 0 0;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid var(--agilearn-tint-warning-bar);
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  background: var(--agilearn-tint-warning-bg);
+  color: var(--agilearn-tint-warning-bar);
+  font-size: var(--agilearn-text-sm);
+  line-height: var(--agilearn-lh-normal);
+}
+.agilearn-norun__badge::before {
+  /* A struck-through play glyph: "you can't press play here". */
+  content: "▷";
+  font-weight: 700;
+  text-decoration: line-through;
+  flex: 0 0 auto;
+}
+[data-md-color-scheme="slate"] .agilearn-norun__badge {
+  color: var(--agilearn-ochre-light);
+}
+/* The static code block under a badge gets a warning-tinted edge so badge and
+   code read as a single "run this elsewhere" unit. */
+.jp-CodeCell.agilearn-norun {
+  border-inline-start: 3px solid var(--agilearn-tint-warning-bar);
+  border-radius: 0 4px 4px 0;
+}
+
 /* Thebe's own cell output styling — tighten to match Material's body text. */
 .thebe-cell {
   margin: 0.6rem 0;

@@ -388,6 +388,23 @@
       });
     }
 
+    function decorateNoRun(cell) {
+      // Cells tagged `no-run` in the notebook (e.g. thread/process examples
+      // that the in-browser Pyodide runtime can't execute) are left as static
+      // code — no editor, no Run button. We add a badge above them so the
+      // *absence* of a Run button reads as deliberate rather than broken.
+      if (cell.dataset.agilearnNoRun === "1") return;
+      cell.classList.add("agilearn-norun");
+      const badge = document.createElement("div");
+      badge.className = "agilearn-norun__badge";
+      badge.setAttribute("role", "note");
+      badge.textContent =
+        "Runs locally only — real threads and processes aren't available in " +
+        "the in-browser runtime. Copy this into your own editor to run it.";
+      cell.parentNode.insertBefore(badge, cell);
+      cell.dataset.agilearnNoRun = "1";
+    }
+
     function convertCells() {
       // For each rendered .jp-CodeCell, extract the source text from its <pre>,
       // then replace the whole cell with a <pre data-executable="true">. Thebe
@@ -395,6 +412,17 @@
       const cells = document.querySelectorAll(".jp-CodeCell");
       let converted = 0;
       cells.forEach(function (cell) {
+        // Cells carrying the `no-run` notebook tag (mkdocs-jupyter renders this
+        // as the `celltag_no-run` class) are not executable in the browser.
+        // Leave them static and badge them instead of attaching a kernel.
+        // mkdocs-jupyter nests an inner .jp-CodeCell inside the outer one and
+        // tags both; decorate only the outermost so we badge each cell once.
+        if (cell.classList.contains("celltag_no-run")) {
+          if (!cell.parentElement || !cell.parentElement.closest(".jp-CodeCell")) {
+            decorateNoRun(cell);
+          }
+          return;
+        }
         // The .highlight-ipynb pre is the rendered source (with syntax spans);
         // its textContent is the raw code.
         const pre = cell.querySelector(".highlight-ipynb pre, pre");
